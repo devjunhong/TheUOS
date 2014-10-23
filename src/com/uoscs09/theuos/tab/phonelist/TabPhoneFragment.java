@@ -23,8 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsAsyncFragment;
@@ -106,8 +107,8 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 		inflater.inflate(R.menu.tab_phone, menu);
 		MenuItem searchMenu = menu.findItem(R.id.action_search);
 
-		SearchView searchView = (SearchView) searchMenu.getActionView();
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
+		/*searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -124,6 +125,7 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 		searchView.setQueryHint(getText(R.string.tab_phone_search_hint));
 		searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
 				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+				*/
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

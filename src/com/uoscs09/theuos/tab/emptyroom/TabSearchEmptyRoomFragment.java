@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -54,9 +54,8 @@ public class TabSearchEmptyRoomFragment extends
 	@ReleaseWhenDestroy
 	private Spinner termSpinner;
 	@ReleaseWhenDestroy
-	private TextView timeTextView;
-	@ReleaseWhenDestroy
 	private TextView[] textViews;
+	private String mTermString;
 	private int sortFocus;
 	private boolean isReverse = false;
 	private static final String BUILDING = "building";
@@ -66,8 +65,6 @@ public class TabSearchEmptyRoomFragment extends
 	public void onCreate(Bundle savedInstanceState) {
 		initTable();
 		Context context = getActivity();
-		timeTextView = (TextView) View.inflate(context,
-				R.layout.action_textview, null);
 		View dialogLayout = View.inflate(context,
 				R.layout.dialog_search_empty_room, null);
 		buildingSpinner = (Spinner) dialogLayout
@@ -81,7 +78,7 @@ public class TabSearchEmptyRoomFragment extends
 		if (savedInstanceState != null) {
 			mClassRoomList = savedInstanceState
 					.getParcelableArrayList(BUILDING);
-			timeTextView.setText(savedInstanceState.getString("time"));
+			mTermString = savedInstanceState.getString("time");
 		} else {
 			mClassRoomList = new ArrayList<ClassRoomItem>();
 		}
@@ -133,7 +130,7 @@ public class TabSearchEmptyRoomFragment extends
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList(BUILDING, mClassRoomList);
-		outState.putString("time", timeTextView.getText().toString());
+		outState.putString("time", mTermString);
 		super.onSaveInstanceState(outState);
 
 	}
@@ -156,9 +153,6 @@ public class TabSearchEmptyRoomFragment extends
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_search_empty_room, menu);
-		ActionBar ab = getActivity().getActionBar();
-		ab.setCustomView(timeTextView);
-		ab.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -181,9 +175,10 @@ public class TabSearchEmptyRoomFragment extends
 		AppUtil.showToast(getActivity(), String.valueOf(result.size())
 				+ getString(R.string.search_found), true);
 
-		timeTextView.setText(timeSpinner.getSelectedItem().toString()
+		mTermString = timeSpinner.getSelectedItem().toString()
 				.split(StringUtil.NEW_LINE)[1]
-				+ StringUtil.NEW_LINE + termSpinner.getSelectedItem());
+				+ StringUtil.NEW_LINE + termSpinner.getSelectedItem();
+		setSubtitleWhenVisible(mTermString);
 	}
 
 	private void initTable() {
@@ -289,4 +284,10 @@ public class TabSearchEmptyRoomFragment extends
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_search);
 	}
+	
+	@Override
+	protected CharSequence getSubtitle() {
+		return mTermString;
+	}
+	
 }

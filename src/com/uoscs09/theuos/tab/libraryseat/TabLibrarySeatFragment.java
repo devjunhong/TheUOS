@@ -3,7 +3,6 @@ package com.uoscs09.theuos.tab.libraryseat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -20,10 +19,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
@@ -34,6 +32,7 @@ import com.uoscs09.theuos.common.util.StringUtil;
 import com.uoscs09.theuos.http.HttpRequest;
 import com.uoscs09.theuos.http.parse.ParseFactory;
 
+/** 도서관 좌석 정보 현황을 보여주는 페이지 */
 public class TabLibrarySeatFragment extends
 		AbsDrawableProgressFragment<ArrayList<SeatItem>> {
 	/** 좌석 현황 리스트 뷰의 adapter */
@@ -54,12 +53,6 @@ public class TabLibrarySeatFragment extends
 	/** 해지 될 좌석 정보 뷰, infoDialog에서 보여진다. */
 	@ReleaseWhenDestroy
 	private View mDismissDialogView;
-	/** 상단 액션바에 설정되는 layout, timeTextView가 포함되어 동기화 시간을 나타낸다. */
-	@ReleaseWhenDestroy
-	private View mActionViewLayout;
-	/** 상단 액션바에 설정되어 동기화 시간을 나타내는 TextView */
-	@ReleaseWhenDestroy
-	private TextView mTimeTextView;
 	/**
 	 * 상단 액션바에 설정되는 timeTextView에 설정될 Text.<br>
 	 * 
@@ -96,10 +89,6 @@ public class TabLibrarySeatFragment extends
 			mDissmissInfoList = new ArrayList<String>();
 		}
 		Activity activity = getActivity();
-		mActionViewLayout = View.inflate(activity,
-				R.layout.action_tab_lib_seat_view, null);
-		mTimeTextView = (TextView) mActionViewLayout
-				.findViewById(R.id.tab_library_seat_action_text_last_commit_time);
 		mInfoAdapter = new SeatDissmissInfoListAdapter(activity,
 				R.layout.list_layout_two_text_view, mDissmissInfoList);
 		super.onCreate(savedInstanceState);
@@ -118,7 +107,6 @@ public class TabLibrarySeatFragment extends
 
 		mAnimAdapter = new SwingBottomInAnimationAdapter(mSeatAdapter);
 		mAnimAdapter.setAbsListView(mSeatListView);
-		mAnimAdapter.setAnimationDelayMillis(100);
 		mSeatListView.setAdapter(mAnimAdapter);
 
 		mSeatListView.setOnItemClickListener(new OnItemClickListener() {
@@ -171,10 +159,6 @@ public class TabLibrarySeatFragment extends
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_library_seat, menu);
-		mTimeTextView.setText(mCommitTime);
-		ActionBar actionBar = getActivity().getActionBar();
-		actionBar.setCustomView(mActionViewLayout);
-		actionBar.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -227,7 +211,7 @@ public class TabLibrarySeatFragment extends
 		mSeatAdapter.addAll(result);
 
 		mSeatAdapter.notifyDataSetChanged();
-		mAnimAdapter.setShouldAnimateFromPosition(0);
+		mAnimAdapter.reset();
 		mAnimAdapter.notifyDataSetChanged();
 		mInfoAdapter.notifyDataSetChanged();
 	}
@@ -283,7 +267,6 @@ public class TabLibrarySeatFragment extends
 		int s = c.get(Calendar.SECOND);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(getText(R.string.tab_library_seat_last_update));
 
 		if (ampm == Calendar.AM) {
 			sb.append(StringUtil.STR_AM);
@@ -302,13 +285,16 @@ public class TabLibrarySeatFragment extends
 		}
 		sb.append(s);
 		mCommitTime = sb.toString();
-		if (mTimeTextView != null) {
-			mTimeTextView.setText(mCommitTime);
-		}
+		setSubtitleWhenVisible(mCommitTime);
 	}
 
 	@Override
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_refresh);
+	}
+	
+	@Override
+	protected CharSequence getSubtitle() {
+		return mCommitTime;
 	}
 }

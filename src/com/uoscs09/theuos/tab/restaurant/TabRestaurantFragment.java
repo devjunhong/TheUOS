@@ -3,10 +3,8 @@ package com.uoscs09.theuos.tab.restaurant;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,8 +20,6 @@ import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
-import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.IOUtil;
 import com.uoscs09.theuos.common.util.OApiUtil;
 import com.uoscs09.theuos.common.util.PrefUtil;
@@ -37,12 +33,10 @@ public class TabRestaurantFragment extends
 	protected ScrollView restScroll;
 	@ReleaseWhenDestroy
 	private TextView restName, restSemester, restVacation, breakfast, lunch,
-			supper, actionTextView;
+			supper;
 	protected int buttonID;
 	@AsyncData
 	private ArrayList<RestItem> mRestList;
-	@ReleaseWhenDestroy
-	private View actionViewLayout;
 
 	private static final String BUTTON = "button";
 	private static final String REST = "rest_list";
@@ -65,7 +59,6 @@ public class TabRestaurantFragment extends
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Context context = getActivity();
 		if (savedInstanceState != null) {
 			buttonID = savedInstanceState.getInt(BUTTON);
 			mRestList = savedInstanceState.getParcelableArrayList(REST);
@@ -73,11 +66,6 @@ public class TabRestaurantFragment extends
 			buttonID = R.id.tab_rest_button_students_hall;
 			mRestList = new ArrayList<RestItem>();
 		}
-
-		actionViewLayout = View.inflate(context,
-				R.layout.action_tab_lib_seat_view, null);
-		actionTextView = (TextView) actionViewLayout
-				.findViewById(R.id.tab_library_seat_action_text_last_commit_time);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -116,19 +104,7 @@ public class TabRestaurantFragment extends
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		if(AppUtil.theme == AppTheme.BlackAndWhite)
-			actionTextView.setTextColor(Color.WHITE);
 		inflater.inflate(R.menu.tab_restaurant, menu);
-		ActionBar actionBar = getActivity().getActionBar();
-
-		if (getExecutor() != null && isRunning()) {
-			actionTextView.setText(R.string.progress_while_updating);
-		} else {
-			actionTextView.setText(StringUtil.NULL);
-		}
-
-		actionBar.setCustomView(actionViewLayout);
-		actionBar.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -216,11 +192,6 @@ public class TabRestaurantFragment extends
 		}
 	}
 
-	@Override
-	protected void excute() {
-		actionTextView.setText(R.string.progress_while_updating);
-		super.excute();
-	}
 
 	@Override
 	public ArrayList<RestItem> call() throws Exception {
@@ -260,8 +231,6 @@ public class TabRestaurantFragment extends
 	@Override
 	public void exceptionOccured(Exception e) {
 		super.exceptionOccured(e);
-		if (actionTextView != null)
-			actionTextView.setText(R.string.progress_fail);
 	}
 
 	@Override
@@ -269,7 +238,6 @@ public class TabRestaurantFragment extends
 		mRestList.clear();
 		mRestList.addAll(result);
 		getView().findViewById(buttonID).performClick();
-		actionTextView.setText(StringUtil.NULL);
 	}
 
 	@Override

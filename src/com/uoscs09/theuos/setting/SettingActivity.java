@@ -1,6 +1,7 @@
 package com.uoscs09.theuos.setting;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -12,9 +13,13 @@ public class SettingActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getFragmentManager().beginTransaction()
-				.replace(android.R.id.content, new SettingsFragment(), "main")
-				.commit();
+		setContentView(R.layout.activity_setting);
+		Toolbar toolBar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolBar);
+		getFragmentManager()
+				.beginTransaction()
+				.replace(android.R.id.tabcontent, new SettingsFragment(),
+						"main").commit();
 	}
 
 	@Override
@@ -38,6 +43,14 @@ public class SettingActivity extends BaseActivity {
 	public void finish() {
 		super.finish();
 		overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// support v4와 일반 Api와의 호환성을 위해 구현
+		if (!getFragmentManager().popBackStackImmediate()) {
+			super.onBackPressed();
+		}
 	}
 
 }

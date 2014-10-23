@@ -15,7 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.swinginadapters.prepared.SwingBottomInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.uoscs09.theuos.common.SimpleTextViewAdapter;
 import com.uoscs09.theuos.common.SimpleTextViewAdapter.DrawblePosition;
 import com.uoscs09.theuos.common.impl.BaseFragment;
@@ -83,8 +83,7 @@ public class TabHomeFragment extends BaseFragment implements
 			}
 		});
 
-		etcDialog = new AlertDialog.Builder(context)
-				.setCancelable(true)
+		etcDialog = new AlertDialog.Builder(context).setCancelable(true)
 				.setIconAttribute(R.attr.ic_navigation_accept)
 				.setTitle(R.string.tab_etc_selection).create();
 		etcDialog.setView(v, 10, 10, 10, 10);
@@ -96,9 +95,8 @@ public class TabHomeFragment extends BaseFragment implements
 		View v = inflater.inflate(R.layout.tab_home, container, false);
 		GridView gridView = (GridView) v.findViewById(R.id.tab_home_gridview);
 		SwingBottomInAnimationAdapter animatorAdapter = new SwingBottomInAnimationAdapter(
-				adapter, 80);
+				adapter);
 		animatorAdapter.setAbsListView(gridView);
-		animatorAdapter.setInitialDelayMillis(150);
 		gridView.setOnItemClickListener(this);
 		gridView.setAdapter(animatorAdapter);
 

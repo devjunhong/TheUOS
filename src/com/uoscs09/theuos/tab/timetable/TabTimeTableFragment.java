@@ -9,7 +9,6 @@ import java.util.concurrent.Callable;
 
 import org.apache.http.client.ClientProtocolException;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -28,7 +27,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.AsyncLoader;
@@ -63,8 +61,6 @@ public class TabTimeTableFragment extends
 	@ReleaseWhenDestroy
 	private Spinner termSpinner;
 	@ReleaseWhenDestroy
-	protected TextView termTextView;
-	@ReleaseWhenDestroy
 	private AlertDialog deleteDialog;
 	protected Term term;
 	@ReleaseWhenDestroy
@@ -73,7 +69,9 @@ public class TabTimeTableFragment extends
 	private TimeTableInfoCallback cb;
 	private boolean mIsOnLoad;
 	private Map<String, Integer> colorTable;
-	//public final static int NUM_OF_TIMETABLE_VIEWS = 7;
+	private String termText;
+
+	// public final static int NUM_OF_TIMETABLE_VIEWS = 7;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -89,8 +87,6 @@ public class TabTimeTableFragment extends
 			colorTable = new Hashtable<String, Integer>();
 		}
 		cb = new TimeTableInfoCallback(context);
-		termTextView = (TextView) View.inflate(context,
-				R.layout.action_textview, null);
 
 		int termValue = PrefUtil.getInstance(context).get("timetable_term", -1);
 		if (termValue != -1) {
@@ -205,13 +201,9 @@ public class TabTimeTableFragment extends
 		super.onResume();
 	}
 
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_timetable, menu);
-		ActionBar actionBar = getActivity().getActionBar();
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(termTextView);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -244,9 +236,10 @@ public class TabTimeTableFragment extends
 			return;
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(PrefUtil.getPictureSavedPath(getActivity())).append("timetable_")
-				.append(OApiUtil.getYear()).append('_').append(term)
-				.append('_').append(String.valueOf(System.currentTimeMillis()))
+		sb.append(PrefUtil.getPictureSavedPath(getActivity()))
+				.append("timetable_").append(OApiUtil.getYear()).append('_')
+				.append(term).append('_')
+				.append(String.valueOf(System.currentTimeMillis()))
 				.append(".png");
 		String dir = sb.toString();
 		ListViewBitmapWriteTask task = new ListViewBitmapWriteTask(
@@ -305,11 +298,11 @@ public class TabTimeTableFragment extends
 	}
 
 	private void setTermTextViewText(Term term, Context context) {
-		if (termTextView != null)
-			termTextView.setText(OApiUtil.getSemesterYear(term)
-					+ " / "
-					+ context.getResources().getStringArray(R.array.terms)[term
-							.ordinal()]);
+		termText = OApiUtil.getSemesterYear(term)
+				+ " / "
+				+ context.getResources().getStringArray(R.array.terms)[term
+						.ordinal()];
+		setSubtitleWhenVisible(termText);
 	}
 
 	@Override
@@ -482,7 +475,6 @@ public class TabTimeTableFragment extends
 												return b;
 											}
 										}, new OnTaskFinishedListener() {
-
 											@Override
 											public void onTaskFinished(
 													boolean isExceptionOccoured,
@@ -504,13 +496,12 @@ public class TabTimeTableFragment extends
 															context).put(
 															"timetable_term",
 															-1);
-													termTextView
-															.setText(StringUtil.NULL);
+													termText = StringUtil.NULL;
 												} else {
 													AppUtil.showToast(
 															getActivity(),
 															R.string.file_not_found,
-															isVisible());
+															isMenuVisible());
 												}
 											}
 
@@ -522,5 +513,10 @@ public class TabTimeTableFragment extends
 	@Override
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_wise);
+	}
+
+	@Override
+	protected CharSequence getSubtitle() {
+		return termText;
 	}
 }

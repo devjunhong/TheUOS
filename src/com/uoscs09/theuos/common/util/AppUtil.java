@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -620,8 +621,10 @@ public class AppUtil {
 			for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
 				unbindDrawables(((ViewGroup) view).getChildAt(i));
 			}
-			if (!(view instanceof AdapterView))
-				((ViewGroup) view).removeAllViews();
+			if (view instanceof AdapterView
+					|| view instanceof AdapterViewCompat)
+				return;
+			((ViewGroup) view).removeAllViews();
 		}
 	}
 

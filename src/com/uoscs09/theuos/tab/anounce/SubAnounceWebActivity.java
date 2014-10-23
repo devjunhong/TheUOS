@@ -16,7 +16,7 @@ public class SubAnounceWebActivity extends WebViewActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActionBar().setTitle(R.string.title_section1_announce);
+		getSupportActionBar().setTitle(R.string.title_section1_announce);
 		Intent intent = getIntent();
 		String link = intent.getStringExtra(TabAnounceFragment.LIST_AN);
 		int selection = intent.getIntExtra(TabAnounceFragment.PAGE_NUM, 0);

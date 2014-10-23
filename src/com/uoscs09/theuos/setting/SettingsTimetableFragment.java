@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.support.v7.app.ActionBarActivity;
 
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.util.PrefUtil;
@@ -17,7 +18,8 @@ public class SettingsTimetableFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActivity().getActionBar().setTitle(R.string.setting_timetable);
+		((ActionBarActivity) getActivity())
+				.getSupportActionBar().setTitle(R.string.setting_timetable);
 		addPreferencesFromResource(R.xml.prefrence_timetable);
 		bindPreferenceSummaryToValue();
 	}

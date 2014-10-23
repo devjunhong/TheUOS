@@ -22,8 +22,8 @@ import android.widget.ListView;
 
 import com.javacan.asyncexcute.AsyncCallback;
 import com.javacan.asyncexcute.AsyncExecutor;
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.ListViewBitmapWriteTask;
 import com.uoscs09.theuos.common.util.AppUtil;

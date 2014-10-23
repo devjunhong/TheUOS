@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-    <style name="Theme.MystyleBW" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.MystyleBW" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <item name="android:windowActionBarOverlay">false</item>
-
+        <item name="android:textColorPrimary">@color/primary_text_default_material_dark</item>
+        <item name="windowActionBar">false</item>
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_shadow">@drawable/selector_list_shadow</item>
@@ -44,10 +45,10 @@
         <item name="ic_chair">@drawable/ic_action_book_with_pen</item>
         <item name="ic_secure_login">@drawable/ic_action_secure_login</item>
         <item name="ic_content_timetable">@drawable/ic_action_content_timetable</item>
-		<item name="ic_content_picture">@drawable/ic_action_content_picture</item>
-		<item name="ic_device_phone">@drawable/ic_action_hardware_phone</item>
-		<item name="ic_content_paint">@drawable/ic_action_content_paint</item>
-		
+        <item name="ic_content_picture">@drawable/ic_action_content_picture</item>
+        <item name="ic_device_phone">@drawable/ic_action_hardware_phone</item>
+        <item name="ic_content_paint">@drawable/ic_action_content_paint</item>
+
         <!-- for menu icon drawables -->
         <item name="menu_ic_action_about">@drawable/ic_action_action_about_dark</item>
         <item name="menu_ic_action_help">@drawable/ic_action_action_help_dark</item>
@@ -83,7 +84,7 @@
         <item name="menu_ic_content_picture">@drawable/ic_action_content_picture_dark</item>
         <item name="menu_ic_device_phone">@drawable/ic_action_hardware_phone_dark</item>
         <item name="menu_ic_content_paint">@drawable/ic_action_content_paint_dark</item>
-        
+
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown</item>
         <item name="color_text">@android:color/black</item>

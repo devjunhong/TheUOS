@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.ClipData;
@@ -13,6 +12,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,13 +26,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
-import com.nhaarman.listviewanimations.swinginadapters.prepared.AlphaInAnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
@@ -48,29 +48,23 @@ public class TabBookSearchFragment extends
 	private boolean isInvokeScroll = true;
 	/** 비동기 작업 결과가 비었는지 여부 */
 	private boolean isResultEmpty = true;
-	/** 현재 page */
-	protected int page = 1;
+	/** 현재 mCurrentPage */
+	protected int mCurrentPage = 1;
 	/** 중앙 도서관에 질의할 매개변수들 */
-	private String query;
-	private String rawQuery;
+	private String mEncodedQuery;
+	private String mRawQuery;
+	private String mOptionString;
 	@ReleaseWhenDestroy
-	protected ArrayAdapter<BookItem> bookListAdapter;
+	protected ArrayAdapter<BookItem> mBookListAdapter;
 	@ReleaseWhenDestroy
-	protected AnimationAdapter animAdapter;
+	protected AnimationAdapter mAnimAdapter;
 	@AsyncData
 	private ArrayList<BookItem> mBookList;
 	@ReleaseWhenDestroy
 	private ListView mListView;
-	/** ListView의 emptyView */
+	/** ListView의 mEmptyView */
 	@ReleaseWhenDestroy
-	private View emptyView;
-	/** ActionBar에 띄울 View, 도서 검색 option이 선택된 사항을 나타낸다. */
-	@ReleaseWhenDestroy
-	private TextView optionTextView;
-	@ReleaseWhenDestroy
-	private TextView queryTextview;
-	@ReleaseWhenDestroy
-	private View actionView;
+	private View mEmptyView;
 	/** option : catergory */
 	@ReleaseWhenDestroy
 	protected Spinner oi;
@@ -101,20 +95,15 @@ public class TabBookSearchFragment extends
 			mBookList = savedInstanceState.getParcelableArrayList(BUNDLE_LIST);
 			oiSelect = savedInstanceState.getInt(OI_SEL);
 			osSelect = savedInstanceState.getInt(OS_SEL);
-			query = savedInstanceState.getString(QUERY);
-			page = savedInstanceState.getInt(BUNDLE_PAGE);
-			rawQuery = savedInstanceState
-					.getString("rawQuery", StringUtil.NULL);
+			mEncodedQuery = savedInstanceState.getString(QUERY);
+			mCurrentPage = savedInstanceState.getInt(BUNDLE_PAGE);
+			mRawQuery = savedInstanceState.getString("mRawQuery",
+					StringUtil.NULL);
 		} else {
 			mBookList = new ArrayList<BookItem>();
-			page = 1;
+			mCurrentPage = 1;
 		}
 		Context context = getActivity();
-		actionView = View.inflate(context, R.layout.action_tab_book, null);
-		queryTextview = (TextView) actionView.findViewById(R.id.tab_book_query);
-		optionTextView = (TextView) actionView
-				.findViewById(R.id.tab_book_option);
-		queryTextview.setText(rawQuery);
 
 		View dialogLayout = View.inflate(context,
 				R.layout.dialog_tab_book_spinners, null);
@@ -137,7 +126,7 @@ public class TabBookSearchFragment extends
 								setActionText();
 								if (!mBookList.isEmpty()) {
 									mBookList.clear();
-									page = 1;
+									mCurrentPage = 1;
 									excute();
 								}
 							}
@@ -161,9 +150,9 @@ public class TabBookSearchFragment extends
 				: "분류 : " + oi.getSelectedItem();
 		String text2 = os.getSelectedItemPosition() == 0 ? StringUtil.NULL
 				: "정렬 : " + os.getSelectedItem();
-		String text = !text1.equals(StringUtil.NULL) ? text1
+		mOptionString = !text1.equals(StringUtil.NULL) ? text1
 				+ StringUtil.NEW_LINE + text2 : text2;
-		optionTextView.setText(text);
+		// optionTextView.setText(text);
 	}
 
 	@Override
@@ -171,9 +160,9 @@ public class TabBookSearchFragment extends
 		outState.putParcelableArrayList(BUNDLE_LIST, mBookList);
 		outState.putInt(OI_SEL, oi.getSelectedItemPosition());
 		outState.putInt(OS_SEL, os.getSelectedItemPosition());
-		outState.putInt(BUNDLE_PAGE, page);
-		outState.putString(QUERY, query);
-		outState.putString("rawQuery", rawQuery);
+		outState.putInt(BUNDLE_PAGE, mCurrentPage);
+		outState.putString(QUERY, mEncodedQuery);
+		outState.putString("mRawQuery", mRawQuery);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -183,28 +172,28 @@ public class TabBookSearchFragment extends
 		View rootView = inflater.inflate(R.layout.tab_book_search, container,
 				false);
 
-		emptyView = rootView.findViewById(R.id.tab_book_empty);
-		emptyView.findViewById(R.id.tab_book_search_empty_info1)
+		mEmptyView = rootView.findViewById(R.id.tab_book_empty);
+		mEmptyView.findViewById(R.id.tab_book_search_empty_info1)
 				.setOnClickListener(this);
-		emptyView.findViewById(R.id.tab_book_search_empty_info2)
+		mEmptyView.findViewById(R.id.tab_book_search_empty_info2)
 				.setOnClickListener(this);
 		if (mBookList.size() != 0) {
-			emptyView.setVisibility(View.INVISIBLE);
+			mEmptyView.setVisibility(View.INVISIBLE);
 			isResultEmpty = false;
 		} else {
-			emptyView.setVisibility(View.VISIBLE);
+			mEmptyView.setVisibility(View.VISIBLE);
 		}
 
-		bookListAdapter = new BookItemListAdapter(getActivity(),
+		mBookListAdapter = new BookItemListAdapter(getActivity(),
 				R.layout.list_layout_book, mBookList, mLongClickListener);
-		animAdapter = new AlphaInAnimationAdapter(bookListAdapter);
+		mAnimAdapter = new AlphaInAnimationAdapter(mBookListAdapter);
 		// 리스트 뷰
 		mListView = (ListView) rootView.findViewById(R.id.tab_book_list_search);
 		mListView.addFooterView(getLoadingView());
 		// 스크롤 리스너 등록
 		mListView.setOnScrollListener(this);
-		animAdapter.setAbsListView(mListView);
-		mListView.setAdapter(animAdapter);
+		mAnimAdapter.setAbsListView(mListView);
+		mListView.setAdapter(mAnimAdapter);
 		return rootView;
 	}
 
@@ -226,22 +215,22 @@ public class TabBookSearchFragment extends
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_book_search, menu);
 		searchMenu = menu.findItem(R.id.action_search);
-		SearchView searchView = (SearchView) searchMenu.getActionView();
-		searchView.setOnQueryTextListener(this);
-		searchView.setSubmitButtonEnabled(true);
-		searchView.setQueryHint(getText(R.string.search_hint));
-		searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		ActionBar actionBar = getActivity().getActionBar();
+		// TODO
+		/*
+		 * SearchView searchView = (SearchView) MenuItemCompat
+		 * .getActionView(searchMenu); searchView.setOnQueryTextListener(this);
+		 * searchView.setSubmitButtonEnabled(true);
+		 * searchView.setQueryHint(getText(R.string.search_hint));
+		 * searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
+		 * MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		 */
 		setActionText();
-		actionBar.setCustomView(actionView);
-		actionBar.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
 	protected void excute() {
-		emptyView.setVisibility(View.GONE);
+		mEmptyView.setVisibility(View.GONE);
 		super.excute();
 	}
 
@@ -262,8 +251,8 @@ public class TabBookSearchFragment extends
 	public boolean onQueryTextSubmit(String q) {
 		InputMethodManager ipm = (InputMethodManager) getActivity()
 				.getSystemService(Context.INPUT_METHOD_SERVICE);
-		rawQuery = q.trim();
-		if (rawQuery.equals(StringUtil.NULL)) {
+		mRawQuery = q.trim();
+		if (mRawQuery.equals(StringUtil.NULL)) {
 			AppUtil.showToast(getActivity(), R.string.search_input_empty,
 					isMenuVisible());
 		} else {
@@ -272,18 +261,18 @@ public class TabBookSearchFragment extends
 			searchMenu.collapseActionView();
 			String lastQuery;
 			try {
-				lastQuery = URLEncoder
-						.encode(rawQuery, StringUtil.ENCODE_UTF_8);
+				lastQuery = URLEncoder.encode(mRawQuery,
+						StringUtil.ENCODE_UTF_8);
 			} catch (UnsupportedEncodingException e) {
 				AppUtil.showToast(getActivity(), "Text Encoding Error!",
 						isMenuVisible());
 				return true;
 			}
-			query = lastQuery;
-			page = 1;
+			mEncodedQuery = lastQuery;
+			mCurrentPage = 1;
 			mBookList.clear();
-			queryTextview.setText(rawQuery);
-			animAdapter.setShouldAnimateFromPosition(0);
+			setSubtitleWhenVisible(mRawQuery);
+			mAnimAdapter.reset();
 			excute();
 		}
 		return true;
@@ -328,7 +317,7 @@ public class TabBookSearchFragment extends
 		String OI = getSpinnerItemString(0, oi.getSelectedItemPosition());
 		boolean check = true;
 		StringBuilder sb = new StringBuilder();
-		sb.append(URL).append(page).append("&q=").append(query);
+		sb.append(URL).append(mCurrentPage).append("&q=").append(mEncodedQuery);
 		String lastQuery = null;
 		String RM = "&websysdiv=tot";
 		if (!OI.equals(StringUtil.NULL)) {
@@ -375,7 +364,7 @@ public class TabBookSearchFragment extends
 						+ context.getString(R.string.search_found),
 						isMenuVisible());
 				mBookList.addAll(result);
-				bookListAdapter.notifyDataSetChanged();
+				mBookListAdapter.notifyDataSetChanged();
 			}
 		}
 	}
@@ -420,7 +409,7 @@ public class TabBookSearchFragment extends
 				&& (firstVisibleItem + visibleItemCount) == totalItemCount) {
 			if (!isInvokeScroll && !isResultEmpty) {
 				isInvokeScroll = true;
-				page++;
+				mCurrentPage++;
 				excute();
 			}
 		} else {
@@ -515,5 +504,10 @@ public class TabBookSearchFragment extends
 	protected boolean putAsyncData(String key, ArrayList<BookItem> obj) {
 		mBookList.addAll(obj);
 		return super.putAsyncData(key, mBookList);
+	}
+
+	@Override
+	protected CharSequence getSubtitle() {
+		return mRawQuery;
 	}
 }

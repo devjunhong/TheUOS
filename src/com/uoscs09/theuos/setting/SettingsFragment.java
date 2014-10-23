@@ -5,7 +5,8 @@ import java.util.concurrent.Callable;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -62,7 +63,7 @@ public class SettingsFragment extends PreferenceFragment implements
 		getFragmentManager()
 				.beginTransaction()
 				.hide(this)
-				.add(android.R.id.content,
+				.add(android.R.id.tabcontent,
 						Fragment.instantiate(getActivity(), clazz.getName()),
 						"front").addToBackStack(null).commit();
 	}
@@ -140,7 +141,7 @@ public class SettingsFragment extends PreferenceFragment implements
 							thisVersion);
 					tv.setText(f.toString() + " " + result);
 					f.close();
-					
+
 					builder.setTitle(
 							R.string.setting_app_version_update_require)
 							.setView(tv)
@@ -181,9 +182,10 @@ public class SettingsFragment extends PreferenceFragment implements
 			for (AppTheme at : values) {
 				items[i++] = at.toString();
 			}
-			
+
 			themeSelectorDialog = new AlertDialog.Builder(getActivity())
-					.setIconAttribute(R.attr.ic_content_paint).setTitle(R.string.setting_plz_select_theme)
+					.setIconAttribute(R.attr.ic_content_paint)
+					.setTitle(R.string.setting_plz_select_theme)
 					.setItems(items, new DialogInterface.OnClickListener() {
 
 						@Override
@@ -238,7 +240,8 @@ public class SettingsFragment extends PreferenceFragment implements
 	public void onResume() {
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
-		ActionBar actionBar = getActivity().getActionBar();
+		ActionBar actionBar = ((ActionBarActivity) getActivity())
+				.getSupportActionBar();
 		actionBar.setTitle(R.string.setting);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
@@ -254,7 +257,8 @@ public class SettingsFragment extends PreferenceFragment implements
 		if (isVisible()) {
 			getPreferenceScreen().getSharedPreferences()
 					.registerOnSharedPreferenceChangeListener(this);
-			ActionBar actionBar = getActivity().getActionBar();
+			ActionBar actionBar = ((ActionBarActivity) getActivity())
+					.getSupportActionBar();
 			actionBar.setTitle(R.string.setting);
 			actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 					| ActionBar.DISPLAY_SHOW_HOME

@@ -3,7 +3,7 @@ package com.uoscs09.theuos;
 import java.util.ArrayList;
 
 import android.R.color;
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +23,7 @@ import android.widget.ListView;
 
 import com.uoscs09.theuos.common.BackPressCloseHandler;
 import com.uoscs09.theuos.common.SimpleTextViewAdapter;
-import com.uoscs09.theuos.common.impl.BaseFragmentActivity;
+import com.uoscs09.theuos.common.impl.BaseActivity;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.PrefUtil;
@@ -31,7 +32,7 @@ import com.uoscs09.theuos.setting.SettingActivity;
 import dev.dworks.libs.actionbartoggle.ActionBarToggle;
 
 /** Main Activity, ViewPager가 존재한다. */
-public class PagerFragmentActivity extends BaseFragmentActivity implements
+public class PagerFragmentActivity extends BaseActivity implements
 		PagerInterface {
 	/** ViewPager */
 	private ViewPager mViewPager;
@@ -70,6 +71,9 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		// setContentView(R.layout.activity_pager_and_drawer);
 		setContentView(R.layout.activity_pager_and_slider);
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		
 		initPager();
 		initDrawer();
 		/* 호출 순서를 바꾸지 말 것 */
@@ -117,8 +121,8 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 		mDrawerListView.setSelection(position);
 		int res = mPageOrderList.get(position);
 		if (res != -1) {
-			getActionBar().setTitle(res);
-			// getActionBar().setIcon(AppUtil.getPageIcon(res));
+			getSupportActionBar().setTitle(res);
+			// getSupportActionBar().setIcon(AppUtil.getPageIcon(res));
 		}
 	}
 
@@ -128,7 +132,7 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 		list.add(R.string.setting);
 		list.add(R.string.action_exit);
 
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 
@@ -240,7 +244,7 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 		super.onPostCreate(savedInstanceState);
 		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
-		getActionBar().setDisplayHomeAsUpEnabled(
+		getSupportActionBar().setDisplayHomeAsUpEnabled(
 				mDrawerToggle.isDrawerIndicatorEnabled());
 	}
 
@@ -249,14 +253,14 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 		super.onConfigurationChanged(newConfig);
 		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
-		getActionBar().setDisplayHomeAsUpEnabled(
+		getSupportActionBar().setDisplayHomeAsUpEnabled(
 				mDrawerToggle.isDrawerIndicatorEnabled());
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		menu.clear();
-		getActionBar().setDisplayShowCustomEnabled(false);
+		getSupportActionBar().setDisplayShowCustomEnabled(false);
 		return true;
 	}
 
@@ -381,7 +385,7 @@ public class PagerFragmentActivity extends BaseFragmentActivity implements
 			slidingLayout.closePane();
 		}
 	}
-
+	
 	@Override
 	public Object sendCommand(Type type, Object data) {
 		switch (type) {

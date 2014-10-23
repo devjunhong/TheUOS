@@ -3,7 +3,8 @@ package com.uoscs09.theuos.tab.anounce;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import android.app.ActionBar;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -21,7 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -176,15 +177,16 @@ public class TabAnounceFragment extends
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_anounce, menu);
 		searchMenu = menu.findItem(R.id.action_search);
-		SearchView searchView = (SearchView) searchMenu.getActionView();
-		searchView.setOnQueryTextListener(mSearchViewOnQueryTextListener);
-		searchView.setSubmitButtonEnabled(true);
-		searchView.setQueryHint(getText(R.string.search_hint));
+		SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenu);
+		//searchView.setOnQueryTextListener(mSearchViewOnQueryTextListener);
+		//searchView.setSubmitButtonEnabled(true);
+		//searchView.setQueryHint(getText(R.string.search_hint));
 		searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
 				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
 		spinner.setSelection(spinnerSelection);
 		updatePageNumber();
-		ActionBar actionBar = getActivity().getActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setCustomView(actionViewLayout);
 		actionBar.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
@@ -246,7 +248,7 @@ public class TabAnounceFragment extends
 		public boolean onQueryTextSubmit(String query) {
 			InputMethodManager ipm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			SearchView v = (SearchView) searchMenu.getActionView();
+			SearchView v = (SearchView) MenuItemCompat.getActionView(searchMenu);
 			ipm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 			searchMenu.collapseActionView();
 

@@ -20,17 +20,11 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-    <style name="Theme.Mystyle" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_mystyle</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.Mystyle</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Mystyle</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.Mystyle</item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.Mystyle</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Transparent.Mystyle</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_mystyle</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_mystyle</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.Mystyle</item>
-        <item name="android:windowActionBarOverlay">false</item>
+    <style name="Theme.Mystyle" parent="@style/Theme.AppCompat.Light">
+        <item name="actionBarStyle">@style/Widget.AppCompat.ActionBar</item>
+        <item name="windowActionBar">false</item>
+        <item name="colorPrimary">@color/primary_material_light</item>
+        <item name="colorPrimaryDark">@color/primary_material_dark</item>
 
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
@@ -116,50 +110,6 @@
         <item name="color_rosy_brown">@color/rosy_brown</item>
         <item name="color_text">@android:color/black</item>
         <item name="color_action_text">@android:color/black</item>
-    </style>
-
-    <style name="ActionBar.Solid.Mystyle" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
-        <item name="android:background">@drawable/ab_solid_mystyle</item>
-        <item name="android:backgroundStacked">@drawable/ab_stacked_solid_mystyle</item>
-        <item name="android:backgroundSplit">@drawable/ab_bottom_solid_mystyle</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Mystyle</item>
-    </style>
-
-    <style name="ActionBar.Transparent.Mystyle" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">@drawable/ab_transparent_mystyle</item>
-        <item name="android:progressBarStyle">@style/ProgressBar.Mystyle</item>
-    </style>
-
-    <style name="PopupMenu.Mystyle" parent="@android:style/Widget.Holo.Light.ListPopupWindow">
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mystyle</item>
-    </style>
-
-    <style name="DropDownListView.Mystyle" parent="@android:style/Widget.Holo.Light.ListView.DropDown">
-        <item name="android:listSelector">@drawable/selectable_background_mystyle</item>
-    </style>
-
-    <style name="ActionBarTabStyle.Mystyle" parent="@android:style/Widget.Holo.Light.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_ab_mystyle</item>
-    </style>
-
-    <style name="DropDownNav.Mystyle" parent="@android:style/Widget.Holo.Light.Spinner">
-        <item name="android:background">@drawable/spinner_background_ab_mystyle</item>
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_mystyle</item>
-        <item name="android:dropDownSelector">@drawable/selectable_background_mystyle</item>
-    </style>
-
-    <style name="ProgressBar.Mystyle" parent="@android:style/Widget.Holo.Light.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/progress_horizontal_mystyle</item>
-    </style>
-
-    <style name="ActionButton.CloseMode.Mystyle" parent="@android:style/Widget.Holo.Light.ActionButton.CloseMode">
-        <item name="android:background">@drawable/btn_cab_done_mystyle</item>
-    </style>
-
-    <!-- this style is only referenced in a Light.DarkActionBar based theme -->
-    <style name="Theme.Mystyle.Widget" parent="@android:style/Theme.Holo">
-        <item name="android:popupMenuStyle">@style/PopupMenu.Mystyle</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Mystyle</item>
     </style>
 
 </resources>

@@ -1,7 +1,5 @@
 package com.uoscs09.theuos.tab.map;
 
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +9,9 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBar.OnNavigationListener;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +26,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.uoscs09.theuos.R;
-import com.uoscs09.theuos.common.impl.BaseFragmentActivity;
+import com.uoscs09.theuos.common.impl.BaseActivity;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.StringUtil;
 
-public class SubMapActivity extends BaseFragmentActivity implements
-		LocationListener {
+public class SubMapActivity extends BaseActivity implements LocationListener {
 	@ReleaseWhenDestroy
 	private GoogleMap googleMap;
 	private boolean isInit = true;
@@ -53,7 +52,9 @@ public class SubMapActivity extends BaseFragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.tab_map_googlemap);
-
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		
 		if (!initMap()) {
 			AppUtil.showToast(getApplicationContext(),
 					R.string.tab_map_submap_device_without_googlemap, true);
@@ -61,7 +62,7 @@ public class SubMapActivity extends BaseFragmentActivity implements
 			return;
 		}
 
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 		actionBar.setTitle(R.string.action_map);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
@@ -169,7 +170,8 @@ public class SubMapActivity extends BaseFragmentActivity implements
 			locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 			Criteria criteria = new Criteria();
 			String provider = locationManager.getBestProvider(criteria, true);
-			if (provider == null) { // 위치정보 설정이 안되어 있으면 설정하는 엑티비티로 이동합니다
+			if (provider == null) {
+				// 위치정보 설정이 안되어 있으면 설정하는 엑티비티로 이동
 				new AlertDialog.Builder(this)
 						.setTitle("위치서비스 동의")
 						.setNeutralButton("이동",
@@ -191,7 +193,8 @@ public class SubMapActivity extends BaseFragmentActivity implements
 									}
 								}).show();
 
-			} else { // 위치 정보 설정이 되어 있으면 현재위치를 받아옵니다
+			} else { 
+				// 위치 정보 설정이 되어 있으면 현재위치를 받아옴
 				locationManager.requestLocationUpdates(provider, 1, 1, this);
 			}
 		}
@@ -199,7 +202,7 @@ public class SubMapActivity extends BaseFragmentActivity implements
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) { // 후
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		case 0:
@@ -239,15 +242,15 @@ public class SubMapActivity extends BaseFragmentActivity implements
 		buildingNo = getIntent().getIntExtra("building", -1);
 		if (buildingNo != -1) {
 			isInit = false;
-			getActionBar().setSelectedNavigationItem(buildingNo - 1);
-			new Handler().postDelayed(new Runnable() {
+			getSupportActionBar().setSelectedNavigationItem(buildingNo - 1);
+			runOnUiThread(new Runnable() {
 
 				@Override
 				public void run() {
 					moveCameraPositionAt(buildingNo);
 					buildingNo = -1;
 				}
-			}, 1000);
+			});
 		}
 	}
 
@@ -544,4 +547,5 @@ public class SubMapActivity extends BaseFragmentActivity implements
 		googleMap.addMarker(new MarkerOptions().position(latLng)
 				.title(locationName).visible(true));
 	}
+
 }

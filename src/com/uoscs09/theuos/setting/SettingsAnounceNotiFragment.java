@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.TimePicker;
 
 import com.uoscs09.theuos.R;
@@ -28,7 +29,8 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getActivity().getActionBar().setTitle(
+		((ActionBarActivity) getActivity())
+				.getSupportActionBar().setTitle(
 				R.string.setting_anounce_noti_frag_title1);
 		addPreferencesFromResource(R.xml.prefrence_announce_noti);
 		bindPreferenceSummaryToValue();

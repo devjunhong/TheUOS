@@ -5,7 +5,7 @@
         android:id="@+id/action_web"
         android:icon="?menu_ic_location_web_site"
         android:orderInCategory="103"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/action_web">
     </item>
 

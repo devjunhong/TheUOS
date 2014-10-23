@@ -1,18 +1,17 @@
 package com.uoscs09.theuos.common.impl;
 
+import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.MenuItem;
+
 import com.uoscs09.theuos.common.util.AppUtil;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.os.Bundle;
-
-/** onCreate에서 테마 설정을 하는 액티비티 */
-@SuppressLint("Registered")
-public class BaseActivity extends Activity {
+/** onCreate에서 테마 설정을 하는 fragment액티비티 */
+public abstract class BaseActivity extends ActionBarActivity {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle arg0) {
 		AppUtil.applyTheme(this);
-		super.onCreate(savedInstanceState);
+		super.onCreate(arg0);
 	}
 
 	@Override
@@ -20,5 +19,16 @@ public class BaseActivity extends Activity {
 		AppUtil.unbindDrawables(getWindow().getDecorView());
 		super.onDestroy();
 		System.gc();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			onBackPressed();
+			return true;
+		default:
+			return false;
+		}
 	}
 }

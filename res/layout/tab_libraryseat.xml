@@ -15,8 +15,8 @@
         android:padding="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:scrollbars="none"
-        android:stretchMode="columnWidth"
-        android:scrollingCache="true" />
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollingCache="true"
+        android:stretchMode="columnWidth" />
 
 </LinearLayout>

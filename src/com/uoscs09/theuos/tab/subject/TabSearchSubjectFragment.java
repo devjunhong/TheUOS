@@ -4,7 +4,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import android.app.ActionBar;
+import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -329,7 +329,7 @@ public class TabSearchSubjectFragment extends
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_search_subject, menu);
-		ActionBar actionBar = getActivity().getActionBar();
+		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayShowCustomEnabled(true);
 		actionBar.setCustomView(actionTextview);
 		super.onCreateOptionsMenu(menu, inflater);
