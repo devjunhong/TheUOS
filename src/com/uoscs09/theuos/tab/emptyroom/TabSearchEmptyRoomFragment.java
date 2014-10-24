@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Locale;
 
-import android.support.v7.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;

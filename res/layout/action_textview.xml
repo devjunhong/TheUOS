@@ -5,6 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
-    android:textColor="?color_action_text" >
+    android:textColor="?attr/colorAccent" >
 
 </TextView>

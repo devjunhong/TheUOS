@@ -22,8 +22,11 @@
 
     <style name="Theme.Mystyledark" parent="@style/Theme.AppCompat">
         <item name="windowActionBar">false</item>
-        <item name="actionBarStyle">@style/Widget.AppCompat.ActionBar</item>
-        <item name="android:textColorPrimary">@color/primary_text_default_material_dark</item>
+        <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="cardBackgroundColor">@color/button_material_dark</item>
+        <item name="colorAccent">@color/material_red_400</item>
+        <item name="searchViewStyle">@style/Widget.AppCompat.SearchView</item>
+        <item name="android:textColorPrimary">@color/material_red_400</item>
 
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list_dark</item>
@@ -107,8 +110,6 @@
 
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown_dark</item>
-        <item name="color_text">@android:color/white</item>
-        <item name="color_action_text">@android:color/white</item>
     </style>
 
 </resources>

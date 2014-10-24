@@ -17,7 +17,7 @@ public class TitleActivity extends Activity {
 			@Override
 			public void run() {
 				startActivity(new Intent(getApplicationContext(),
-						PagerFragmentActivity.class));
+						UosMainActivity.class));
 				overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 				finish();
 			}

@@ -18,6 +18,6 @@
         android:layout_marginLeft="20dp"
         android:layout_toRightOf="@id/tab_announce_action_spinner1"
         android:background="?selector_button"
-        android:textColor="?color_action_text" />
+        android:textColor="?attr/colorAccent" />
 
 </RelativeLayout>

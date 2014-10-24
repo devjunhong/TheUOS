@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Titile" parent="@android:style/Theme.Holo.Light.NoActionBar">
+    <style name="Theme.Titile" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@drawable/title_hawk</item>
     </style>
 

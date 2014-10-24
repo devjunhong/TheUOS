@@ -4,7 +4,7 @@
     <!--
     <color name="sky_blue">#66CCFF</color>
     <color name="red">#FF0000</color>
-    <color name="lime">#c8ee25</color>
+    <color name="lime">#c8ee25</color>
     -->
     <color name="rosy_brown">#BC8F8F</color>
     <color name="rosy_brown_dark">#694444</color>
@@ -23,5 +23,8 @@
     <color name="yellow_green">#c0e770</color>
     <color name="red_yellow">#fdcd7f</color>
     <color name="widget_white_divider">#80cccccc</color>
+    <color name="material_red_400">#e84e40</color>
+    <color name="material_indigo_200">#9fa8da</color>
+    <color name="material_teal_200">#80cbc4</color>
 
 </resources>

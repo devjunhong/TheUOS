@@ -3,14 +3,14 @@ package com.uoscs09.theuos.tab.anounce;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +22,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.NumberPicker;
-import android.support.v7.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -131,7 +130,7 @@ public class TabAnounceFragment extends
 			Bundle savedInstanceState) {
 		View rootView = inflater
 				.inflate(R.layout.tab_anounce, container, false);
-
+		((ViewGroup) rootView).addView(actionViewLayout, 0);
 		ListView listView = (ListView) rootView
 				.findViewById(R.id.tab_announce_list_announce);
 		View emptyView = rootView.findViewById(R.id.tab_anounce_empty_view);
@@ -177,18 +176,25 @@ public class TabAnounceFragment extends
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_anounce, menu);
 		searchMenu = menu.findItem(R.id.action_search);
-		SearchView searchView = (SearchView) MenuItemCompat
+
+		final SearchView searchView = (SearchView) MenuItemCompat
 				.getActionView(searchMenu);
-		//searchView.setOnQueryTextListener(mSearchViewOnQueryTextListener);
-		//searchView.setSubmitButtonEnabled(true);
-		//searchView.setQueryHint(getText(R.string.search_hint));
-		searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
+		searchView.setOnQueryTextListener(mSearchViewOnQueryTextListener);
+		searchView.setSubmitButtonEnabled(true);
+		searchView.setQueryHint(getText(R.string.search_hint));
+		searchView
+				.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View view,
+							boolean queryTextFocused) {
+						if (!queryTextFocused) {
+							searchMenu.collapseActionView();
+							searchView.setQuery("", false);
+						}
+					}
+				});
 		spinner.setSelection(spinnerSelection);
 		updatePageNumber();
-		ActionBar actionBar = getActionBar();
-		actionBar.setCustomView(actionViewLayout);
-		actionBar.setDisplayShowCustomEnabled(true);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -248,7 +254,8 @@ public class TabAnounceFragment extends
 		public boolean onQueryTextSubmit(String query) {
 			InputMethodManager ipm = (InputMethodManager) getActivity()
 					.getSystemService(Context.INPUT_METHOD_SERVICE);
-			SearchView v = (SearchView) MenuItemCompat.getActionView(searchMenu);
+			SearchView v = (SearchView) MenuItemCompat
+					.getActionView(searchMenu);
 			ipm.hideSoftInputFromWindow(v.getWindowToken(), 0);
 			searchMenu.collapseActionView();
 

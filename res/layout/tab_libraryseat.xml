@@ -11,12 +11,14 @@
         android:choiceMode="singleChoice"
         android:clipToPadding="false"
         android:gravity="center"
+        android:horizontalSpacing="10dp"
         android:numColumns="auto_fit"
-        android:padding="5dp"
+        android:padding="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:scrollbarStyle="outsideOverlay"
         android:scrollingCache="true"
-        android:stretchMode="columnWidth" />
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" />
 
 </LinearLayout>
