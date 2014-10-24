@@ -20,14 +20,28 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
 
-    <style name="Theme.Mystyledark" parent="@style/Theme.AppCompat">
-        <item name="windowActionBar">false</item>
-        <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
-        <item name="cardBackgroundColor">@color/button_material_dark</item>
-        <item name="colorAccent">@color/material_red_400</item>
-        <item name="searchViewStyle">@style/Widget.AppCompat.SearchView</item>
-        <item name="android:textColorPrimary">@color/material_red_400</item>
+    <style name="Theme.Mystyle.Dark.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="titleTextStyle">@style/Theme.Mystyle.Dark.ActionBar.TitleTextStyle</item>
+        <item name="subtitleTextStyle">@style/Theme.Mystyle.Dark.ActionBar.SubTitleTextStyle</item>
+    </style>
 
+    <style name="Theme.Mystyle.Dark.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Theme.Mystyle.Dark.ActionBar.SubTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="Theme.Mystyle.Dark" parent="@style/Theme.AppCompat">
+        <item name="windowActionBar">false</item>
+        <item name="actionBarStyle">@style/Theme.Mystyle.Dark.ActionBarStyle</item>
+        <item name="cardBackgroundColor">@color/button_material_dark</item>
+        <item name="colorAccent">@android:color/white</item>
+        <item name="searchViewStyle">@style/Widget.AppCompat.SearchView</item>
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="toolbar_actionbar_title">@style/Theme.Mystyle.Dark.ActionBar.TitleTextStyle</item>
+        <item name="toolbar_actionbar_subtitle">@style/Theme.Mystyle.Dark.ActionBar.SubTitleTextStyle</item>
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list_dark</item>
         <item name="selector_list_shadow">@drawable/selector_list_dark</item>
@@ -42,35 +56,36 @@
         <item name="ic_action_search">@drawable/ic_action_action_search_dark</item>
         <item name="ic_action_settings">@drawable/ic_action_action_settings_dark</item>
         <item name="ic_av_replay">@drawable/ic_action_av_replay_dark</item>
-        <item name="ic_collections_collection">@drawable/ic_action_collections_collection_dark</item>
-        <item name="ic_collections_view_as_list">@drawable/ic_action_collections_view_as_list_dark</item>
-        <item name="ic_content_copy">@drawable/ic_action_content_copy_dark</item>
+        <item name="ic_collections_collection">@drawable/ic_action_file_folder_dark</item>
+        <item name="ic_collections_view_as_list">@drawable/ic_action_action_view_list_dark</item>
+        <item name="ic_content_copy">@drawable/ic_action_content_content_copy_dark</item>
         <item name="ic_content_discard">@drawable/ic_action_content_discard_dark</item>
-        <item name="ic_content_import_export">@drawable/ic_action_content_import_export_dark</item>
-        <item name="ic_content_paste">@drawable/ic_action_content_paste_dark</item>
+        <item name="ic_content_import_export">@drawable/ic_action_communication_import_export_dark</item>
+        <item name="ic_content_paste">@drawable/ic_action_content_content_paste_dark</item>
         <item name="ic_content_remove">@drawable/ic_action_content_remove_dark</item>
         <item name="ic_content_save">@drawable/ic_action_content_save_dark</item>
-        <item name="ic_content_undo">@drawable/ic_action_content_undo</item>
-        <item name="ic_device_access_alarms">@drawable/ic_action_device_access_alarms_dark</item>
-        <item name="ic_device_access_call">@drawable/ic_action_device_access_call_dark</item>
-        <item name="ic_device_access_storage">@drawable/ic_action_device_access_storage_1_dark</item>
-        <item name="ic_location_directions">@drawable/ic_action_location_directions_dark</item>
-        <item name="ic_location_place">@drawable/ic_action_location_place_dark</item>
+        <item name="ic_content_undo">@drawable/ic_action_content_undo_dark</item>
+        <item name="ic_device_access_alarms">@drawable/ic_action_action_alarm_dark</item>
+        <item name="ic_device_access_call">@drawable/ic_action_communication_call_dark</item>
+        <item name="ic_device_access_storage">@drawable/ic_action_device_storage_dark</item>
+        <item name="ic_location_directions">@drawable/ic_action_maps_directions_dark</item>
+        <item name="ic_location_place">@drawable/ic_action_maps_place_dark</item>
         <item name="ic_location_web_site">@drawable/ic_action_location_web_site_dark</item>
-        <item name="ic_navigation_accept">@drawable/ic_action_navigation_accept_dark</item>
-        <item name="ic_navigation_back">@drawable/ic_action_navigation_back_dark</item>
+        <item name="ic_navigation_accept">@drawable/ic_action_navigation_check_dark</item>
+        <item name="ic_navigation_back">@drawable/ic_action_navigation_arrow_back_dark</item>
         <item name="ic_navigation_cancel">@drawable/ic_action_content_remove_dark</item>
-        <item name="ic_navigation_collapse">@drawable/ic_action_navigation_collapse_dark</item>
-        <item name="ic_navigation_expand">@drawable/ic_action_navigation_expand_dark</item>
-        <item name="ic_navigation_forward">@drawable/ic_action_navigation_forward_dark</item>
+        <item name="ic_navigation_collapse">@drawable/ic_action_navigation_arrow_drop_up_dark</item>
+        <item name="ic_navigation_expand">@drawable/ic_action_navigation_arrow_drop_down_dark</item>
+        <item name="ic_navigation_forward">@drawable/ic_action_navigation_arrow_forward_dark</item>
         <item name="ic_navigation_refresh">@drawable/ic_action_navigation_refresh_dark</item>
         <item name="ic_book">@drawable/ic_book_text_dark</item>
         <item name="ic_chair">@drawable/ic_action_book_with_pen_dark</item>
         <item name="ic_secure_login">@drawable/ic_action_secure_login_dark</item>
         <item name="ic_content_timetable">@drawable/ic_action_content_timetable_dark</item>
-        <item name="ic_content_picture">@drawable/ic_action_content_picture_dark</item>
-        <item name="ic_device_phone">@drawable/ic_action_hardware_phone_dark</item>
+        <item name="ic_content_picture">@drawable/ic_action_image_image_dark</item>
+        <item name="ic_device_phone">@drawable/ic_action_hardware_phone_android_dark</item>
         <item name="ic_content_paint">@drawable/ic_action_content_paint_dark</item>
+        <item name="ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
 
         <!-- for menu icon drawables -->
         <item name="menu_ic_action_about">@drawable/ic_action_action_about_dark</item>
@@ -78,38 +93,40 @@
         <item name="menu_ic_action_search">@drawable/ic_action_action_search_dark</item>
         <item name="menu_ic_action_settings">@drawable/ic_action_action_settings_dark</item>
         <item name="menu_ic_av_replay">@drawable/ic_action_av_replay_dark</item>
-        <item name="menu_ic_collections_collection">@drawable/ic_action_collections_collection_dark</item>
-        <item name="menu_ic_collections_view_as_list">@drawable/ic_action_collections_view_as_list_dark</item>
-        <item name="menu_ic_content_copy">@drawable/ic_action_content_copy_dark</item>
+        <item name="menu_ic_collections_collection">@drawable/ic_action_file_folder_dark</item>
+        <item name="menu_ic_collections_view_as_list">@drawable/ic_action_action_view_list_dark</item>
+        <item name="menu_ic_content_copy">@drawable/ic_action_content_content_copy_dark</item>
         <item name="menu_ic_content_discard">@drawable/ic_action_content_discard_dark</item>
-        <item name="menu_ic_content_import_export">@drawable/ic_action_content_import_export_dark</item>
-        <item name="menu_ic_content_paste">@drawable/ic_action_content_paste_dark</item>
+        <item name="menu_ic_content_import_export">@drawable/ic_action_communication_import_export_dark</item>
+        <item name="menu_ic_content_paste">@drawable/ic_action_content_content_paste_dark</item>
         <item name="menu_ic_content_remove">@drawable/ic_action_content_remove_dark</item>
         <item name="menu_ic_content_save">@drawable/ic_action_content_save_dark</item>
-        <item name="menu_ic_content_undo">@drawable/ic_action_content_undo</item>
-        <item name="menu_ic_device_access_alarms">@drawable/ic_action_device_access_alarms_dark</item>
-        <item name="menu_ic_device_access_call">@drawable/ic_action_device_access_call_dark</item>
-        <item name="menu_ic_device_access_storage">@drawable/ic_action_device_access_storage_1_dark</item>
-        <item name="menu_ic_location_directions">@drawable/ic_action_location_directions_dark</item>
-        <item name="menu_ic_location_place">@drawable/ic_action_location_place_dark</item>
+        <item name="menu_ic_content_undo">@drawable/ic_action_content_undo_dark</item>
+        <item name="menu_ic_device_access_alarms">@drawable/ic_action_action_alarm_dark</item>
+        <item name="menu_ic_device_access_call">@drawable/ic_action_communication_call_dark</item>
+        <item name="menu_ic_device_access_storage">@drawable/ic_action_device_storage_dark</item>
+        <item name="menu_ic_location_directions">@drawable/ic_action_maps_directions_dark</item>
+        <item name="menu_ic_location_place">@drawable/ic_action_maps_place_dark</item>
         <item name="menu_ic_location_web_site">@drawable/ic_action_location_web_site_dark</item>
-        <item name="menu_ic_navigation_accept">@drawable/ic_action_navigation_accept_dark</item>
-        <item name="menu_ic_navigation_back">@drawable/ic_action_navigation_back_dark</item>
+        <item name="menu_ic_navigation_accept">@drawable/ic_action_navigation_check_dark</item>
+        <item name="menu_ic_navigation_back">@drawable/ic_action_navigation_arrow_back_dark</item>
         <item name="menu_ic_navigation_cancel">@drawable/ic_action_content_remove_dark</item>
-        <item name="menu_ic_navigation_collapse">@drawable/ic_action_navigation_collapse_dark</item>
-        <item name="menu_ic_navigation_expand">@drawable/ic_action_navigation_expand_dark</item>
-        <item name="menu_ic_navigation_forward">@drawable/ic_action_navigation_forward_dark</item>
+        <item name="menu_ic_navigation_collapse">@drawable/ic_action_navigation_arrow_drop_up_dark</item>
+        <item name="menu_ic_navigation_expand">@drawable/ic_action_navigation_arrow_drop_down_dark</item>
+        <item name="menu_ic_navigation_forward">@drawable/ic_action_navigation_arrow_forward_dark</item>
         <item name="menu_ic_navigation_refresh">@drawable/ic_action_navigation_refresh_dark</item>
         <item name="menu_ic_book">@drawable/ic_book_text_dark</item>
         <item name="menu_ic_chair">@drawable/ic_action_book_with_pen_dark</item>
         <item name="menu_ic_secure_login">@drawable/ic_action_secure_login_dark</item>
         <item name="menu_ic_content_timetable">@drawable/ic_action_content_timetable_dark</item>
-        <item name="menu_ic_content_picture">@drawable/ic_action_content_picture_dark</item>
-        <item name="menu_ic_device_phone">@drawable/ic_action_hardware_phone_dark</item>
+        <item name="menu_ic_content_picture">@drawable/ic_action_image_image_dark</item>
+        <item name="menu_ic_device_phone">@drawable/ic_action_hardware_phone_android_dark</item>
         <item name="menu_ic_content_paint">@drawable/ic_action_content_paint_dark</item>
+        <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
 
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown_dark</item>
+        <item name="color_actionbar_title">@android:color/white</item>
     </style>
 
 </resources>

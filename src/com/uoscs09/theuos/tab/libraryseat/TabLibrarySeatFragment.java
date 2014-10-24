@@ -5,23 +5,19 @@ import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
-import com.nhaarman.listviewanimations.appearance.simple.SwingBottomInAnimationAdapter;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
@@ -37,11 +33,11 @@ public class TabLibrarySeatFragment extends
 		AbsDrawableProgressFragment<ArrayList<SeatItem>> {
 	/** 좌석 현황 리스트 뷰의 adapter */
 	@ReleaseWhenDestroy
-	private ArrayAdapter<SeatItem> mSeatAdapter;
+	private RecyclerView.Adapter<SeatListAdapter.ViewHolder> mSeatAdapter;
+	private RecyclerView.LayoutManager mLayoutManager;
 	/** 해지 될 좌석 정보 리스트 뷰의 adapter */
 	@ReleaseWhenDestroy
 	private ArrayAdapter<String> mInfoAdapter;
-	private AnimationAdapter mAnimAdapter;
 	/** 좌석 정보 리스트 */
 	@AsyncData
 	private ArrayList<SeatItem> mSeatList;
@@ -49,7 +45,7 @@ public class TabLibrarySeatFragment extends
 	private ArrayList<String> mDissmissInfoList;
 	/** 좌석 정보 리스트 뷰 */
 	@ReleaseWhenDestroy
-	private AbsListView mSeatListView;
+	private RecyclerView mSeatListView;
 	/** 해지 될 좌석 정보 뷰, infoDialog에서 보여진다. */
 	@ReleaseWhenDestroy
 	private View mDismissDialogView;
@@ -91,6 +87,12 @@ public class TabLibrarySeatFragment extends
 		Activity activity = getActivity();
 		mInfoAdapter = new SeatDissmissInfoListAdapter(activity,
 				R.layout.list_layout_two_text_view, mDissmissInfoList);
+		mSeatAdapter = new SeatListAdapter(getActivity(), mSeatList);
+		mLayoutManager = new StaggeredGridLayoutManager(2,
+				StaggeredGridLayoutManager.VERTICAL);
+		((StaggeredGridLayoutManager) mLayoutManager)
+				.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+
 		super.onCreate(savedInstanceState);
 	}
 
@@ -99,34 +101,15 @@ public class TabLibrarySeatFragment extends
 			Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.tab_libraryseat, container,
 				false);
-		Activity activity = getActivity();
-		mSeatAdapter = new SeatListAdapter(activity, R.layout.list_layout_seat,
-				mSeatList);
-		mSeatListView = (AbsListView) rootView
+
+		mSeatListView = (RecyclerView) rootView
 				.findViewById(R.id.tab_library_list_seat);
 
-		mAnimAdapter = new SwingBottomInAnimationAdapter(mSeatAdapter);
-		mAnimAdapter.setAbsListView(mSeatListView);
-		mSeatListView.setAdapter(mAnimAdapter);
+		mSeatListView.setAdapter(mSeatAdapter);
+		mSeatListView.setLayoutManager(mLayoutManager);
+		mSeatListView.setItemAnimator(new DefaultItemAnimator());
 
-		mSeatListView.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
-				if (!isMenuVisible())
-					return;
-				SeatItem item = (SeatItem) arg0.getItemAtPosition(position);
-				if (item == null)
-					return;
-				Activity activity = getActivity();
-				Intent intent = new Intent(activity, SubSeatWebActivity.class);
-				intent.putExtra(ITEM, (Parcelable) item);
-				startActivity(intent);
-				AppUtil.overridePendingTransition(activity, 1);
-			}
-		});
-
-		mDismissDialogView = View.inflate(activity,
+		mDismissDialogView = View.inflate(getActivity(),
 				R.layout.dialog_library_dismiss_info, null);
 
 		ListView mInfoListView = (ListView) mDismissDialogView
@@ -188,18 +171,22 @@ public class TabLibrarySeatFragment extends
 
 	@Override
 	protected void excute() {
-		mSeatAdapter.clear();
+		mSeatList.clear();
 		mSeatAdapter.notifyDataSetChanged();
-		mAnimAdapter.notifyDataSetChanged();
-		((ViewGroup) getView()).addView(getLoadingView(), 0);
-		getView().invalidate();
+
+		if (getLoadingView().getParent() == null) {
+			((ViewGroup) getView()).addView(getLoadingView(), 0);
+			getView().invalidate();
+		}
 		super.excute();
 	}
 
 	@Override
 	protected void onTransactPostExcute() {
-		((ViewGroup) getView()).removeView(getLoadingView());
-		getView().invalidate();
+		if (getLoadingView().getParent() != null) {
+			((ViewGroup) getView()).removeView(getLoadingView());
+			getView().invalidate();
+		}
 		super.onTransactPostExcute();
 	}
 
@@ -207,12 +194,10 @@ public class TabLibrarySeatFragment extends
 	public void onTransactResult(ArrayList<SeatItem> result) {
 		updateTimeView();
 
-		mSeatAdapter.clear();
-		mSeatAdapter.addAll(result);
+		mSeatList.clear();
+		mSeatList.addAll(result);
 
 		mSeatAdapter.notifyDataSetChanged();
-		mAnimAdapter.reset();
-		mAnimAdapter.notifyDataSetChanged();
 		mInfoAdapter.notifyDataSetChanged();
 	}
 
@@ -292,7 +277,7 @@ public class TabLibrarySeatFragment extends
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_refresh);
 	}
-	
+
 	@Override
 	protected CharSequence getSubtitle() {
 		return mCommitTime;

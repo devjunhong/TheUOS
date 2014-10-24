@@ -22,6 +22,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.javacan.asyncexcute.AsyncCallback;
@@ -36,7 +39,7 @@ import com.uoscs09.theuos.http.HttpRequest;
 /** 메인 설정화면을 나타내는 {@code PreferenceFragment} */
 public class SettingsFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
-	private AlertDialog themeSelectorDialog;
+	AlertDialog mThemeSelectorDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,45 +177,72 @@ public class SettingsFragment extends PreferenceFragment implements
 
 	/** 테마를 선택하는 dialog를 보여준다.dialog가 null일시 초기화도 같이한다. */
 	private void showThemeDialog() {
-		if (themeSelectorDialog == null) {
-			AppTheme[] values = AppTheme.values();
-			int size = values.length;
-			String[] items = new String[size];
-			int i = 0;
-			for (AppTheme at : values) {
-				items[i++] = at.toString();
-			}
-
-			themeSelectorDialog = new AlertDialog.Builder(getActivity())
+		if (mThemeSelectorDialog == null) {
+			mThemeSelectorDialog = new AlertDialog.Builder(getActivity())
 					.setIconAttribute(R.attr.ic_content_paint)
 					.setTitle(R.string.setting_plz_select_theme)
-					.setItems(items, new DialogInterface.OnClickListener() {
+					.setAdapter(
+							new ArrayAdapter<AppTheme>(getActivity(),
+									android.R.layout.simple_list_item_1,
+									AppTheme.values()) {
+								@Override
+								public View getView(int position,
+										View convertView, ViewGroup parent) {
+									View view = super.getView(position,
+											convertView, parent);
+									int textColor;
+									int backColor;
+									switch (getItem(position)) {
+									case Black:
+										textColor = android.R.color.white;
+										backColor = R.color.primary_material_dark;
+										break;
+									case BlackAndWhite:
+										textColor = android.R.color.white;
+										backColor = R.color.primary_material_dark;
+										break;
+									case LightBlue:
+										textColor = android.R.color.white;
+										backColor = R.color.material_light_blue_400;
+										break;
+									case White:
+									default:
+										textColor = R.color.material_deep_teal_500;
+										backColor = android.R.color.white;
+										break;
+									}
 
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							PrefUtil pref = PrefUtil.getInstance(getActivity());
-							int originalValue = pref.get(PrefUtil.KEY_THEME, 0);
-							switch (which) {
-							case 1:
-							case 2:
-								pref.put(PrefUtil.KEY_THEME, which);
-								break;
-							default:
-								pref.put(PrefUtil.KEY_THEME, 0);
-								break;
-							}
-							if (originalValue != which) {
-								onSharedPreferenceChanged(getPreferenceScreen()
-										.getSharedPreferences(),
-										PrefUtil.KEY_THEME);
-								getActivity().setResult(
-										AppUtil.RELAUNCH_ACTIVITY);
-							}
-							themeSelectorDialog.dismiss();
-						}
-					}).create();
+									((TextView) view)
+											.setTextColor(getResources()
+													.getColor(textColor));
+									view.setBackgroundColor(getResources()
+											.getColor(backColor));
+									return view;
+								}
+							}, new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									PrefUtil pref = PrefUtil
+											.getInstance(getActivity());
+									int originalValue = pref.get(
+											PrefUtil.KEY_THEME, 0);
+
+									if (originalValue != which) {
+										pref.put(PrefUtil.KEY_THEME, which);
+										onSharedPreferenceChanged(
+												getPreferenceScreen()
+														.getSharedPreferences(),
+												PrefUtil.KEY_THEME);
+										getActivity().setResult(
+												AppUtil.RELAUNCH_ACTIVITY);
+									}
+									mThemeSelectorDialog.dismiss();
+								}
+							}).create();
 		}
-		themeSelectorDialog.show();
+		mThemeSelectorDialog.show();
 	}
 
 	/** 어플리케이션의 모든 캐쉬를 삭제한다. */

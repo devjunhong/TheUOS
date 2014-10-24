@@ -108,32 +108,37 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 
 		final SearchView searchView = (SearchView) MenuItemCompat
 				.getActionView(searchMenu);
-		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+		if (searchView != null) {
+			searchView
+					.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-			@Override
-			public boolean onQueryTextSubmit(String query) {
-				return true;
-			}
+						@Override
+						public boolean onQueryTextSubmit(String query) {
+							return true;
+						}
 
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				phoneAdapter.getFilter().filter(newText);
-				return true;
-			}
-		});
-		searchView
-		.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View view,
-					boolean queryTextFocused) {
-				if (!queryTextFocused) {
-					searchMenu.collapseActionView();
-					searchView.setQuery("", false);
-				}
-			}
-		});
-		searchView.setSubmitButtonEnabled(true);
-		searchView.setQueryHint(getText(R.string.tab_phone_search_hint));
+						@Override
+						public boolean onQueryTextChange(String newText) {
+							phoneAdapter.getFilter().filter(newText);
+							return true;
+						}
+					});
+			searchView
+					.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+						@Override
+						public void onFocusChange(View view,
+								boolean queryTextFocused) {
+							if (!queryTextFocused) {
+								searchMenu.collapseActionView();
+								searchView.setQuery("", false);
+							}
+						}
+					});
+			searchView.setSubmitButtonEnabled(true);
+			searchView.setQueryHint(getText(R.string.tab_phone_search_hint));
+		} else {
+			AppUtil.showToast(getActivity(), "compactibility error");
+		}
 
 		super.onCreateOptionsMenu(menu, inflater);
 	}

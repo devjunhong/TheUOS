@@ -7,6 +7,7 @@
         android:icon="?menu_ic_location_web_site"
         android:orderInCategory="103"
         android:title="@string/action_web"
+        android:showAsAction="always"
         com.uoscs09.theuos:showAsAction="always">
     </item>
 

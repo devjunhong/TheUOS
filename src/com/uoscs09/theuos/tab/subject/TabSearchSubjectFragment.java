@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -34,7 +33,6 @@ import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.OApiUtil;
 import com.uoscs09.theuos.common.util.OApiUtil.Term;
 import com.uoscs09.theuos.common.util.StringUtil;
@@ -58,8 +56,7 @@ public class TabSearchSubjectFragment extends
 	private int[] selections = new int[4];
 	@ReleaseWhenDestroy
 	private TextView[] textViews;
-	@ReleaseWhenDestroy
-	private TextView actionTextview;
+	private String mSearchedTermString;
 	private int sortFocusViewId;
 	private boolean isInverse = false;
 	protected static int width;
@@ -79,7 +76,7 @@ public class TabSearchSubjectFragment extends
 		sp4 = (Spinner) dialogView.findViewById(R.id.etc_search_subj_spinner4);
 		termSpinner = (Spinner) dialogView
 				.findViewById(R.id.etc_search_subj_spinner_term);
-
+		sp1.setAdapter(createArrayAdapter(R.array.search_subj_opt1));
 		sp1.setOnItemSelectedListener(this);
 		sp2.setOnItemSelectedListener(this);
 		sp3.setOnItemSelectedListener(this);
@@ -92,8 +89,6 @@ public class TabSearchSubjectFragment extends
 		View rootView;
 		Context context = getActivity();
 
-		actionTextview = (TextView) View.inflate(context,
-				R.layout.action_textview, null);
 		rootView = inflater.inflate(R.layout.tab_search_subj, container, false);
 		View empty = rootView.findViewById(R.id.tab_search_subject_empty_view);
 		empty.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +100,7 @@ public class TabSearchSubjectFragment extends
 		if (savedInstanceState != null) {
 			mSubjectList = savedInstanceState
 					.getParcelableArrayList("mSubjectList");
-			actionTextview.setText(savedInstanceState.getString("action"));
+			mSearchedTermString = savedInstanceState.getString("action");
 		} else {
 			mSubjectList = new ArrayList<SubjectItem>();
 		}
@@ -200,21 +195,11 @@ public class TabSearchSubjectFragment extends
 		default:
 			return;
 		}
-		//FIXME theme 관련 코드
-		int drawableId;
-		switch (AppUtil.theme) {
-		case Black:
-			drawableId = isInverse ? R.drawable.ic_action_navigation_collapse_dark
-					: R.drawable.ic_action_navigation_expand_dark;
-			break;
-		case BlackAndWhite:
-		case White:
-		default:
-			drawableId = isInverse ? R.drawable.ic_action_navigation_collapse
-					: R.drawable.ic_action_navigation_expand;
-			break;
-		}
-		Drawable d = getResources().getDrawable(drawableId);
+
+		Drawable d = getResources().getDrawable(
+				AppUtil.getStyledValue(getActivity(),
+						isInverse ? R.attr.ic_navigation_collapse
+								: R.attr.ic_navigation_expand));
 		textViews[field + bias].setCompoundDrawablesWithIntrinsicBounds(d,
 				null, null, null);
 
@@ -224,7 +209,7 @@ public class TabSearchSubjectFragment extends
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList("mSubjectList", mSubjectList);
-		outState.putString("action", actionTextview.getText().toString());
+		outState.putString("action", mSearchedTermString);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -284,7 +269,8 @@ public class TabSearchSubjectFragment extends
 		AppUtil.showToast(getActivity(), String.valueOf(result.size())
 				+ getString(R.string.search_found), true);
 
-		actionTextview.setText(termSpinner.getSelectedItem().toString());
+		mSearchedTermString = termSpinner.getSelectedItem().toString();
+		setSubtitleWhenVisible(mSearchedTermString);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -329,9 +315,6 @@ public class TabSearchSubjectFragment extends
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_search_subject, menu);
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayShowCustomEnabled(true);
-		actionBar.setCustomView(actionTextview);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 
@@ -488,15 +471,9 @@ public class TabSearchSubjectFragment extends
 	}
 
 	private ArrayAdapter<CharSequence> createArrayAdapter(int arrayResource) {
-		// TODO theme관련 코드 수정 요망
-		ArrayAdapter<CharSequence> aa = ArrayAdapter
-				.createFromResource(
-						getActivity(),
-						arrayResource,
-						AppUtil.theme == AppTheme.Black ? R.layout.spinner_simple_item_dark
-								: R.layout.spinner_simple_item);
-		aa.setDropDownViewResource(AppUtil.theme == AppTheme.Black ? R.layout.spinner_simple_dropdown_item_dark
-				: R.layout.spinner_simple_dropdown_item);
+		ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(
+				getActivity(), arrayResource,
+				R.layout.support_simple_spinner_dropdown_item);
 		return aa;
 	}
 

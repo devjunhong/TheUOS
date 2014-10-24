@@ -53,7 +53,7 @@ public class TabBookSearchFragment extends
 	/** 중앙 도서관에 질의할 매개변수들 */
 	private String mEncodedQuery;
 	private String mRawQuery;
-	private String mOptionString;
+	// private String mOptionString;
 	@ReleaseWhenDestroy
 	protected ArrayAdapter<BookItem> mBookListAdapter;
 	@ReleaseWhenDestroy
@@ -146,12 +146,12 @@ public class TabBookSearchFragment extends
 	}
 
 	protected void setActionText() {
-		String text1 = oi.getSelectedItemPosition() == 0 ? StringUtil.NULL
-				: "분류 : " + oi.getSelectedItem();
-		String text2 = os.getSelectedItemPosition() == 0 ? StringUtil.NULL
-				: "정렬 : " + os.getSelectedItem();
-		mOptionString = !text1.equals(StringUtil.NULL) ? text1
-				+ StringUtil.NEW_LINE + text2 : text2;
+		// String text1 = oi.getSelectedItemPosition() == 0 ? StringUtil.NULL
+		// : "분류 : " + oi.getSelectedItem();
+		// String text2 = os.getSelectedItemPosition() == 0 ? StringUtil.NULL
+		// : "정렬 : " + os.getSelectedItem();
+		// mOptionString = !text1.equals(StringUtil.NULL) ? text1
+		// + StringUtil.NEW_LINE + text2 : text2;
 		// optionTextView.setText(text);
 	}
 
@@ -218,20 +218,24 @@ public class TabBookSearchFragment extends
 
 		final SearchView searchView = (SearchView) MenuItemCompat
 				.getActionView(searchMenu);
-		searchView.setOnQueryTextListener(this);
-		searchView.setSubmitButtonEnabled(true);
-		searchView.setQueryHint(getText(R.string.search_hint));
-		searchView
-				.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-					@Override
-					public void onFocusChange(View view,
-							boolean queryTextFocused) {
-						if (!queryTextFocused) {
-							searchMenu.collapseActionView();
-							searchView.setQuery("", false);
+		if (searchView != null) {
+			searchView.setOnQueryTextListener(this);
+			searchView.setSubmitButtonEnabled(true);
+			searchView.setQueryHint(getText(R.string.search_hint));
+			searchView
+					.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+						@Override
+						public void onFocusChange(View view,
+								boolean queryTextFocused) {
+							if (!queryTextFocused) {
+								searchMenu.collapseActionView();
+								searchView.setQuery("", false);
+							}
 						}
-					}
-				});
+					});
+		} else {
+			AppUtil.showToast(getActivity(), "compactibility error");
+		}
 		setActionText();
 		super.onCreateOptionsMenu(menu, inflater);
 	}

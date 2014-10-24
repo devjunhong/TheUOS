@@ -54,8 +54,9 @@ public class TabHomeFragment extends BaseFragment implements
 				R.layout.list_layout_home, list)
 				.setDrawablePosition(DrawblePosition.TOP)
 				.setTextViewId(R.id.tab_home_text_title)
-				.setDrawableTheme(AppTheme.Black).setTheme(AppTheme.Black)
-				.create();
+				.setTextViewTextColor(
+						getResources().getColor(android.R.color.white))
+				.setDrawableTheme(AppTheme.Black).create();
 		initDialog(context);
 	}
 
@@ -72,7 +73,7 @@ public class TabHomeFragment extends BaseFragment implements
 		listView.setAdapter(new SimpleTextViewAdapter.Builder(context,
 				android.R.layout.simple_list_item_1, list)
 				.setDrawablePosition(DrawblePosition.LEFT)
-				.setDrawableTheme(theme).setTheme(AppUtil.theme).create());
+				.setDrawableTheme(theme).create());
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,

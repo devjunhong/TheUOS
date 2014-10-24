@@ -6,8 +6,9 @@
         android:id="@+id/action_search"
         android:icon="?menu_ic_action_search"
         android:orderInCategory="101"
+        android:showAsAction="always"
         android:title="@string/action_search"
-        com.uoscs09.theuos:showAsAction="always|withText">
+        com.uoscs09.theuos:showAsAction="always">
     </item>
 
 </menu>

@@ -259,20 +259,10 @@ public class TabSearchEmptyRoomFragment extends
 		default:
 			return;
 		}
-		int drawableId;
-		switch (AppUtil.theme) {
-		case Black:
-			drawableId = isReverse ? R.drawable.ic_action_navigation_collapse_dark
-					: R.drawable.ic_action_navigation_expand_dark;
-			break;
-		case BlackAndWhite:
-		case White:
-		default:
-			drawableId = isReverse ? R.drawable.ic_action_navigation_collapse
-					: R.drawable.ic_action_navigation_expand;
-			break;
-		}
-		Drawable d = getResources().getDrawable(drawableId);
+		Drawable d = getResources().getDrawable(
+				AppUtil.getStyledValue(getActivity(),
+						isReverse ? R.attr.ic_navigation_collapse
+								: R.attr.ic_navigation_expand));
 		textViews[field].setCompoundDrawablesWithIntrinsicBounds(d, null, null,
 				null);
 
@@ -283,10 +273,10 @@ public class TabSearchEmptyRoomFragment extends
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_search);
 	}
-	
+
 	@Override
 	protected CharSequence getSubtitle() {
 		return mTermString;
 	}
-	
+
 }

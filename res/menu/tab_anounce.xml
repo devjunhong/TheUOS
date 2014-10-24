@@ -4,8 +4,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="?menu_ic_action_search"
+        android:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="?attr/menu_ic_action_search"
         android:orderInCategory="101"
+        android:showAsAction="always|collapseActionView"
         android:title="@string/action_search"
         com.uoscs09.theuos:actionViewClass="android.support.v7.widget.SearchView"
         com.uoscs09.theuos:showAsAction="always|collapseActionView">
@@ -14,6 +16,7 @@
         android:id="@+id/action_backward"
         android:icon="?menu_ic_navigation_back"
         android:orderInCategory="103"
+        android:showAsAction="ifRoom"
         android:title="@string/action_backward"
         com.uoscs09.theuos:showAsAction="ifRoom">
     </item>
@@ -21,6 +24,7 @@
         android:id="@+id/action_forward"
         android:icon="?menu_ic_navigation_forward"
         android:orderInCategory="105"
+        android:showAsAction="ifRoom"
         android:title="@string/action_forward"
         com.uoscs09.theuos:showAsAction="ifRoom">
     </item>

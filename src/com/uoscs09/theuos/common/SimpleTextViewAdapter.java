@@ -3,7 +3,6 @@ package com.uoscs09.theuos.common;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.view.View;
@@ -17,7 +16,7 @@ import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 /** TextView가 하나있고, icon이 붙은 layout의 Adapter를 제공하는 클래스. */
 public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 	protected int textViewId;
-	protected AppTheme textColorTheme;
+	protected int textViewTextColor = 0;
 	protected AppTheme iconTheme;
 	protected DrawblePosition position;
 	protected Rect drawableBound;
@@ -29,7 +28,6 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 	public SimpleTextViewAdapter(Context context, int layout, List<Integer> list) {
 		super(context, layout, list);
 		this.textViewId = android.R.id.text1;
-		this.textColorTheme = AppTheme.White;
 		this.position = DrawblePosition.LEFT;
 		this.iconTheme = AppUtil.theme;
 	}
@@ -78,16 +76,11 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 						null);
 			break;
 		}
-		switch (textColorTheme) {
-		case BlackAndWhite:
-		case White:
-			h.tv.setTextColor(Color.BLACK);
-			break;
-		case Black:
-		default:
-			h.tv.setTextColor(Color.WHITE);
-			break;
-		}
+		h.tv.setTextColor(textViewTextColor == 0 ? getContext().getResources()
+				.getColor(
+						AppUtil.getStyledValue(getContext(),
+								android.R.attr.colorForeground))
+				: textViewTextColor);
 		return convertView;
 	}
 
@@ -118,12 +111,6 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 			return this;
 		}
 
-		/** AdapterView에서 표현될 Theme를 설정한다 */
-		public Builder setTheme(AppTheme theme) {
-			product.textColorTheme = theme;
-			return this;
-		}
-
 		/** TextView의 icon의 위치를 설정한다. */
 		public Builder setDrawablePosition(DrawblePosition position) {
 			product.position = position;
@@ -139,6 +126,11 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 		/** TextView의 icon의 테마를 설정한다. */
 		public Builder setDrawableTheme(AppTheme theme) {
 			product.iconTheme = theme;
+			return this;
+		}
+
+		public Builder setTextViewTextColor(int color) {
+			product.textViewTextColor = color;
 			return this;
 		}
 

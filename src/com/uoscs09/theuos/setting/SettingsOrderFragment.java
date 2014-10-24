@@ -119,7 +119,6 @@ public class SettingsOrderFragment extends Fragment {
 
 		public SwapAdapter(Context context, int layout, List<Integer> list) {
 			super(context, layout, list);
-			this.textColorTheme = AppUtil.theme;
 			this.textViewId = R.id.setting_order_list_text_tab_title;
 			if (AppUtil.theme == AppTheme.BlackAndWhite) {
 				this.iconTheme = AppTheme.White;
