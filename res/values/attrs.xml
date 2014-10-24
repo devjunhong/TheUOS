@@ -118,8 +118,6 @@
     </declare-styleable>
     <declare-styleable name="ThemeDrawable.Color">
         <attr name="color_rosy_brown" format="reference|color"></attr>
-        <attr name="color_text" format="reference|color"></attr>
-        <attr name="color_action_text" format="reference|color"></attr>
     </declare-styleable>
 
 </resources>

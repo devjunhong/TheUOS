@@ -15,6 +15,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,9 +25,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsAsyncFragment;
@@ -105,10 +104,11 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_phone, menu);
-		MenuItem searchMenu = menu.findItem(R.id.action_search);
+		final MenuItem searchMenu = menu.findItem(R.id.action_search);
 
-		SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
-		/*searchView.setOnQueryTextListener(new OnQueryTextListener() {
+		final SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenu);
+		searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
 			@Override
 			public boolean onQueryTextSubmit(String query) {
@@ -121,11 +121,20 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 				return true;
 			}
 		});
+		searchView
+		.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View view,
+					boolean queryTextFocused) {
+				if (!queryTextFocused) {
+					searchMenu.collapseActionView();
+					searchView.setQuery("", false);
+				}
+			}
+		});
 		searchView.setSubmitButtonEnabled(true);
 		searchView.setQueryHint(getText(R.string.tab_phone_search_hint));
-		searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-				| MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-				*/
+
 		super.onCreateOptionsMenu(menu, inflater);
 	}
 

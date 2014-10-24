@@ -41,14 +41,14 @@ public class TabRestaurantFragment extends
 	private static final String BUTTON = "button";
 	private static final String REST = "rest_list";
 	private static final String[] timeSemester = {
-			"학기중				\n조식 : 08:00~10:00	\n중식 : 11:00~14:00	\n 		       15:00~17:00",
-			"학기중				\n중식 : 11:30~14:00	\n석식 : 15:00~19:00	\n토요일 : 휴무",
-			"학기중					\n중식 : 11:30~13:30\n석식 : 17:00~18:30\n토요일 : 휴무",
+			"학기중\n조식 : 08:00~10:00\n중식 : 11:00~14:00\n15:00~17:00",
+			"학기중\n중식 : 11:30~14:00\n석식 : 15:00~19:00\n토요일 : 휴무",
+			"학기중\n중식 : 11:30~13:30\n석식 : 17:00~18:30\n토요일 : 휴무",
 			StringUtil.NULL, StringUtil.NULL };
 	private static final String[] timeVacation = {
-			"방학중				\n조식 : 09:00~10:00\n	         08:30~10:00 (계절학기 기간)\n중식 : 11:00~14:00\n	         15:00~17:00\n석식 : 17:00~18:30\n토요일 : 휴무",
-			"방학중				\n중식 : 11:30~14:00\n석식 : 16:00~18:30\n토요일 : 휴무",
-			"방학중 : 휴관		\n\n\n", StringUtil.NULL, StringUtil.NULL };
+			"방학중\n조식 : 09:00~10:00\n	08:30~10:00\n(계절학기 기간)\n중식 : 11:00~14:00\n15:00~17:00\n석식 : 17:00~18:30\n토요일 : 휴무",
+			"방학중\n중식 : 11:30~14:00\n석식 : 16:00~18:30\n토요일 : 휴무",
+			"방학중 : 휴관\n\n\n", StringUtil.NULL, StringUtil.NULL };
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
@@ -191,7 +191,6 @@ public class TabRestaurantFragment extends
 			supper.setText(R.string.tab_rest_no_info);
 		}
 	}
-
 
 	@Override
 	public ArrayList<RestItem> call() throws Exception {

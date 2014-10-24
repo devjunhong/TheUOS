@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
-import com.uoscs09.theuos.PagerFragmentActivity;
+import com.uoscs09.theuos.UosMainActivity;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.TabHomeFragment;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
@@ -307,7 +307,7 @@ public class AppUtil {
 
 	/** 메인 액티비티에 종료 인텐트를 보낸다. */
 	public static void exit(Context context) {
-		Intent clearTop = new Intent(context, PagerFragmentActivity.class);
+		Intent clearTop = new Intent(context, UosMainActivity.class);
 		clearTop.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
 				| Intent.FLAG_ACTIVITY_SINGLE_TOP
 				| Intent.FLAG_ACTIVITY_NEW_TASK);

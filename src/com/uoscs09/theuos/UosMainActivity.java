@@ -32,7 +32,7 @@ import com.uoscs09.theuos.setting.SettingActivity;
 import dev.dworks.libs.actionbartoggle.ActionBarToggle;
 
 /** Main Activity, ViewPager가 존재한다. */
-public class PagerFragmentActivity extends BaseActivity implements
+public class UosMainActivity extends BaseActivity implements
 		PagerInterface {
 	/** ViewPager */
 	private ViewPager mViewPager;
@@ -43,7 +43,7 @@ public class PagerFragmentActivity extends BaseActivity implements
 	/** 화면 순서를 나타내는 리스트 */
 	private ArrayList<Integer> mPageOrderList;
 
-	protected SlidingPaneLayout slidingLayout;
+	protected SlidingPaneLayout mSlidingPaneLayout;
 	/** Left ListView */
 	private ListView mDrawerListView;
 	/** ActionBar Toggle */
@@ -114,7 +114,7 @@ public class PagerFragmentActivity extends BaseActivity implements
 		}
 		if (!isFromPager) {
 			mViewPager.setCurrentItem(position, true);
-			slidingLayout.closePane();
+			mSlidingPaneLayout.closePane();
 			// drawerLayout.closeDrawer(mDrawerListView);
 		}
 		mDrawerListView.setItemChecked(position, true);
@@ -136,10 +136,10 @@ public class PagerFragmentActivity extends BaseActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 
-		slidingLayout = (SlidingPaneLayout) findViewById(R.id.activity_sliding_layout);
-		slidingLayout.setShadowResourceLeft(R.drawable.shadow_);
-		slidingLayout.setSliderFadeColor(Color.TRANSPARENT);
-		slidingLayout.setCoveredFadeColor(Color.DKGRAY);
+		mSlidingPaneLayout = (SlidingPaneLayout) findViewById(R.id.activity_sliding_layout);
+		mSlidingPaneLayout.setShadowResourceLeft(R.drawable.shadow_);
+		mSlidingPaneLayout.setSliderFadeColor(Color.TRANSPARENT);
+		mSlidingPaneLayout.setCoveredFadeColor(Color.DKGRAY);
 		mDrawerListView = (ListView) findViewById(R.id.activity_pager_left_drawer);
 		int drawerLayoutId;
 		switch (AppUtil.theme) {
@@ -178,7 +178,7 @@ public class PagerFragmentActivity extends BaseActivity implements
 							navigateItem(pos, false);
 						else if (pos == size) {
 							startSettingActivity();
-							slidingLayout.closePane();
+							mSlidingPaneLayout.closePane();
 							// drawerLayout.closeDrawer(mDrawerListView);
 						} else if (pos == size + 1) {
 							AppUtil.exit(getApplicationContext());
@@ -187,12 +187,12 @@ public class PagerFragmentActivity extends BaseActivity implements
 				});
 
 		mDrawerToggle = new ActionBarToggle(this, /* host Activity */
-		slidingLayout, /* DrawerLayout object */
+		mSlidingPaneLayout, /* DrawerLayout object */
 		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
 		R.string.app_name, /* "open drawer" description for accessibility */
 		R.string.app_name /* "close drawer" description for accessibility */
 		);
-		slidingLayout.setPanelSlideListener(mDrawerToggle);
+		mSlidingPaneLayout.setPanelSlideListener(mDrawerToggle);
 	}
 
 	private void initPager() {
@@ -318,15 +318,15 @@ public class PagerFragmentActivity extends BaseActivity implements
 		mPageOrderList = null;
 		mPagerAdapter = null;
 		mViewPager = null;
-		slidingLayout = null;
+		mSlidingPaneLayout = null;
 		super.onDetachedFromWindow();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (AppUtil.isScreenSizeSmall(this) && slidingLayout.isSlideable()
-				&& slidingLayout.isOpen()) {
-			slidingLayout.closePane();
+		if (AppUtil.isScreenSizeSmall(this) && mSlidingPaneLayout.isSlideable()
+				&& mSlidingPaneLayout.isOpen()) {
+			mSlidingPaneLayout.closePane();
 		} else if (PrefUtil.getInstance(getApplicationContext()).get(
 				PrefUtil.KEY_HOME, true)) {
 			if (getCurrentPageIndex() == 0) {
@@ -379,10 +379,10 @@ public class PagerFragmentActivity extends BaseActivity implements
 		// drawerLayout.closeDrawer(mDrawerListView);
 		// else
 		// drawerLayout.openDrawer(mDrawerListView);
-		if (!slidingLayout.isOpen()) {
-			slidingLayout.openPane();
+		if (!mSlidingPaneLayout.isOpen()) {
+			mSlidingPaneLayout.openPane();
 		} else {
-			slidingLayout.closePane();
+			mSlidingPaneLayout.closePane();
 		}
 	}
 	

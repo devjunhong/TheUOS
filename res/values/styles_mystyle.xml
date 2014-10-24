@@ -21,11 +21,14 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:custom="http://schemas.android.com/apk/res-auto">
 
     <style name="Theme.Mystyle" parent="@style/Theme.AppCompat.Light">
-        <item name="actionBarStyle">@style/Widget.AppCompat.ActionBar</item>
+        <item name="actionBarStyle">@style/ThemeOverlay.AppCompat.ActionBar</item>
         <item name="windowActionBar">false</item>
-        <item name="colorPrimary">@color/primary_material_light</item>
-        <item name="colorPrimaryDark">@color/primary_material_dark</item>
-
+        <item name="colorPrimary">@android:color/white</item>
+        <item name="colorPrimaryDark">@color/primary_material_light</item>
+        <item name="colorAccent">@color/light_blue</item>
+        <item name="cardBackgroundColor">@android:color/white</item>
+        <item name="searchViewStyle">@style/Widget.AppCompat.Light.SearchView</item>
+      
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_shadow">@drawable/selector_list_shadow</item>
@@ -108,8 +111,6 @@
 
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown</item>
-        <item name="color_text">@android:color/black</item>
-        <item name="color_action_text">@android:color/black</item>
     </style>
 
 </resources>

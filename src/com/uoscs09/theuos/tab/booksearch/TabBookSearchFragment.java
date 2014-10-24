@@ -141,7 +141,7 @@ public class TabBookSearchFragment extends
 								os.setSelection(0);
 								setActionText();
 							}
-						}).setIcon(R.attr.ic_action_help).create();
+						}).setIconAttribute(R.attr.ic_action_help).create();
 		super.onCreate(savedInstanceState);
 	}
 
@@ -215,15 +215,23 @@ public class TabBookSearchFragment extends
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.tab_book_search, menu);
 		searchMenu = menu.findItem(R.id.action_search);
-		// TODO
-		/*
-		 * SearchView searchView = (SearchView) MenuItemCompat
-		 * .getActionView(searchMenu); searchView.setOnQueryTextListener(this);
-		 * searchView.setSubmitButtonEnabled(true);
-		 * searchView.setQueryHint(getText(R.string.search_hint));
-		 * searchMenu.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM |
-		 * MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-		 */
+
+		final SearchView searchView = (SearchView) MenuItemCompat
+				.getActionView(searchMenu);
+		searchView.setOnQueryTextListener(this);
+		searchView.setSubmitButtonEnabled(true);
+		searchView.setQueryHint(getText(R.string.search_hint));
+		searchView
+				.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+					@Override
+					public void onFocusChange(View view,
+							boolean queryTextFocused) {
+						if (!queryTextFocused) {
+							searchMenu.collapseActionView();
+							searchView.setQuery("", false);
+						}
+					}
+				});
 		setActionText();
 		super.onCreateOptionsMenu(menu, inflater);
 	}
