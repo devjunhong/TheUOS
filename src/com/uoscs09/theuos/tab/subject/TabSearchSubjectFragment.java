@@ -4,7 +4,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
-import android.support.v7.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,7 +34,6 @@ import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.OApiUtil;
 import com.uoscs09.theuos.common.util.OApiUtil.Term;
 import com.uoscs09.theuos.common.util.StringUtil;
@@ -200,21 +199,11 @@ public class TabSearchSubjectFragment extends
 		default:
 			return;
 		}
-		//FIXME theme 관련 코드
-		int drawableId;
-		switch (AppUtil.theme) {
-		case Black:
-			drawableId = isInverse ? R.drawable.ic_action_navigation_collapse_dark
-					: R.drawable.ic_action_navigation_expand_dark;
-			break;
-		case BlackAndWhite:
-		case White:
-		default:
-			drawableId = isInverse ? R.drawable.ic_action_navigation_collapse
-					: R.drawable.ic_action_navigation_expand;
-			break;
-		}
-		Drawable d = getResources().getDrawable(drawableId);
+
+		Drawable d = getResources().getDrawable(
+				AppUtil.getStyledValue(getActivity(),
+						isInverse ? R.attr.ic_navigation_collapse
+								: R.attr.ic_navigation_expand));
 		textViews[field + bias].setCompoundDrawablesWithIntrinsicBounds(d,
 				null, null, null);
 
@@ -488,15 +477,9 @@ public class TabSearchSubjectFragment extends
 	}
 
 	private ArrayAdapter<CharSequence> createArrayAdapter(int arrayResource) {
-		// TODO theme관련 코드 수정 요망
-		ArrayAdapter<CharSequence> aa = ArrayAdapter
-				.createFromResource(
-						getActivity(),
-						arrayResource,
-						AppUtil.theme == AppTheme.Black ? R.layout.spinner_simple_item_dark
-								: R.layout.spinner_simple_item);
-		aa.setDropDownViewResource(AppUtil.theme == AppTheme.Black ? R.layout.spinner_simple_dropdown_item_dark
-				: R.layout.spinner_simple_dropdown_item);
+		ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(
+				getActivity(), arrayResource,
+				android.R.layout.simple_spinner_item);
 		return aa;
 	}
 

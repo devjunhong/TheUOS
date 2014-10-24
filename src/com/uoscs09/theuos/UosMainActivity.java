@@ -32,8 +32,7 @@ import com.uoscs09.theuos.setting.SettingActivity;
 import dev.dworks.libs.actionbartoggle.ActionBarToggle;
 
 /** Main Activity, ViewPager가 존재한다. */
-public class UosMainActivity extends BaseActivity implements
-		PagerInterface {
+public class UosMainActivity extends BaseActivity implements PagerInterface {
 	/** ViewPager */
 	private ViewPager mViewPager;
 	/** ViewPager Adapter */
@@ -143,9 +142,8 @@ public class UosMainActivity extends BaseActivity implements
 		mDrawerListView = (ListView) findViewById(R.id.activity_pager_left_drawer);
 		int drawerLayoutId;
 		switch (AppUtil.theme) {
+		case LightBlue:
 		case Black:
-			drawerLayoutId = R.layout.drawer_list_item_dark;
-			break;
 		case BlackAndWhite:
 			drawerLayoutId = R.layout.drawer_list_item_dark;
 			break;
@@ -186,12 +184,9 @@ public class UosMainActivity extends BaseActivity implements
 					}
 				});
 
-		mDrawerToggle = new ActionBarToggle(this, /* host Activity */
-		mSlidingPaneLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-		R.string.app_name, /* "open drawer" description for accessibility */
-		R.string.app_name /* "close drawer" description for accessibility */
-		);
+		mDrawerToggle = new ActionBarToggle(this, mSlidingPaneLayout,
+				AppUtil.getStyledValue(this, R.attr.menu_ic_navigation_drawer),
+				R.string.app_name, R.string.app_name);
 		mSlidingPaneLayout.setPanelSlideListener(mDrawerToggle);
 	}
 
@@ -385,7 +380,7 @@ public class UosMainActivity extends BaseActivity implements
 			mSlidingPaneLayout.closePane();
 		}
 	}
-	
+
 	@Override
 	public Object sendCommand(Type type, Object data) {
 		switch (type) {

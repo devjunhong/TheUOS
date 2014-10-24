@@ -3,34 +3,44 @@ package com.uoscs09.theuos.tab.libraryseat;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.PieProgressDrawable;
-import com.uoscs09.theuos.common.impl.AbsArrayAdapter;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 
-public class SeatListAdapter extends AbsArrayAdapter<SeatItem> {
+public class SeatListAdapter extends
+		RecyclerView.Adapter<SeatListAdapter.ViewHolder> {
 	int textColor;
+	List<SeatItem> mDataSet;
+	Context mContext;
+	LayoutInflater mInflater;
 
-	private SeatListAdapter(Context context) {
-		super(context, 0);
-	}
-
-	public SeatListAdapter(Context context, int resource, List<SeatItem> list) {
-		super(context, resource, list);
+	public SeatListAdapter(Context context, List<SeatItem> list) {
+		this.mDataSet = list;
+		this.mContext = context;
+		this.mInflater = LayoutInflater.from(context);
 		textColor = context.getResources().getColor(
 				AppUtil.theme == AppTheme.Black ? android.R.color.white
 						: R.color.dark_blue_gray);
 	}
 
 	@Override
-	public View setView(int position, View convertView, ViewHolder holder) {
-		Holder h = (Holder) holder;
-		SeatItem item = getItem(position);
+	public int getItemCount() {
+		return mDataSet.size();
+	}
+
+	@Override
+	public void onBindViewHolder(ViewHolder h, int position) {
+		final SeatItem item = mDataSet.get(position);
 		h.roomName.setText(item.roomName);
 		int progress = Math.round(Float.parseFloat(item.utilizationRate));
 		h.drawable.setTextColor(textColor);
@@ -39,22 +49,31 @@ public class SeatListAdapter extends AbsArrayAdapter<SeatItem> {
 				+ (Integer.valueOf(item.occupySeat.trim()) + Integer
 						.valueOf(item.vacancySeat.trim())));
 		h.drawable.setLevel(progress);
+		h.itemView.setOnClickListener(new View.OnClickListener() {
 
-		return convertView;
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(mContext, SubSeatWebActivity.class);
+				intent.putExtra(TabLibrarySeatFragment.ITEM, (Parcelable) item);
+				mContext.startActivity(intent);
+			}
+		});
 	}
 
 	@Override
-	public ViewHolder getViewHolder(View v) {
-		return new Holder(v);
+	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+		return new ViewHolder(mInflater.inflate(R.layout.list_layout_seat,
+				parent, false));
 	}
 
-	private static class Holder implements ViewHolder {
+	public static class ViewHolder extends RecyclerView.ViewHolder {
 		TextView roomName;
 		PieProgressDrawable drawable = new PieProgressDrawable();
 		TextView progressImg;
 
 		@SuppressWarnings("deprecation")
-		public Holder(View convertView) {
+		public ViewHolder(View convertView) {
+			super(convertView);
 			roomName = (TextView) convertView
 					.findViewById(R.id.tab_library_seat_list_text_room_name);
 			DisplayMetrics dm = convertView.getContext().getResources()
@@ -68,4 +87,5 @@ public class SeatListAdapter extends AbsArrayAdapter<SeatItem> {
 			progressImg.setBackgroundDrawable(drawable);
 		}
 	}
+
 }

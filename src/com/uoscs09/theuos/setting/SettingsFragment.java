@@ -36,7 +36,7 @@ import com.uoscs09.theuos.http.HttpRequest;
 /** 메인 설정화면을 나타내는 {@code PreferenceFragment} */
 public class SettingsFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
-	private AlertDialog themeSelectorDialog;
+	AlertDialog mThemeSelectorDialog;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -174,7 +174,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
 	/** 테마를 선택하는 dialog를 보여준다.dialog가 null일시 초기화도 같이한다. */
 	private void showThemeDialog() {
-		if (themeSelectorDialog == null) {
+		if (mThemeSelectorDialog == null) {
 			AppTheme[] values = AppTheme.values();
 			int size = values.length;
 			String[] items = new String[size];
@@ -183,7 +183,7 @@ public class SettingsFragment extends PreferenceFragment implements
 				items[i++] = at.toString();
 			}
 
-			themeSelectorDialog = new AlertDialog.Builder(getActivity())
+			mThemeSelectorDialog = new AlertDialog.Builder(getActivity())
 					.setIconAttribute(R.attr.ic_content_paint)
 					.setTitle(R.string.setting_plz_select_theme)
 					.setItems(items, new DialogInterface.OnClickListener() {
@@ -192,27 +192,20 @@ public class SettingsFragment extends PreferenceFragment implements
 						public void onClick(DialogInterface dialog, int which) {
 							PrefUtil pref = PrefUtil.getInstance(getActivity());
 							int originalValue = pref.get(PrefUtil.KEY_THEME, 0);
-							switch (which) {
-							case 1:
-							case 2:
-								pref.put(PrefUtil.KEY_THEME, which);
-								break;
-							default:
-								pref.put(PrefUtil.KEY_THEME, 0);
-								break;
-							}
+
 							if (originalValue != which) {
+								pref.put(PrefUtil.KEY_THEME, which);
 								onSharedPreferenceChanged(getPreferenceScreen()
 										.getSharedPreferences(),
 										PrefUtil.KEY_THEME);
 								getActivity().setResult(
 										AppUtil.RELAUNCH_ACTIVITY);
 							}
-							themeSelectorDialog.dismiss();
+							mThemeSelectorDialog.dismiss();
 						}
 					}).create();
 		}
-		themeSelectorDialog.show();
+		mThemeSelectorDialog.show();
 	}
 
 	/** 어플리케이션의 모든 캐쉬를 삭제한다. */

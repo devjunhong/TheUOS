@@ -18,6 +18,7 @@
         android:layout_marginLeft="10dip"
         android:gravity="center"
         android:text="@string/progress_while_loading"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="?attr/colorAccent" />
 
 </LinearLayout>

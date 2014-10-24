@@ -29,7 +29,6 @@ import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.BaseActivity;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.StringUtil;
 
 public class SubMapActivity extends BaseActivity implements LocationListener {
@@ -66,19 +65,9 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 		actionBar.setTitle(R.string.action_map);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-		int spinnerLayout = android.R.layout.simple_spinner_item;
-		if (AppUtil.theme == AppTheme.BlackAndWhite) {
-			spinnerLayout = R.layout.spinner_simple_item_dark;
-		}
+		
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter
-				.createFromResource(this, R.array.buildings_univ, spinnerLayout);
-		if (AppUtil.theme == AppTheme.BlackAndWhite) {
-			spinnerAdapter
-					.setDropDownViewResource(R.layout.spinner_simple_dropdown_item_dark);
-		} else {
-			spinnerAdapter
-					.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		}
+				.createFromResource(this, R.array.buildings_univ, android.R.layout.simple_spinner_item);
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setListNavigationCallbacks(spinnerAdapter,

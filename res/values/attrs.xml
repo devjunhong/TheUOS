@@ -3,7 +3,8 @@
 
     <declare-styleable name="ThemeDrawable"></declare-styleable>
     <declare-styleable name="ThemeDrawable.ActionIcon">
-        <!-- i 아이콘, Drawable -->
+
+        <!-- i 아이콘, Drawable -->
         <attr name="ic_action_about" format="reference|color|" />
         <!-- ? 아이콘, Drawable -->
         <attr name="ic_action_help" format="reference|color" />
@@ -71,6 +72,8 @@
         <attr name="ic_chair" format="reference|color" />
         <!-- 로그인 아이콘, Drawable -->
         <attr name="ic_secure_login" format="reference|color" />
+        <!-- 서랍 아이콘, Drawable -->
+        <attr name="ic_navigation_drawer" format="reference|color" />
     </declare-styleable>
     <declare-styleable name="ThemeDrawable.Selector">
         <attr name="selector_list" format="reference|color" />
@@ -115,9 +118,11 @@
         <attr name="menu_ic_book" format="reference|color" />
         <attr name="menu_ic_chair" format="reference|color" />
         <attr name="menu_ic_secure_login" format="reference|color" />
+        <attr name="menu_ic_navigation_drawer" format="reference|color" />
     </declare-styleable>
     <declare-styleable name="ThemeDrawable.Color">
         <attr name="color_rosy_brown" format="reference|color"></attr>
+        <attr name="color_actionbar_title" format="reference|color"></attr>
     </declare-styleable>
 
 </resources>

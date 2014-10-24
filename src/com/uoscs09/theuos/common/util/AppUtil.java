@@ -58,7 +58,9 @@ public class AppUtil {
 		/** android default, 액션바는 검은색, 일반 배경은 하얀색 */
 		BlackAndWhite,
 		/** black textColortheme */
-		Black
+		Black,
+		/** Light Blue Theme */
+		LightBlue
 	}
 
 	public static void initStaticValues(PrefUtil pref) {
@@ -220,7 +222,7 @@ public class AppUtil {
 		case R.string.title_section0_home:
 			return R.drawable.ic_launcher;
 		case R.string.title_section1_announce:
-			return R.drawable.ic_action_collections_view_as_list;
+			return R.drawable.ic_action_action_view_list;
 		case R.string.title_section2_rest:
 			return R.drawable.ic_restaurant;
 		case R.string.title_section3_book:
@@ -228,21 +230,21 @@ public class AppUtil {
 		case R.string.title_section4_lib:
 			return R.drawable.ic_action_book_with_pen;
 		case R.string.title_section5_map:
-			return R.drawable.ic_action_location_place;
+			return R.drawable.ic_action_maps_place;
 		case R.string.title_section6_tel:
-			return R.drawable.ic_action_device_access_call;
+			return R.drawable.ic_action_communication_call;
 		case R.string.title_section7_time:
 			return R.drawable.ic_action_content_timetable;
 		case R.string.title_tab_search_empty_room:
 			return R.drawable.ic_action_action_search;
 		case R.string.title_tab_search_subject:
-			return R.drawable.ic_action_content_paste;
+			return R.drawable.ic_action_content_content_paste;
 		case R.string.title_tab_score:
-			return R.drawable.ic_action_content_copy;
+			return R.drawable.ic_action_content_content_copy;
 		case R.string.title_tab_transport:
-			return R.drawable.ic_action_location_directions;
+			return R.drawable.ic_action_maps_directions;
 		case R.string.title_section_etc:
-			return R.drawable.ic_action_navigation_accept;
+			return R.drawable.ic_action_navigation_check;
 		case R.string.setting:
 			return R.drawable.ic_action_action_settings;
 		case R.string.action_exit:
@@ -257,7 +259,7 @@ public class AppUtil {
 		case R.string.title_section0_home:
 			return R.drawable.ic_launcher;
 		case R.string.title_section1_announce:
-			return R.drawable.ic_action_collections_view_as_list_dark;
+			return R.drawable.ic_action_action_view_list_dark;
 		case R.string.title_section2_rest:
 			return R.drawable.ic_restaurant_dark;
 		case R.string.title_section3_book:
@@ -265,21 +267,21 @@ public class AppUtil {
 		case R.string.title_section4_lib:
 			return R.drawable.ic_action_book_with_pen_dark;
 		case R.string.title_section5_map:
-			return R.drawable.ic_action_location_place_dark;
+			return R.drawable.ic_action_maps_place_dark;
 		case R.string.title_section6_tel:
-			return R.drawable.ic_action_device_access_call_dark;
+			return R.drawable.ic_action_communication_call_dark;
 		case R.string.title_section7_time:
 			return R.drawable.ic_action_content_timetable_dark;
 		case R.string.title_tab_search_empty_room:
 			return R.drawable.ic_action_action_search_dark;
 		case R.string.title_tab_search_subject:
-			return R.drawable.ic_action_content_paste_dark;
+			return R.drawable.ic_action_content_content_paste_dark;
 		case R.string.title_tab_score:
-			return R.drawable.ic_action_content_copy_dark;
+			return R.drawable.ic_action_content_content_copy_dark;
 		case R.string.title_tab_transport:
-			return R.drawable.ic_action_location_directions_dark;
+			return R.drawable.ic_action_maps_directions_dark;
 		case R.string.title_section_etc:
-			return R.drawable.ic_action_navigation_accept_dark;
+			return R.drawable.ic_action_navigation_check_dark;
 		case R.string.setting:
 			return R.drawable.ic_action_action_settings_dark;
 		case R.string.action_exit:
@@ -532,6 +534,9 @@ public class AppUtil {
 			break;
 		case Black:
 			appContext.setTheme(R.style.Theme_Mystyledark);
+			break;
+		case LightBlue:
+			appContext.setTheme(R.style.Theme_Mystyle_Light_Blue);
 			break;
 		case White:
 		default:

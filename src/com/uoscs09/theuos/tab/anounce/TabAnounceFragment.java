@@ -30,16 +30,12 @@ import com.uoscs09.theuos.common.impl.AbsDrawableProgressFragment;
 import com.uoscs09.theuos.common.impl.annotaion.AsyncData;
 import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.StringUtil;
 import com.uoscs09.theuos.http.HttpRequest;
 import com.uoscs09.theuos.http.parse.ParseFactory;
 
 public class TabAnounceFragment extends
 		AbsDrawableProgressFragment<ArrayList<AnounceItem>> {
-	/** 상단 액션바에 추가될 레이아웃, spinner와 pageView가 배치된다. */
-	@ReleaseWhenDestroy
-	private View actionViewLayout;
 	/** 상단 액션바에 추가될 위젯, 페이지 인덱스 */
 	@ReleaseWhenDestroy
 	private TextView pageView;
@@ -90,12 +86,20 @@ public class TabAnounceFragment extends
 		Context context = getActivity();
 		initDialog();
 
-		actionViewLayout = View.inflate(context,
-				R.layout.action_tab_anounce_spinner, null);
-		spinner = (Spinner) actionViewLayout
+		adapter = new AnounceAdapter(context, R.layout.list_layout_announce,
+				mDataList);
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View rootView = inflater
+				.inflate(R.layout.tab_anounce, container, false);
+		spinner = (Spinner) rootView
 				.findViewById(R.id.tab_announce_action_spinner1);
 		spinner.setOnItemSelectedListener(mSpinnerOnItemSelectedListener);
-		pageView = (TextView) actionViewLayout
+		pageView = (TextView) rootView
 				.findViewById(R.id.tab_anounce_action_textView_page);
 		pageView.setOnClickListener(new View.OnClickListener() {
 			// 페이지를 나타내는 버튼을 선택했을 시, 페이지를 선택하는 메뉴를 띄운다.
@@ -109,28 +113,6 @@ public class TabAnounceFragment extends
 				}
 			}
 		});
-		// FIXME 테마 관련 코드
-		adapter = new AnounceAdapter(context, R.layout.list_layout_announce,
-				mDataList);
-		if (AppUtil.theme == AppTheme.BlackAndWhite) {
-			ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(
-					context, R.array.tab_anounce_action_spinner,
-					R.layout.spinner_simple_item_dark);
-			aa.setDropDownViewResource(R.layout.spinner_simple_dropdown_item);
-			spinner.setAdapter(aa);
-			pageView.setBackgroundResource(R.drawable.selector_button_dark);
-			adapter = new AnounceAdapter(context,
-					R.layout.list_layout_announce, mDataList);
-		}
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View rootView = inflater
-				.inflate(R.layout.tab_anounce, container, false);
-		((ViewGroup) rootView).addView(actionViewLayout, 0);
 		ListView listView = (ListView) rootView
 				.findViewById(R.id.tab_announce_list_announce);
 		View emptyView = rootView.findViewById(R.id.tab_anounce_empty_view);
