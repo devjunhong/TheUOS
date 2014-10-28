@@ -9,8 +9,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:layout_margin="3dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="4dp"
         android:divider="@null"
         android:dividerPadding="2dp"
         android:orientation="horizontal"
@@ -75,7 +76,9 @@
     <ScrollView
         android:id="@+id/tab_rest_scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:scrollbarStyle="outsideOverlay" >
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -91,6 +91,7 @@ public class TabBookSearchFragment extends
 	public void onCreate(Bundle savedInstanceState) {
 		int oiSelect = 0, osSelect = 0;
 		setMenuRefresh(false);
+		setDrawableForMenu(false);
 		if (savedInstanceState != null) {
 			mBookList = savedInstanceState.getParcelableArrayList(BUNDLE_LIST);
 			oiSelect = savedInstanceState.getInt(OI_SEL);

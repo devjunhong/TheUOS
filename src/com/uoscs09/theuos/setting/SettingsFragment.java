@@ -309,6 +309,7 @@ public class SettingsFragment extends PreferenceFragment implements
 		SharedPreferences pref = getPreferenceScreen().getSharedPreferences();
 		pref.registerOnSharedPreferenceChangeListener(this);
 		String[] keys = { PrefUtil.KEY_CHECK_BORROW, PrefUtil.KEY_CHECK_SEAT,
+				PrefUtil.KEY_LIB_WIDGET_SEAT_SHOW_ALL,
 				PrefUtil.KEY_IMAGE_SAVE_PATH, PrefUtil.KEY_THEME };
 		for (String key : keys) {
 			onSharedPreferenceChanged(pref, key);
@@ -332,6 +333,10 @@ public class SettingsFragment extends PreferenceFragment implements
 			setPrefScreenSummary(sharedPreferences, key,
 					R.string.setting_check_seat_desc_enable,
 					R.string.setting_check_seat_desc_disable);
+		} else if(key.equals(PrefUtil.KEY_LIB_WIDGET_SEAT_SHOW_ALL)){
+			setPrefScreenSummary(sharedPreferences, key,
+					R.string.setting_widget_seat_show_all_enable,
+					R.string.setting_widget_seat_show_all_disable);
 		} else if (key.equals(PrefUtil.KEY_IMAGE_SAVE_PATH)) {
 			findPreference(key).setSummary(
 					PrefUtil.getPictureSavedPath(getActivity()));

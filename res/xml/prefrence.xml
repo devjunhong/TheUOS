@@ -41,6 +41,10 @@
             android:icon="?attr/ic_chair"
             android:key="@string/pref_key_check_seat"
             android:title="@string/setting_check_seat" />
+         <CheckBoxPreference
+            android:icon="?attr/ic_chair"
+            android:key="@string/pref_key_widget_seat_show_all"
+            android:title="@string/setting_widget_seat_show_all" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_section7_time" >
         <PreferenceScreen

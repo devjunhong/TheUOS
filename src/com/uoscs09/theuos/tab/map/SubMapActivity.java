@@ -67,7 +67,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
 		
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter
-				.createFromResource(this, R.array.buildings_univ, android.R.layout.simple_spinner_item);
+				.createFromResource(this, R.array.buildings_univ, android.R.layout.simple_dropdown_item_1line);
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setListNavigationCallbacks(spinnerAdapter,

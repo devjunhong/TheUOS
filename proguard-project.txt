@@ -42,6 +42,8 @@
    public *;
 }
 -keep class com.uoscs09.theuos.common.impl.annotaion.**
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
 
 -libraryjars libs/listviewanimations_lib-manipulation_3.1.0.jar
 -libraryjars libs/listviewanimations_lib-core_3.1.0.jar

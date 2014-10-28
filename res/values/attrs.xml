@@ -74,6 +74,7 @@
         <attr name="ic_secure_login" format="reference|color" />
         <!-- 서랍 아이콘, Drawable -->
         <attr name="ic_navigation_drawer" format="reference|color" />
+        <attr name="ic_loading" format="reference"></attr>
     </declare-styleable>
     <declare-styleable name="ThemeDrawable.Selector">
         <attr name="selector_list" format="reference|color" />
@@ -119,6 +120,7 @@
         <attr name="menu_ic_chair" format="reference|color" />
         <attr name="menu_ic_secure_login" format="reference|color" />
         <attr name="menu_ic_navigation_drawer" format="reference|color" />
+        <attr name="menu_ic_loading" format="reference"></attr>
     </declare-styleable>
     <declare-styleable name="ThemeDrawable.Color">
         <attr name="color_rosy_brown" format="reference|color"></attr>

@@ -45,18 +45,47 @@ public class LibrarySeatListService extends RemoteViewsService {
 			if (room.contains("전문"))
 				room = room.replace("전문", StringUtil.NULL);
 			rv.setTextViewText(android.R.id.text1, room);
-			int size = Integer.valueOf(item.vacancySeat.trim())
-					+ Integer.valueOf(item.occupySeat.trim());
+			int vacancySeatCount;
+			if (item.vacancySeat.trim().equals("")) {
+				vacancySeatCount = 0;
+			} else {
+				try {
+					vacancySeatCount = Integer.valueOf(item.vacancySeat.trim());
+				} catch (Exception e) {
+					vacancySeatCount = 0;
+				}
+			}
+			int occupySeatCount;
+			if (item.occupySeat.trim().equals("")) {
+				occupySeatCount = 0;
+			} else {
+				try {
+					occupySeatCount = Integer.valueOf(item.occupySeat.trim());
+				} catch (Exception e) {
+					occupySeatCount = 0;
+				}
+			}
+			int size = vacancySeatCount + occupySeatCount;
 			rv.setTextViewText(android.R.id.text2, item.vacancySeat);
 			rv.setTextViewText(android.R.id.summary, "/" + size);
 			int color;
 			try {
-				color = Float.valueOf(item.utilizationRate) < 50 ? android.R.color.holo_green_light
-						: android.R.color.holo_red_light;
+				color = Float.valueOf(item.utilizationRate) < 50 ? R.color.material_green_200
+						: R.color.material_red_200;
 			} catch (Exception e) {
-				color = android.R.color.holo_green_light;
+				color = R.color.material_green_200;
 			}
 			rv.setInt(android.R.id.content, "setBackgroundResource", color);
+
+			//Bundle extras = new Bundle();
+			//extras.putSerializable(LibrarySeatWidget.LIBRARY_SEAT_WIDGET_DATA,
+			//		(Serializable) item);
+			//Intent fillInIntent = new Intent();
+			//fillInIntent
+			//		.setAction(LibrarySeatWidget.LIBRARY_SEAT_WIDGET_ACTIVITY);
+			//fillInIntent.putExtras(extras);
+			//rv.setOnClickFillInIntent(android.R.id.widget_frame, fillInIntent);
+
 			return rv;
 		}
 

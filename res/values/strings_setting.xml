@@ -43,6 +43,9 @@
     <string name="setting_check_seat">점유된 스터디룸 표시</string>
     <string name="setting_check_seat_desc_enable">좌석 이용률이 50%이상인 스터디룸은 리스트에서 표시되지 않습니다.</string>
     <string name="setting_check_seat_desc_disable">모든 열람실 검색 결과가 보여집니다.</string>
+    <string name="setting_widget_seat_show_all">위젯 : 스터디룸만 표시</string>
+    <string name="setting_widget_seat_show_all_enable">위젯에서 스터디룸만 표시됩니다.</string>
+    <string name="setting_widget_seat_show_all_disable">위젯에서 모든 열람실 현황이 보여집니다.</string>
     <string name="setting_noti_time">알림 시간 설정</string>
     <string name="setting_noti_time_desc">알리미가 실행될 시간을 설정합니다.</string>
     <string name="setting_confirm">설정 되었습니다.</string>
@@ -69,6 +72,8 @@
     <string name="pref_key_check_borrow">BORROW</string>
     <!-- 점유된 스터디룸 표시 여부, boolean -->
     <string name="pref_key_check_seat">LIB_SEAT</string>
+    <!-- 도서관 좌석 위젯 스터디룸만 표시 여부, boolean -->
+    <string name="pref_key_widget_seat_show_all">LIB_WIDGET_SEAT_SHOW_ALL</string>
     <!-- 공지사항 알리미의 알림 시간, String -->
     <string name="pref_key_noti_time">NOTI_TIME</string>
     <!-- 어플리케이션의 테마, int -->

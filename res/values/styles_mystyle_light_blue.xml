@@ -68,7 +68,8 @@
         <item name="ic_device_phone">@drawable/ic_action_hardware_phone_android</item>
         <item name="ic_content_paint">@drawable/ic_action_content_paint</item>
         <item name="ic_navigation_drawer">@drawable/ic_action_navigation_menu</item>
-
+		<item name="ic_loading">@anim/progress_medium_light_blue</item>
+		
         <!-- for menu icon drawables -->
         <item name="menu_ic_action_about">@drawable/ic_action_action_about_dark</item>
         <item name="menu_ic_action_help">@drawable/ic_action_action_help_dark</item>
@@ -105,7 +106,8 @@
         <item name="menu_ic_device_phone">@drawable/ic_action_hardware_phone_android_dark</item>
         <item name="menu_ic_content_paint">@drawable/ic_action_content_paint_dark</item>
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
-
+		<item name="menu_ic_loading">@anim/progress_medium_dark</item>
+		
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown</item>
         <item name="color_actionbar_title">@android:color/white</item>

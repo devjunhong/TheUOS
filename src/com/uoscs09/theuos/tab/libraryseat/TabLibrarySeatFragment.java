@@ -70,7 +70,7 @@ public class TabLibrarySeatFragment extends
 	/** bundle에서 해지될 좌석 정보 List를 가리킨다. */
 	private final static String INFO_LIST = "InfoList";
 	/** {@code SubSeatWebActivity}에 전달할 SeatItem을 가리킨다. */
-	protected final static String ITEM = "item";
+	public final static String ITEM = "item";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

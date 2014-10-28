@@ -44,6 +44,12 @@ public class PrefUtil {
 	 */
 	public static final String KEY_CHECK_SEAT = "LIB_SEAT";
 	/**
+	 * 도서관 좌석 위젯 스터디룸만 표시 여부, {@code boolean}
+	 * 
+	 * @see R.string#pref_key_widget_seat_show_all
+	 */
+	public static final String KEY_LIB_WIDGET_SEAT_SHOW_ALL = "LIB_WIDGET_SEAT_SHOW_ALL";
+	/**
 	 * 공지사항 알리미의 알림 시간, {@code String}
 	 * 
 	 * @see R.string#pref_key_noti_time

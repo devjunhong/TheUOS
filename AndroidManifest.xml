@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.uoscs09.theuos"
-    android:versionCode="59"
+    android:versionCode="60"
     android:versionName="@string/setting_app_version_desc" >
 
     <uses-sdk
@@ -167,6 +167,7 @@
 
             <intent-filter>
                 <action android:name="com.uoscs09.theuos.widget.libraryseat.REFRESH" />
+                <action android:name="com.uoscs09.theuos.widget.libraryseat.ACTIVITY" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
         </receiver>

@@ -5,14 +5,14 @@
     android:gravity="center" >
 
     <ImageView
-        android:id="@+id/iv_list_footer_loading"
+        android:id="@+id/view_loading_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@anim/loading_animation"
+        android:background="?attr/menu_ic_loading"
         android:contentDescription="@string/progress_while_loading" />
 
     <TextView
-        android:id="@+id/tv_list_footer"
+        android:id="@+id/view_loading_text"
         android:layout_width="wrap_content"
         android:layout_height="50dip"
         android:layout_marginLeft="10dip"

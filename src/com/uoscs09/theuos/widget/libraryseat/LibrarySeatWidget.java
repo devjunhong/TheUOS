@@ -16,6 +16,7 @@ import android.widget.RemoteViews;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsAsyncWidgetProvider;
 import com.uoscs09.theuos.common.util.IOUtil;
+import com.uoscs09.theuos.common.util.PrefUtil;
 import com.uoscs09.theuos.common.util.StringUtil;
 import com.uoscs09.theuos.http.HttpRequest;
 import com.uoscs09.theuos.http.parse.ParseFactory;
@@ -26,8 +27,11 @@ public class LibrarySeatWidget extends
 		AbsAsyncWidgetProvider<ArrayList<SeatItem>> {
 	public static final String LIBRARY_SEAT_WIDGET_REFRASH = "com.uoscs09.theuos.widget.libraryseat.REFRESH";
 	public static final String LIBRARY_SEAT_WIDGET_DATA = "com.uoscs09.theuos.widget.libraryseat.DATA";
+	public static final String LIBRARY_SEAT_WIDGET_ACTIVITY = "com.uoscs09.theuos.widget.libraryseat.ACTIVITY";
 	private final static int[] STUDY_ROOM_NUMBER_ARRAY = { 0, 1, 2, 3, 4, 5, 6,
 			7, 8, 9, 10, 11, 12, 23, 24, 25, 26, 27, 28 };
+	final static int REQUEST_REFRESH = 0;
+	final static int REQUEST_ITEM_CLICK = 1;
 
 	@Override
 	public void onUpdate(final Context context,
@@ -48,6 +52,19 @@ public class LibrarySeatWidget extends
 				this.onUpdate(context, AppWidgetManager.getInstance(context),
 						appWidgetIds);
 			}
+		//} else if (LIBRARY_SEAT_WIDGET_ACTIVITY.equals(action)) {
+		//	SeatItem item = (SeatItem) intent.getExtras().getSerializable(
+		//			LIBRARY_SEAT_WIDGET_DATA);
+		//	if (item != null) {
+		//		Intent activityIntent = new Intent(context,
+		//				SubSeatWebActivity.class);
+		//		activityIntent.getExtras().setClassLoader(
+		//				SeatItem.class.getClassLoader());
+		//		activityIntent.putExtra(TabLibrarySeatFragment.ITEM,
+		//				(Parcelable) item);
+		//		activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		//		context.startActivity(activityIntent);
+		//	}
 		} else
 			super.onReceive(context, intent);
 	}
@@ -63,11 +80,18 @@ public class LibrarySeatWidget extends
 				ParseFactory.What.Seat, body, 0).parse();
 		ArrayList<SeatItem> newList = new ArrayList<SeatItem>();
 
-		for (int i : STUDY_ROOM_NUMBER_ARRAY) {
-			SeatItem item = list.get(i);
-			// if (Double.parseDouble(item.utilizationRate) < 50d)
-			newList.add(item);
+		if (PrefUtil.getInstance(context).get(
+				PrefUtil.KEY_LIB_WIDGET_SEAT_SHOW_ALL, false)) {
+			for (int i : STUDY_ROOM_NUMBER_ARRAY) {
+				SeatItem item = list.get(i);
+				// if (Double.parseDouble(item.utilizationRate) < 50d)
+				newList.add(item);
+			}
+		} else {
+			newList = list;
+			newList.remove(newList.size() - 1);
 		}
+
 		IOUtil.saveToFileSuppressed(context, IOUtil.FILE_LIBRARY_SEAT,
 				Context.MODE_PRIVATE, newList);
 		return newList;
@@ -89,14 +113,27 @@ public class LibrarySeatWidget extends
 			rv.setRemoteAdapter(android.R.id.list, intent);
 			rv.setEmptyView(android.R.id.list, android.R.id.empty);
 
+			// refresh button
 			rv.setTextViewText(android.R.id.text1, new SimpleDateFormat(
-					"a hh:mm:ss", Locale.KOREA).format(new Date()));
+					"a hh:mm:ss", Locale.getDefault()).format(new Date()));
 			Intent clickIntent = new Intent(context, LibrarySeatWidget.class);
 			clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
 					.setAction(LIBRARY_SEAT_WIDGET_REFRASH);
 			rv.setOnClickPendingIntent(android.R.id.selectedIcon, PendingIntent
-					.getBroadcast(context, 0, clickIntent,
+					.getBroadcast(context, REQUEST_REFRESH, clickIntent,
 							PendingIntent.FLAG_UPDATE_CURRENT));
+
+			// Collection OnclickListener
+			//Intent collectionClickIntent = new Intent(
+			//		LIBRARY_SEAT_WIDGET_ACTIVITY);
+			//collectionClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+			//		id);
+			//collectionClickIntent.setData(Uri.parse(new Intent(context,
+			//		LibrarySeatWidget.class).toUri(Intent.URI_INTENT_SCHEME)));
+			//PendingIntent collectionClickPI = PendingIntent.getBroadcast(
+			//		context, REQUEST_ITEM_CLICK, collectionClickIntent,
+			//		PendingIntent.FLAG_UPDATE_CURRENT);
+			//rv.setPendingIntentTemplate(android.R.id.list, collectionClickPI);
 
 			appWidgetManager.updateAppWidget(id, rv);
 			appWidgetManager.notifyAppWidgetViewDataChanged(id,
@@ -123,8 +160,22 @@ public class LibrarySeatWidget extends
 			clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
 					.setAction(LIBRARY_SEAT_WIDGET_REFRASH);
 			rv.setOnClickPendingIntent(android.R.id.selectedIcon, PendingIntent
-					.getBroadcast(context, 0, clickIntent,
+					.getBroadcast(context, REQUEST_REFRESH, clickIntent,
 							PendingIntent.FLAG_UPDATE_CURRENT));
+
+			// Collection OnclickListener
+			Intent intent = new Intent(context, LibrarySeatWidget.class);
+			Intent collectionClickIntent = new Intent(
+					LIBRARY_SEAT_WIDGET_ACTIVITY);
+			collectionClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+					id);
+			collectionClickIntent.setData(Uri.parse(intent
+					.toUri(Intent.URI_INTENT_SCHEME)));
+			PendingIntent collectionClickPI = PendingIntent.getBroadcast(
+					context, REQUEST_ITEM_CLICK, collectionClickIntent,
+					PendingIntent.FLAG_UPDATE_CURRENT);
+			rv.setPendingIntentTemplate(android.R.id.list, collectionClickPI);
+
 			appWidgetManager.updateAppWidget(id, rv);
 		}
 	}

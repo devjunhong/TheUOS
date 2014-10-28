@@ -192,16 +192,15 @@ public abstract class AbsAsyncFragment<T> extends BaseFragment implements
 		} else {
 			title = context.getText(R.string.progress_finish);
 		}
-
+		String msg = resultMesage + " : " + title;
 		noti = new NotificationCompat.Builder(context).setAutoCancel(true)
-				.setContentTitle(title).setContentText(resultMesage)
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setTicker(context.getText(R.string.progress_finish)).build();
+				.setContentTitle(msg).setSmallIcon(R.drawable.ic_launcher)
+				.setTicker(msg).build();
 		final int notiId = AppUtil.titleResIdToOrder(titleRes);
 		nm.notify(notiId, noti);
-		
+
 		new Handler().postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				nm.cancel(notiId);

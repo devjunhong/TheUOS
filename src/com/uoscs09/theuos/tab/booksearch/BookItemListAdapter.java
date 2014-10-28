@@ -267,9 +267,11 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 			// Create configuration for ImageLoader
 			DisplayImageOptions option = new DisplayImageOptions.Builder()
 					.showImageForEmptyUri(extraDrawable)
-					.showImageOnFail(extraDrawable).decodingOptions(bitmapOpt)
+					.showImageOnFail(extraDrawable)
+					.decodingOptions(bitmapOpt)
 					.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-					.showImageOnLoading(R.anim.loading_animation)
+					.showImageOnLoading(
+							AppUtil.getStyledValue(mContext, R.attr.ic_loading))
 					.cacheInMemory(true).cacheOnDisk(true).build();
 			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
 					mContext)
