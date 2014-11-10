@@ -24,6 +24,7 @@
         <item name="android:textColorPrimary">@color/material_blue_grey_950</item>
         <item name="toolbar_actionbar_title">@style/Theme.Mystyle.Light.DarkActionBar.ActionBar.TitleTextStyle</item>
         <item name="toolbar_actionbar_subtitle">@style/Theme.Mystyle.Light.DarkActionBar.ActionBar.SubTitleTextStyle</item>
+        
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_shadow">@drawable/selector_list_shadow</item>

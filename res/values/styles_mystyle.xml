@@ -23,7 +23,6 @@
     <style name="Theme.Mystyle.ActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar">
         <item name="titleTextStyle">@style/Theme.Mystyle.ActionBar.TitleTextStyle</item>
         <item name="subtitleTextStyle">@style/Theme.Mystyle.ActionBar.SubTitleTextStyle</item>
-        
     </style>
 
     <style name="Theme.Mystyle.ActionBar.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -33,7 +32,7 @@
     <style name="Theme.Mystyle.ActionBar.SubTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
         <item name="android:textColor">@color/material_deep_teal_200</item>
     </style>
-
+    
     <style name="Theme.Mystyle" parent="@style/Theme.AppCompat.Light">
         <item name="actionBarStyle">@style/Theme.Mystyle.ActionBarStyle</item>
         <item name="windowActionBar">false</item>
@@ -43,8 +42,9 @@
         <item name="cardBackgroundColor">@android:color/white</item>
         <item name="searchViewStyle">@style/Widget.AppCompat.Light.SearchView</item>
         <item name="android:textColorPrimary">@android:color/black</item>
-<item name="toolbar_actionbar_title">@style/Theme.Mystyle.ActionBar.TitleTextStyle</item>
+        <item name="toolbar_actionbar_title">@style/Theme.Mystyle.ActionBar.TitleTextStyle</item>
         <item name="toolbar_actionbar_subtitle">@style/Theme.Mystyle.ActionBar.SubTitleTextStyle</item>
+        
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_shadow">@drawable/selector_list_shadow</item>
@@ -89,8 +89,8 @@
         <item name="ic_device_phone">@drawable/ic_action_hardware_phone_android</item>
         <item name="ic_content_paint">@drawable/ic_action_content_paint</item>
         <item name="ic_navigation_drawer">@drawable/ic_action_navigation_menu</item>
-		<item name="ic_loading">@anim/progress_medium_white</item>
-		
+        <item name="ic_loading">@anim/progress_medium_white</item>
+
         <!-- for menu icon drawables -->
         <item name="menu_ic_action_about">@drawable/ic_action_action_about</item>
         <item name="menu_ic_action_help">@drawable/ic_action_action_help</item>
@@ -127,8 +127,8 @@
         <item name="menu_ic_device_phone">@drawable/ic_action_hardware_phone_android</item>
         <item name="menu_ic_content_paint">@drawable/ic_action_content_paint</item>
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu</item>
-		<item name="menu_ic_loading">@anim/progress_medium_white</item>
-		
+        <item name="menu_ic_loading">@anim/progress_medium_white</item>
+
         <!-- for color -->
         <item name="color_rosy_brown">@color/rosy_brown</item>
         <item name="color_actionbar_title">@color/material_deep_teal_500</item>

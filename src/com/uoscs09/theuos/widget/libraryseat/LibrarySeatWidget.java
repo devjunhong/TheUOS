@@ -32,6 +32,7 @@ public class LibrarySeatWidget extends
 			7, 8, 9, 10, 11, 12, 23, 24, 25, 26, 27, 28 };
 	final static int REQUEST_REFRESH = 0;
 	final static int REQUEST_ITEM_CLICK = 1;
+	final static String DATE_FILE = "LIB_SEAT_WIDGET_UPDATE_DATE";
 
 	@Override
 	public void onUpdate(final Context context,
@@ -52,19 +53,30 @@ public class LibrarySeatWidget extends
 				this.onUpdate(context, AppWidgetManager.getInstance(context),
 						appWidgetIds);
 			}
-		//} else if (LIBRARY_SEAT_WIDGET_ACTIVITY.equals(action)) {
-		//	SeatItem item = (SeatItem) intent.getExtras().getSerializable(
-		//			LIBRARY_SEAT_WIDGET_DATA);
-		//	if (item != null) {
-		//		Intent activityIntent = new Intent(context,
-		//				SubSeatWebActivity.class);
-		//		activityIntent.getExtras().setClassLoader(
-		//				SeatItem.class.getClassLoader());
-		//		activityIntent.putExtra(TabLibrarySeatFragment.ITEM,
-		//				(Parcelable) item);
-		//		activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		//		context.startActivity(activityIntent);
-		//	}
+			// } else if (LIBRARY_SEAT_WIDGET_ACTIVITY.equals(action)) {
+			// SeatItem item = (SeatItem) intent.getExtras().getSerializable(
+			// LIBRARY_SEAT_WIDGET_DATA);
+			// if (item != null) {
+			// Intent activityIntent = new Intent(context,
+			// SubSeatWebActivity.class);
+			// activityIntent.getExtras().setClassLoader(
+			// SeatItem.class.getClassLoader());
+			// activityIntent.putExtra(TabLibrarySeatFragment.ITEM,
+			// (Parcelable) item);
+			// activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			// context.startActivity(activityIntent);
+			// }
+		} else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+			// 처음 부팅시 인터넷 접속이 되지 않으므로, 기존 파일에서 읽어온다.
+			ArrayList<SeatItem> list = IOUtil.readFromFileSuppressed(context,
+					IOUtil.FILE_LIBRARY_SEAT);
+			if (list == null)
+				return;
+			onBackgroundTaskResult(context,
+					AppWidgetManager.getInstance(context),
+					new int[] { intent.getIntExtra(
+							AppWidgetManager.EXTRA_APPWIDGET_ID,
+							AppWidgetManager.INVALID_APPWIDGET_ID) }, list);
 		} else
 			super.onReceive(context, intent);
 	}
@@ -92,8 +104,13 @@ public class LibrarySeatWidget extends
 			newList.remove(newList.size() - 1);
 		}
 
+		// 파일 저장
 		IOUtil.saveToFileSuppressed(context, IOUtil.FILE_LIBRARY_SEAT,
 				Context.MODE_PRIVATE, newList);
+		//불러온 시간 기록
+		IOUtil.saveToFileSuppressed(context, DATE_FILE, Context.MODE_PRIVATE,
+				new SimpleDateFormat("a hh:mm:ss", Locale.getDefault())
+						.format(new Date()));
 		return newList;
 	}
 
@@ -113,9 +130,11 @@ public class LibrarySeatWidget extends
 			rv.setRemoteAdapter(android.R.id.list, intent);
 			rv.setEmptyView(android.R.id.list, android.R.id.empty);
 
+			String dateTime = IOUtil.readFromFileSuppressed(context, DATE_FILE);
+			if (dateTime == null)
+				dateTime = "";
 			// refresh button
-			rv.setTextViewText(android.R.id.text1, new SimpleDateFormat(
-					"a hh:mm:ss", Locale.getDefault()).format(new Date()));
+			rv.setTextViewText(android.R.id.text1, dateTime);
 			Intent clickIntent = new Intent(context, LibrarySeatWidget.class);
 			clickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
 					.setAction(LIBRARY_SEAT_WIDGET_REFRASH);
@@ -124,16 +143,17 @@ public class LibrarySeatWidget extends
 							PendingIntent.FLAG_UPDATE_CURRENT));
 
 			// Collection OnclickListener
-			//Intent collectionClickIntent = new Intent(
-			//		LIBRARY_SEAT_WIDGET_ACTIVITY);
-			//collectionClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-			//		id);
-			//collectionClickIntent.setData(Uri.parse(new Intent(context,
-			//		LibrarySeatWidget.class).toUri(Intent.URI_INTENT_SCHEME)));
-			//PendingIntent collectionClickPI = PendingIntent.getBroadcast(
-			//		context, REQUEST_ITEM_CLICK, collectionClickIntent,
-			//		PendingIntent.FLAG_UPDATE_CURRENT);
-			//rv.setPendingIntentTemplate(android.R.id.list, collectionClickPI);
+			// Intent collectionClickIntent = new Intent(
+			// LIBRARY_SEAT_WIDGET_ACTIVITY);
+			// collectionClickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+			// id);
+			// collectionClickIntent.setData(Uri.parse(new Intent(context,
+			// LibrarySeatWidget.class).toUri(Intent.URI_INTENT_SCHEME)));
+			// PendingIntent collectionClickPI = PendingIntent.getBroadcast(
+			// context, REQUEST_ITEM_CLICK, collectionClickIntent,
+			// PendingIntent.FLAG_UPDATE_CURRENT);
+			// rv.setPendingIntentTemplate(android.R.id.list,
+			// collectionClickPI);
 
 			appWidgetManager.updateAppWidget(id, rv);
 			appWidgetManager.notifyAppWidgetViewDataChanged(id,

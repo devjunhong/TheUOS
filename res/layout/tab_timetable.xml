@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
-    android:paddingTop="5dp" >
+    android:layout_height="match_parent" >
 
     <LinearLayout
         android:id="@+id/tab_timetable_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
         android:weightSum="360" >
 
         <TextView
@@ -19,6 +19,7 @@
             android:layout_weight="48"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timtable_period"
             android:textColor="@android:color/white" />
 
@@ -29,6 +30,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_mon"
             android:textColor="@android:color/white" />
 
@@ -39,6 +41,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_tue"
             android:textColor="@android:color/white" />
 
@@ -49,6 +52,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_wed"
             android:textColor="@android:color/white" />
 
@@ -59,6 +63,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_thr"
             android:textColor="@android:color/white" />
 
@@ -69,6 +74,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_fri"
             android:textColor="@android:color/white" />
 
@@ -79,6 +85,7 @@
             android:layout_weight="52"
             android:background="?color_rosy_brown"
             android:gravity="center"
+            android:padding="2dp"
             android:text="@string/tab_timetable_sat"
             android:textColor="@android:color/white" />
     </LinearLayout>
@@ -90,6 +97,10 @@
         android:clipToPadding="false"
         android:divider="@null"
         android:dividerHeight="0dp"
+        android:paddingBottom="4dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="2dp"
         android:scrollbarStyle="outsideOverlay"
         android:scrollingCache="true" >
     </ListView>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="libs/google-play-services.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/universal-image-loader-1.9.3.jar" sourcepath="/Android-Universal-Image-Loader/library/src"/>
 	<classpathentry exported="true" kind="lib" path="libs/jericho-html-3.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/dworks.libs.actionbartoggle.jar"/>

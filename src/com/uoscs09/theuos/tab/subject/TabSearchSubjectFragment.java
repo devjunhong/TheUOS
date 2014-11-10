@@ -8,10 +8,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,11 +53,12 @@ public class TabSearchSubjectFragment extends
 	private Spinner sp1, sp2, sp3, sp4, termSpinner;
 	private int[] selections = new int[4];
 	@ReleaseWhenDestroy
+	private View mTitleLayout;
+	@ReleaseWhenDestroy
 	private TextView[] textViews;
 	private String mSearchedTermString;
 	private int sortFocusViewId;
 	private boolean isInverse = false;
-	protected static int width;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,10 +85,13 @@ public class TabSearchSubjectFragment extends
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView;
 		Context context = getActivity();
 
-		rootView = inflater.inflate(R.layout.tab_search_subj, container, false);
+		final View rootView = inflater.inflate(R.layout.tab_search_subj,
+				container, false);
+		mTitleLayout = rootView
+				.findViewById(R.id.tab_search_subject_head_layout);
+		mTitleLayout.setVisibility(View.INVISIBLE);
 		View empty = rootView.findViewById(R.id.tab_search_subject_empty_view);
 		empty.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -127,8 +129,6 @@ public class TabSearchSubjectFragment extends
 			textViews[i] = (TextView) rootView.findViewById(id);
 			textViews[i++].setOnClickListener(this);
 		}
-		width = getResources().getDisplayMetrics().widthPixels / 12;
-		setTextViewSize(width);
 		return rootView;
 	}
 
@@ -214,23 +214,10 @@ public class TabSearchSubjectFragment extends
 	}
 
 	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-				newConfig.screenWidthDp, getResources().getDisplayMetrics()) / 12;
-		setTextViewSize(width);
-		adapter.notifyDataSetChanged();
-		super.onConfigurationChanged(newConfig);
-	}
-
-	private void setTextViewSize(int px) {
-		int[] ints = { 2, 2, 2, 1, 4, 1, 1, 2, 5, 1, 1 };
-		int i = 0;
-		for (TextView tv : textViews) {
-			tv.setWidth(px * ints[i++]);
-		}
-		// ((LinearLayout)
-		// getView().findViewById(R.id.tab_search_subject_line_layout))
-		// .setMinimumWidth(px * 23);
+	public void onResume() {
+		super.onResume();
+		if (!mSubjectList.isEmpty())
+			mTitleLayout.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -266,6 +253,7 @@ public class TabSearchSubjectFragment extends
 		adapter.clear();
 		adapter.addAll(result);
 		adapter.notifyDataSetChanged();
+		mTitleLayout.setVisibility(View.VISIBLE);
 		AppUtil.showToast(getActivity(), String.valueOf(result.size())
 				+ getString(R.string.search_found), true);
 
@@ -897,5 +885,10 @@ public class TabSearchSubjectFragment extends
 	@Override
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_search);
+	}
+
+	@Override
+	protected CharSequence getSubtitle() {
+		return mSearchedTermString;
 	}
 }
