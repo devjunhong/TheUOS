@@ -75,6 +75,7 @@ public class TabLibrarySeatFragment extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setMenuRefresh(false);
+		setDrawableForMenu(false);
 		if (savedInstanceState != null) {
 			mCommitTime = savedInstanceState.getString(COMMIT_TIME);
 			mSeatList = savedInstanceState.getParcelableArrayList(BUNDLE_LIST);

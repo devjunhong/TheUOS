@@ -30,25 +30,12 @@ public class SubjectAdapter extends AbsArrayAdapter<SubjectItem> {
 			}
 			v.setText(item.infoArray[i++]);
 		}
-		setViewSize(h, TabSearchSubjectFragment.width);
 		return convertView;
 	}
 
 	@Override
 	public ViewHolder getViewHolder(View v) {
-		Holder h = new Holder(v);
-		int px = getContext().getApplicationContext().getResources()
-				.getDisplayMetrics().widthPixels / 12;
-		setViewSize(h, px);
-		return h;
-	}
-
-	private void setViewSize(Holder h, int px) {
-		int[] sizes = { 2, 2, 2, 1, 4, 1, 1, 2, 5, 1, 1 };
-
-		for (int i = 0; i < 11; i++) {
-			h.tvArray[i].setWidth(px * sizes[i]);
-		}
+		return new Holder(v);
 	}
 
 	public static class Holder implements ViewHolder {
@@ -67,7 +54,7 @@ public class SubjectAdapter extends AbsArrayAdapter<SubjectItem> {
 		// public TextView tlsn_limit_count;
 		public Holder(View v) {
 			tvArray = new TextView[11];
-			int[] idArray = { R.id.list_subject_text_sub_dept,
+			final int[] idArray = { R.id.list_subject_text_sub_dept,
 					R.id.list_subject_text_sub_div, R.id.list_subject_text_no,
 					R.id.list_subject_text_class_div,
 					R.id.list_subject_text_sub_nm, R.id.list_subject_text_yr,

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
     android:dividerHeight="1dp"
+    android:orientation="horizontal"
     android:weightSum="360" >
 
     <TextView

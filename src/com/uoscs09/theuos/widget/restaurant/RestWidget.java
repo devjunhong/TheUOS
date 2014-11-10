@@ -54,6 +54,17 @@ public class RestWidget extends AbsAsyncWidgetProvider<ArrayList<RestItem>> {
 			context.sendBroadcast(new Intent(
 					AppWidgetManager.ACTION_APPWIDGET_UPDATE).putExtra(
 					AppWidgetManager.EXTRA_APPWIDGET_ID, ids[0]));
+		} else if (Intent.ACTION_BOOT_COMPLETED.equals(action)) {
+			// 처음 부팅시 인터넷 접속이 되지 않으므로, 기존 파일에서 읽어온다.
+			ArrayList<RestItem> list = IOUtil.readFromFileSuppressed(context,
+					IOUtil.FILE_REST);
+			if (list == null)
+				return;
+			onBackgroundTaskResult(context,
+					AppWidgetManager.getInstance(context),
+					new int[] { intent.getIntExtra(
+							AppWidgetManager.EXTRA_APPWIDGET_ID,
+							AppWidgetManager.INVALID_APPWIDGET_ID) }, list);
 		} else
 			super.onReceive(context, intent);
 	}
@@ -82,7 +93,7 @@ public class RestWidget extends AbsAsyncWidgetProvider<ArrayList<RestItem>> {
 		RemoteViews rv = new RemoteViews(context.getPackageName(),
 				R.layout.widget_rest);
 		RestItem item;
-		 
+
 		int position = PrefUtil.getInstance(context).get(REST_WIDGET_POSITION,
 				0);
 		for (int id : appWidgetIds) {

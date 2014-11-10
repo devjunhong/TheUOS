@@ -15,13 +15,16 @@
 # If your project uses WebView with JS, uncomment the following
 # and specify the fully qualified class name to the JavaScript interface
 # class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+   public *;
+}
+
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
 }
 
+# Google Play Services
+#
 # Keep SafeParcelable value, needed for reflection. This is required to support backwards
 # compatibility of some classes.
 -keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
@@ -38,16 +41,16 @@
 -keepnames class * implements android.os.Parcelable {
     public static final ** CREATOR;
 }
--keepclassmembers class fqcn.of.javascript.interface.for.webview {
-   public *;
-}
--keep class com.uoscs09.theuos.common.impl.annotaion.**
+
+# Android Support Library
 -keep class android.support.** { *; }
 -keep interface android.support.** { *; }
 
+-keep class com.uoscs09.theuos.common.impl.annotaion.**
+
+# Library Jars
 -libraryjars libs/listviewanimations_lib-manipulation_3.1.0.jar
 -libraryjars libs/listviewanimations_lib-core_3.1.0.jar
--libraryjars libs/google-play-services.jar
 -libraryjars libs/jericho-html-3.3.jar
 -libraryjars libs/nineoldandroids-2.4.0.jar
 -libraryjars libs/universal-image-loader-1.9.3.jar

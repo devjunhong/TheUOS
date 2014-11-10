@@ -24,6 +24,7 @@
         <item name="actionBarStyle">@style/Theme.Mystyle.Light.Blue.ActionBarStyle</item>
         <item name="toolbar_actionbar_title">@style/Theme.Mystyle.Light.Blue.ActionBar.TitleTextStyle</item>
         <item name="toolbar_actionbar_subtitle">@style/Theme.Mystyle.Light.Blue.ActionBar.SubTitleTextStyle</item>
+        
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
         <item name="selector_list_shadow">@drawable/selector_list_shadow</item>
