@@ -20,6 +20,7 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 	protected AppTheme iconTheme;
 	protected DrawblePosition position;
 	protected Rect drawableBound;
+	protected boolean isDrawableForMenu = false;
 
 	public enum DrawblePosition {
 		TOP, BOTTOM, LEFT, RIGHT
@@ -42,8 +43,19 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 		int item = getItem(position);
 		TextView tv = h.tv;
 		tv.setText(item);
-		Drawable d = getContext().getResources().getDrawable(
-				AppUtil.getPageIcon(item, iconTheme));
+		Drawable d;
+		if (iconTheme != null) {
+			d = getContext().getResources().getDrawable(
+					AppUtil.getPageIcon(item, iconTheme));
+		} else {
+			if (isDrawableForMenu) {
+				d = getContext().getResources().getDrawable(
+						AppUtil.getPageIconForMenu(getContext(), item));
+			} else {
+				d = getContext().getResources().getDrawable(
+						AppUtil.getPageIcon(getContext(), item));
+			}
+		}
 		switch (this.position) {
 		case TOP:
 			if (drawableBound != null) {
@@ -124,6 +136,7 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 		}
 
 		/** TextView의 icon의 테마를 설정한다. */
+		@Deprecated
 		public Builder setDrawableTheme(AppTheme theme) {
 			product.iconTheme = theme;
 			return this;
@@ -131,6 +144,11 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 
 		public Builder setTextViewTextColor(int color) {
 			product.textViewTextColor = color;
+			return this;
+		}
+
+		public Builder setDrawableForMenu(boolean forMenu) {
+			product.isDrawableForMenu = forMenu;
 			return this;
 		}
 

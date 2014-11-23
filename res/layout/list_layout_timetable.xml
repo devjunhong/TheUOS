@@ -3,7 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentLeft="true"
-    android:dividerHeight="1dp"
+    android:divider="@null"
+    android:dividerPadding="2dp"
     android:orientation="horizontal"
     android:weightSum="360" >
 
@@ -12,13 +13,16 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="48"
-        android:gravity="center" />
+        android:background="?attr/colorPrimary"
+        android:gravity="center"
+        android:textColor="?attr/colorAccent" />
 
     <TextView
         android:id="@+id/tab_timetable_list_text_mon"
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
     <TextView
@@ -26,6 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
     <TextView
@@ -33,6 +38,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
     <TextView
@@ -40,6 +46,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
     <TextView
@@ -47,6 +54,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
     <TextView
@@ -54,6 +62,7 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="52"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center" />
 
 </LinearLayout>

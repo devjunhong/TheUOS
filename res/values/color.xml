@@ -25,6 +25,7 @@
     <color name="material_light_blue_400">#29b6f6</color>
     <color name="material_light_blue_600">#039be5</color>
     <color name="material_light_blue_800">#0277bd</color>
+    <color name="material_light_blue_a200">#40c4ff</color>
     <color name="material_red_100">#f9bdbb</color>
     <color name="material_red_200">#f69988</color>
     <color name="material_red_300">#f36c60</color>
@@ -33,5 +34,6 @@
     <color name="material_green_200">#72d572</color>
     <color name="material_green_300">#42bd41</color>
     <color name="material_green_700">#0a7e07</color>
-
+	<color name="material_grey_400">#bdbdbd</color>
+	<color name="material_grey_600">#757575</color>
 </resources>

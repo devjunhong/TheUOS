@@ -30,13 +30,14 @@ import com.uoscs09.theuos.http.parse.ParseFactory;
 public class TabRestaurantFragment extends
 		AbsDrawableProgressFragment<ArrayList<RestItem>> {
 	@ReleaseWhenDestroy
-	protected ScrollView restScroll;
+	private ScrollView mScrollView;
 	@ReleaseWhenDestroy
-	private TextView restSemester, restVacation, breakfast, lunch,
-			supper;
-	protected int buttonID;
+	private TextView mSemesterTimeView, mVacationTimeView,
+			mContentBreakfastView, mContentLunchView, mContentSupperView;
+	private int mCurrentMenuButtonID;
 	@AsyncData
 	private ArrayList<RestItem> mRestList;
+	private String mCurrentRestName;
 
 	private static final String BUTTON = "button";
 	private static final String REST = "rest_list";
@@ -52,7 +53,7 @@ public class TabRestaurantFragment extends
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putInt(BUTTON, buttonID);
+		outState.putInt(BUTTON, mCurrentMenuButtonID);
 		outState.putParcelableArrayList(REST, mRestList);
 		super.onSaveInstanceState(outState);
 	}
@@ -60,10 +61,10 @@ public class TabRestaurantFragment extends
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		if (savedInstanceState != null) {
-			buttonID = savedInstanceState.getInt(BUTTON);
+			mCurrentMenuButtonID = savedInstanceState.getInt(BUTTON);
 			mRestList = savedInstanceState.getParcelableArrayList(REST);
 		} else {
-			buttonID = R.id.tab_rest_button_students_hall;
+			mCurrentMenuButtonID = R.id.tab_rest_button_students_hall;
 			mRestList = new ArrayList<RestItem>();
 		}
 		super.onCreate(savedInstanceState);
@@ -77,17 +78,21 @@ public class TabRestaurantFragment extends
 		for (int id : new int[] { R.id.tab_rest_button_students_hall,
 				R.id.tab_rest_button_anekan, R.id.tab_rest_button_natural,
 				R.id.tab_rest_button_main_8th, R.id.tab_rest_button_living }) {
-			rootView.findViewById(id).setOnClickListener(disp);
+			View menuView = rootView.findViewById(id);
+			menuView.setOnClickListener(mButtonClickListener);
+			rootView.setTag(id, menuView);
 		}
-		restScroll = (ScrollView) rootView.findViewById(R.id.tab_rest_scroll);
-		restSemester = (TextView) rootView
+		mScrollView = (ScrollView) rootView.findViewById(R.id.tab_rest_scroll);
+		mSemesterTimeView = (TextView) rootView
 				.findViewById(R.id.tab_rest_text_semester);
-		restVacation = (TextView) rootView
+		mVacationTimeView = (TextView) rootView
 				.findViewById(R.id.tab_rest_text_vacation);
-		breakfast = (TextView) rootView
+		mContentBreakfastView = (TextView) rootView
 				.findViewById(R.id.tab_rest_text_breakfast);
-		lunch = (TextView) rootView.findViewById(R.id.tab_rest_text_lunch);
-		supper = (TextView) rootView.findViewById(R.id.tab_rest_text_supper);
+		mContentLunchView = (TextView) rootView
+				.findViewById(R.id.tab_rest_text_lunch);
+		mContentSupperView = (TextView) rootView
+				.findViewById(R.id.tab_rest_text_supper);
 
 		return rootView;
 	}
@@ -97,7 +102,7 @@ public class TabRestaurantFragment extends
 		if (mRestList.isEmpty())
 			excute();
 		else
-			getView().findViewById(buttonID).performClick();
+			getView().findViewById(mCurrentMenuButtonID).performClick();
 		super.onResume();
 	}
 
@@ -118,7 +123,7 @@ public class TabRestaurantFragment extends
 		}
 	}
 
-	private final OnClickListener disp = new OnClickListener() {
+	private final OnClickListener mButtonClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			View prev = getView().findViewWithTag("selected");
@@ -128,9 +133,9 @@ public class TabRestaurantFragment extends
 			}
 			v.setSelected(true);
 			v.setTag("selected");
-			restScroll.scrollTo(0, 0);
-			buttonID = v.getId();
-			performClick(buttonID);
+			mScrollView.scrollTo(0, 0);
+			mCurrentMenuButtonID = v.getId();
+			performClick(mCurrentMenuButtonID);
 		}
 	};
 
@@ -162,13 +167,14 @@ public class TabRestaurantFragment extends
 	}
 
 	private void setSemesterAndVacationText(int i) {
-		if (restSemester != null)
-			restSemester.setText(timeSemester[i]);
-		if (restVacation != null)
-			restVacation.setText(timeVacation[i]);
+		if (mSemesterTimeView != null)
+			mSemesterTimeView.setText(timeSemester[i]);
+		if (mVacationTimeView != null)
+			mVacationTimeView.setText(timeVacation[i]);
 	}
 
 	public void setBody(final String name) {
+		mCurrentRestName = name;
 		setSubtitleWhenVisible(name);
 		RestItem item = null;
 		if (mRestList != null) {
@@ -176,18 +182,18 @@ public class TabRestaurantFragment extends
 			for (int i = 0; i < size; i++) {
 				item = mRestList.get(i);
 				if (name.contains(item.title)) {
-					breakfast.setText(item.breakfast);
-					lunch.setText(item.lunch);
-					supper.setText(item.supper);
+					mContentBreakfastView.setText(item.breakfast);
+					mContentLunchView.setText(item.lunch);
+					mContentSupperView.setText(item.supper);
 					break;
 				}
 				item = null;
 			}
 		}
 		if (item == null) {
-			breakfast.setText(R.string.tab_rest_no_info);
-			lunch.setText(R.string.tab_rest_no_info);
-			supper.setText(R.string.tab_rest_no_info);
+			mContentBreakfastView.setText(R.string.tab_rest_no_info);
+			mContentLunchView.setText(R.string.tab_rest_no_info);
+			mContentSupperView.setText(R.string.tab_rest_no_info);
 		}
 	}
 
@@ -235,11 +241,16 @@ public class TabRestaurantFragment extends
 	public void onTransactResult(ArrayList<RestItem> result) {
 		mRestList.clear();
 		mRestList.addAll(result);
-		getView().findViewById(buttonID).performClick();
+		getView().findViewById(mCurrentMenuButtonID).performClick();
 	}
 
 	@Override
 	protected MenuItem getLoadingMenuItem(Menu menu) {
 		return menu.findItem(R.id.action_refresh);
+	}
+
+	@Override
+	protected CharSequence getSubtitle() {
+		return mCurrentRestName;
 	}
 }

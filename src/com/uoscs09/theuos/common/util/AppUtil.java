@@ -194,6 +194,7 @@ public class AppUtil {
 	}
 
 	/** 탭 아이콘을 불러옴 */
+	@Deprecated
 	public static int getPageIcon(int pageStringResourceId, AppTheme theme) {
 		switch (theme) {
 		case BlackAndWhite:
@@ -206,6 +207,7 @@ public class AppUtil {
 	}
 
 	/** 탭 아이콘을 불러옴 */
+	@Deprecated
 	public static int getPageIcon(int pageStringResourceId) {
 		switch (theme) {
 		case BlackAndWhite:
@@ -215,6 +217,114 @@ public class AppUtil {
 		default:
 			return getPageIconGray(pageStringResourceId);
 		}
+	}
+
+	public static int getPageIcon(Context context, int pageStringResId) {
+		int iconId;
+		switch (pageStringResId) {
+		case R.string.title_section0_home:
+			return R.drawable.ic_launcher;
+		case R.string.title_section1_announce:
+			iconId = R.attr.ic_collections_view_as_list;
+			break;
+		case R.string.title_section2_rest:
+			iconId = R.attr.ic_restaurant;
+			break;
+		case R.string.title_section3_book:
+			iconId = R.attr.ic_book;
+			break;
+		case R.string.title_section4_lib:
+			iconId = R.attr.ic_chair;
+			break;
+		case R.string.title_section5_map:
+			iconId = R.attr.ic_location_place;
+			break;
+		case R.string.title_section6_tel:
+			iconId = R.attr.ic_device_access_call;
+			break;
+		case R.string.title_section7_time:
+			iconId = R.attr.ic_content_timetable;
+			break;
+		case R.string.title_tab_search_empty_room:
+			iconId = R.attr.ic_action_search;
+			break;
+		case R.string.title_tab_search_subject:
+			iconId = R.attr.ic_content_paste;
+			break;
+		case R.string.title_tab_score:
+			iconId = R.attr.ic_content_copy;
+			break;
+		case R.string.title_tab_transport:
+			iconId = R.attr.ic_location_directions;
+			break;
+		case R.string.title_section_etc:
+			iconId = R.attr.ic_navigation_accept;
+			break;
+		case R.string.setting:
+			iconId = R.attr.ic_action_settings;
+			break;
+		case R.string.action_exit:
+			iconId = R.attr.ic_content_remove;
+			break;
+		default:
+			return -1;
+		}
+
+		return getStyledValue(context, iconId);
+	}
+	
+	public static int getPageIconForMenu(Context context, int pageStringResId) {
+		int iconId;
+		switch (pageStringResId) {
+		case R.string.title_section0_home:
+			return R.drawable.ic_launcher;
+		case R.string.title_section1_announce:
+			iconId = R.attr.menu_ic_collections_view_as_list;
+			break;
+		case R.string.title_section2_rest:
+			iconId = R.attr.menu_ic_restaurant;
+			break;
+		case R.string.title_section3_book:
+			iconId = R.attr.menu_ic_book;
+			break;
+		case R.string.title_section4_lib:
+			iconId = R.attr.menu_ic_chair;
+			break;
+		case R.string.title_section5_map:
+			iconId = R.attr.menu_ic_location_place;
+			break;
+		case R.string.title_section6_tel:
+			iconId = R.attr.menu_ic_device_access_call;
+			break;
+		case R.string.title_section7_time:
+			iconId = R.attr.menu_ic_content_timetable;
+			break;
+		case R.string.title_tab_search_empty_room:
+			iconId = R.attr.menu_ic_action_search;
+			break;
+		case R.string.title_tab_search_subject:
+			iconId = R.attr.menu_ic_content_paste;
+			break;
+		case R.string.title_tab_score:
+			iconId = R.attr.menu_ic_content_copy;
+			break;
+		case R.string.title_tab_transport:
+			iconId = R.attr.menu_ic_location_directions;
+			break;
+		case R.string.title_section_etc:
+			iconId = R.attr.menu_ic_navigation_accept;
+			break;
+		case R.string.setting:
+			iconId = R.attr.menu_ic_action_settings;
+			break;
+		case R.string.action_exit:
+			iconId = R.attr.menu_ic_content_remove;
+			break;
+		default:
+			return -1;
+		}
+
+		return getStyledValue(context, iconId);
 	}
 
 	private static int getPageIconGray(int id) {
@@ -530,17 +640,17 @@ public class AppUtil {
 		}
 		switch (theme) {
 		case BlackAndWhite:
-			appContext.setTheme(R.style.Theme_Mystyle_Light_DarkActionBar);
+			appContext.setTheme(R.style.Mystyle_BlackAndWhite);
 			break;
 		case Black:
-			appContext.setTheme(R.style.Theme_Mystyle_Dark);
+			appContext.setTheme(R.style.Mystyle_Black);
 			break;
 		case LightBlue:
-			appContext.setTheme(R.style.Theme_Mystyle_Light_Blue);
+			appContext.setTheme(R.style.Mystyle_Light_Blue);
 			break;
 		case White:
 		default:
-			appContext.setTheme(R.style.Theme_Mystyle);
+			appContext.setTheme(R.style.Mystyle_White);
 			break;
 		}
 	}

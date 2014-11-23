@@ -37,19 +37,17 @@
         android:background="?selector_button"
         android:drawableLeft="?ic_device_access_alarms"
         android:padding="2dp"
-        android:text="@string/tab_timatable_callback_noti"
-        android:visibility="gone" />
+        android:text="@string/tab_timatable_callback_noti" />
 
     <Spinner
         android:id="@+id/timetable_callback_alarm_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/dialog_timetable_button_alarm"
+        android:layout_alignBaseline="@+id/dialog_timetable_button_alarm"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/dialog_timetable_button_alarm"
         android:entries="@array/tab_timetable_alarm_time_array"
-        android:scrollbars="none"
-        android:visibility="gone" />
+        android:scrollbars="none" />
 
 </RelativeLayout>

@@ -73,10 +73,11 @@ public abstract class WidgetTimetableListService extends RemoteViewsService {
 			int size = mWidgetItems.size() - 1;
 
 			// 마지막 수업시간 판별, 14부터 시작
-			for (; size > 0 && mWidgetItems.get(size).isTimeTableEmpty(); size--)
-				;
+			while (size > 0 && mWidgetItems.get(size).isTimeTableEmpty()) {
+				size--;
+			}
 
-			maxTime = size;
+			maxTime = size + 1;
 			if (maxTime < 0)
 				maxTime = mWidgetItems.size() == 0 ? 0
 						: mWidgetItems.size() - 1;

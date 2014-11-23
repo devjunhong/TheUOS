@@ -2,22 +2,22 @@ package com.uoscs09.theuos;
 
 import java.util.ArrayList;
 
-import android.R.color;
-import android.support.v7.app.ActionBar;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SlidingPaneLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -25,14 +25,12 @@ import com.uoscs09.theuos.common.BackPressCloseHandler;
 import com.uoscs09.theuos.common.SimpleTextViewAdapter;
 import com.uoscs09.theuos.common.impl.BaseActivity;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.PrefUtil;
 import com.uoscs09.theuos.setting.SettingActivity;
 
-import dev.dworks.libs.actionbartoggle.ActionBarToggle;
-
 /** Main Activity, ViewPager가 존재한다. */
-public class UosMainActivity extends BaseActivity implements PagerInterface {
+public class UosMainActivity extends BaseActivity implements PagerInterface,
+		DrawerLayout.DrawerListener {
 	/** ViewPager */
 	private ViewPager mViewPager;
 	/** ViewPager Adapter */
@@ -42,11 +40,12 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 	/** 화면 순서를 나타내는 리스트 */
 	private ArrayList<Integer> mPageOrderList;
 
-	protected SlidingPaneLayout mSlidingPaneLayout;
+	protected DrawerLayout mDrawerLayout;
 	/** Left ListView */
 	private ListView mDrawerListView;
 	/** ActionBar Toggle */
-	private ActionBarToggle mDrawerToggle;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private Toolbar mToolbar;
 
 	private static final int START_SETTING = 999;
 	public static final String SAVED_TAB_NUM = "saved_tab_num";
@@ -66,12 +65,16 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 		// StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll()
 		// .penaltyLog().penaltyDeath().build());
 		/* 호출 순서를 바꾸지 말 것 */
+		requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		initValues();
 		super.onCreate(savedInstanceState);
-		// setContentView(R.layout.activity_pager_and_drawer);
-		setContentView(R.layout.activity_pager_and_slider);
-		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-		setSupportActionBar(toolbar);
+
+		setContentView(R.layout.activity_uosmain);
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(mToolbar);
+
+		// getSupportActionBar().setHideOnContentScrollEnabled(true);
+		// getSupportActionBar().setHideOffset(40);
 
 		initPager();
 		initDrawer();
@@ -113,8 +116,7 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 		}
 		if (!isFromPager) {
 			mViewPager.setCurrentItem(position, true);
-			mSlidingPaneLayout.closePane();
-			// drawerLayout.closeDrawer(mDrawerListView);
+			mDrawerLayout.closeDrawer(mDrawerListView);
 		}
 		mDrawerListView.setItemChecked(position, true);
 		mDrawerListView.setSelection(position);
@@ -135,38 +137,21 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setHomeButtonEnabled(true);
 
-		mSlidingPaneLayout = (SlidingPaneLayout) findViewById(R.id.activity_sliding_layout);
-		mSlidingPaneLayout.setShadowResourceLeft(R.drawable.shadow_);
-		mSlidingPaneLayout.setSliderFadeColor(Color.TRANSPARENT);
-		mSlidingPaneLayout.setCoveredFadeColor(Color.DKGRAY);
-		mDrawerListView = (ListView) findViewById(R.id.activity_pager_left_drawer);
-		int drawerLayoutId;
-		switch (AppUtil.theme) {
-		case LightBlue:
-		case Black:
-		case BlackAndWhite:
-			drawerLayoutId = R.layout.drawer_list_item_dark;
-			break;
-		case White:
-		default:
-			drawerLayoutId = R.layout.drawer_list_item;
-			mDrawerListView.setBackgroundColor(getResources().getColor(
-					color.background_light));
-			break;
-		}
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.activity_uos_drawer_layout);
+		mDrawerListView = (ListView) findViewById(R.id.activity_uos_left_drawer);
 
 		final float density = getResources().getDisplayMetrics().density;
 		int width = Math.round(30 * density);
 		int height = Math.round(28 * density);
 
-		AppTheme iconTheme = AppUtil.theme == AppTheme.White ? AppTheme.White
-				: AppTheme.Black;
 		mDrawerListView.setAdapter(new SimpleTextViewAdapter.Builder(this,
-				drawerLayoutId, list)
-				.setDrawableTheme(iconTheme)
+				R.layout.drawer_list_item, list)
+				.setDrawableTheme(null)
+				.setDrawableForMenu(true)
 				.setTextViewTextColor(
-						getResources().getColor(AppUtil.theme == AppTheme.White ? android.R.color.black
-								: android.R.color.white))
+						getResources().getColor(
+								AppUtil.getStyledValue(this,
+										R.attr.color_actionbar_title)))
 				.setDrawableBounds(new Rect(0, 0, width, height)).create());
 		mDrawerListView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -178,18 +163,30 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 							navigateItem(pos, false);
 						else if (pos == size) {
 							startSettingActivity();
-							mSlidingPaneLayout.closePane();
+							mDrawerLayout.closeDrawer(mDrawerListView);
 							// drawerLayout.closeDrawer(mDrawerListView);
 						} else if (pos == size + 1) {
 							AppUtil.exit(getApplicationContext());
 						}
 					}
 				});
+		// AppUtil.getStyledValue(this,R.attr.menu_ic_navigation_drawer)
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				mToolbar, R.string.app_name, R.string.app_name) {
+			@Override
+			public void onDrawerOpened(View drawerView) {
+				super.onDrawerOpened(drawerView);
+				invalidateOptionsMenu();
+			}
 
-		mDrawerToggle = new ActionBarToggle(this, mSlidingPaneLayout,
-				AppUtil.getStyledValue(this, R.attr.menu_ic_navigation_drawer),
-				R.string.app_name, R.string.app_name);
-		mSlidingPaneLayout.setPanelSlideListener(mDrawerToggle);
+			@Override
+			public void onDrawerClosed(View drawerView) {
+				super.onDrawerClosed(drawerView);
+				invalidateOptionsMenu();
+			}
+		};
+		mDrawerLayout.setDrawerListener(this);
+		// setPanelSlideListener(mDrawerToggle);
 	}
 
 	private void initPager() {
@@ -239,7 +236,6 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
 		mDrawerToggle.syncState();
 		getSupportActionBar().setDisplayHomeAsUpEnabled(
 				mDrawerToggle.isDrawerIndicatorEnabled());
@@ -248,10 +244,18 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		// Pass any configuration change to the drawer toggls
 		mDrawerToggle.onConfigurationChanged(newConfig);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(
 				mDrawerToggle.isDrawerIndicatorEnabled());
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean isDrawerOpen = mDrawerLayout.isDrawerOpen(mDrawerListView);
+		for (int i = 0; i < menu.size(); i++) {
+			menu.getItem(i).setVisible(!isDrawerOpen);
+		}
+		return super.onPrepareOptionsMenu(menu);
 	}
 
 	@Override
@@ -315,15 +319,15 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 		mPageOrderList = null;
 		mPagerAdapter = null;
 		mViewPager = null;
-		mSlidingPaneLayout = null;
+		mDrawerLayout = null;
 		super.onDetachedFromWindow();
 	}
 
 	@Override
 	public void onBackPressed() {
-		if (AppUtil.isScreenSizeSmall(this) && mSlidingPaneLayout.isSlideable()
-				&& mSlidingPaneLayout.isOpen()) {
-			mSlidingPaneLayout.closePane();
+		if (AppUtil.isScreenSizeSmall(this)
+				&& mDrawerLayout.isDrawerOpen(mDrawerListView)) {
+			mDrawerLayout.closeDrawer(mDrawerListView);
 		} else if (PrefUtil.getInstance(getApplicationContext()).get(
 				PrefUtil.KEY_HOME, true)) {
 			if (getCurrentPageIndex() == 0) {
@@ -371,16 +375,36 @@ public class UosMainActivity extends BaseActivity implements PagerInterface {
 			return super.onKeyDown(keyCode, event);
 	}
 
+	@Override
+	public void onDrawerClosed(View drawerView) {
+		mDrawerToggle.onDrawerClosed(drawerView);
+	}
+
+	@Override
+	public void onDrawerOpened(View drawerView) {
+		mDrawerToggle.onDrawerOpened(drawerView);
+	}
+
+	@Override
+	public void onDrawerSlide(View drawerView, float slideOffset) {
+		mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
+	}
+
+	@Override
+	public void onDrawerStateChanged(int newState) {
+		mDrawerToggle.onDrawerStateChanged(newState);
+	}
+
 	private void openOrCloseDrawer() {
-		// if (drawerLayout.isDrawerOpen(mDrawerListView))
-		// drawerLayout.closeDrawer(mDrawerListView);
-		// else
-		// drawerLayout.openDrawer(mDrawerListView);
-		if (!mSlidingPaneLayout.isOpen()) {
-			mSlidingPaneLayout.openPane();
-		} else {
-			mSlidingPaneLayout.closePane();
-		}
+		if (mDrawerLayout.isDrawerOpen(mDrawerListView))
+			mDrawerLayout.closeDrawer(mDrawerListView);
+		else
+			mDrawerLayout.openDrawer(mDrawerListView);
+		// if (!mDrawerLayout.isOpen()) {
+		// mDrawerLayout.openPane();
+		// } else {
+		// mDrawerLayout.closePane();
+		// }
 	}
 
 	@Override
