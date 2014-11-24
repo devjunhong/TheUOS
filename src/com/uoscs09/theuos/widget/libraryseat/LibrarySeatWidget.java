@@ -17,9 +17,6 @@ import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsAsyncWidgetProvider;
 import com.uoscs09.theuos.common.util.IOUtil;
 import com.uoscs09.theuos.common.util.PrefUtil;
-import com.uoscs09.theuos.common.util.StringUtil;
-import com.uoscs09.theuos.http.HttpRequest;
-import com.uoscs09.theuos.http.parse.ParseFactory;
 import com.uoscs09.theuos.tab.libraryseat.SeatItem;
 import com.uoscs09.theuos.tab.libraryseat.TabLibrarySeatFragment;
 
@@ -85,11 +82,7 @@ public class LibrarySeatWidget extends
 	protected ArrayList<SeatItem> doInBackGround(Context context,
 			AppWidgetManager appWidgetManager, int[] appWidgetIds)
 			throws Exception {
-		String body = HttpRequest.getBody(TabLibrarySeatFragment.URL,
-				StringUtil.ENCODE_EUC_KR);
-		@SuppressWarnings("unchecked")
-		ArrayList<SeatItem> list = (ArrayList<SeatItem>) ParseFactory.create(
-				ParseFactory.What.Seat, body, 0).parse();
+		ArrayList<SeatItem> list = TabLibrarySeatFragment.getLibaraySeatList();
 		ArrayList<SeatItem> newList = new ArrayList<SeatItem>();
 
 		if (PrefUtil.getInstance(context).get(
@@ -107,7 +100,7 @@ public class LibrarySeatWidget extends
 		// 파일 저장
 		IOUtil.saveToFileSuppressed(context, IOUtil.FILE_LIBRARY_SEAT,
 				Context.MODE_PRIVATE, newList);
-		//불러온 시간 기록
+		// 불러온 시간 기록
 		IOUtil.saveToFileSuppressed(context, DATE_FILE, Context.MODE_PRIVATE,
 				new SimpleDateFormat("a hh:mm:ss", Locale.getDefault())
 						.format(new Date()));

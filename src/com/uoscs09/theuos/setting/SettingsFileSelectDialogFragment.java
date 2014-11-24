@@ -124,7 +124,7 @@ public class SettingsFileSelectDialogFragment extends DialogFragment {
 
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return new AlertDialog.Builder(getActivity())
+		AlertDialog ad = new AlertDialog.Builder(getActivity())
 				.setTitle(R.string.setting_save_route_sub_title)
 				.setView(createView())
 				.setIconAttribute(R.attr.ic_content_picture)
@@ -137,6 +137,8 @@ public class SettingsFileSelectDialogFragment extends DialogFragment {
 							}
 						}).setNegativeButton(android.R.string.cancel, null)
 				.create();
+		AppUtil.setAlertDialogMaterial(ad, getActivity());
+		return ad;
 	}
 
 	protected void putPathToPref(Context context, String path) {

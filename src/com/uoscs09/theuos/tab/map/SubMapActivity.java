@@ -53,7 +53,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 		setContentView(R.layout.tab_map_googlemap);
 		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
-		
+
 		if (!initMap()) {
 			AppUtil.showToast(getApplicationContext(),
 					R.string.tab_map_submap_device_without_googlemap, true);
@@ -65,9 +65,10 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 		actionBar.setTitle(R.string.action_map);
 		actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
 				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-		
+
 		ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter
-				.createFromResource(this, R.array.buildings_univ, android.R.layout.simple_dropdown_item_1line);
+				.createFromResource(this, R.array.buildings_univ,
+						android.R.layout.simple_dropdown_item_1line);
 
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		actionBar.setListNavigationCallbacks(spinnerAdapter,
@@ -113,6 +114,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 		locationSelector = new AlertDialog.Builder(this).setView(listView)
 				.setTitle(R.string.tab_map_submap_select_dest)
 				.setMessage(R.string.tab_map_submap_select_building).create();
+		AppUtil.setAlertDialogMaterial(locationSelector, this);
 		moveCameraPositionAt(0);
 		setCameraMapMarkerAt(0, getString(R.string.univ));
 	}
@@ -182,7 +184,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 									}
 								}).show();
 
-			} else { 
+			} else {
 				// 위치 정보 설정이 되어 있으면 현재위치를 받아옴
 				locationManager.requestLocationUpdates(provider, 1, 1, this);
 			}
@@ -405,6 +407,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 									dialog.dismiss();
 								}
 							}).create();
+			AppUtil.setAlertDialogMaterial(dialog, this);
 		}
 		dialog.show();
 	}

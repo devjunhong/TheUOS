@@ -16,7 +16,7 @@
             android:summary="@string/setting_theme_desc"
             android:title="@string/setting_theme" />
 
-        <SwitchPreference
+        <CheckBoxPreference
             android:defaultValue="true"
             android:icon="?attr/ic_device_phone"
             android:key="@string/pref_key_home"

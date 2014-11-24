@@ -1,5 +1,6 @@
 package com.uoscs09.theuos.tab.libraryseat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -162,6 +163,7 @@ public class TabLibrarySeatFragment extends
 				mInfoDialog = new AlertDialog.Builder(getActivity())
 						.setTitle(R.string.action_dissmiss_info)
 						.setView(mDismissDialogView).create();
+				AppUtil.setAlertDialogMaterial(mInfoDialog, getActivity());
 			}
 			mInfoDialog.show();
 			return true;
@@ -203,11 +205,16 @@ public class TabLibrarySeatFragment extends
 	}
 
 	@SuppressWarnings("unchecked")
+	public static final ArrayList<SeatItem> getLibaraySeatList()
+			throws IOException {
+		String body = HttpRequest.getBody(URL, StringUtil.ENCODE_EUC_KR);
+		return (ArrayList<SeatItem>) ParseFactory.create(
+				ParseFactory.What.Seat, body, 0).parse();
+	}
+
 	@Override
 	public ArrayList<SeatItem> call() throws Exception {
-		String body = HttpRequest.getBody(URL, StringUtil.ENCODE_EUC_KR);
-		ArrayList<SeatItem> callSeatList = (ArrayList<SeatItem>) ParseFactory
-				.create(ParseFactory.What.Seat, body, 0).parse();
+		ArrayList<SeatItem> callSeatList = getLibaraySeatList();
 
 		// '해지될 좌석 정보' 정보를 리스트에 추가
 		SeatItem dissmisInfo = callSeatList.remove(callSeatList.size() - 1);

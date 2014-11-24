@@ -1,23 +1,26 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--
-        Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
-    -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
-        <!--
-            Theme customizations available in newer API levels can go in
-            res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
-        -->
+    <style name="Theme.Mystyle.Light.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/Theme.Mystyle.Light.AlertDialogSytle</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+        <item name="android:buttonBarStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="Theme.Mystyle.Light.AlertDialogSytle">
+        <item name="android:maxLines">1</item>
+        <item name="android:scrollHorizontally">true</item>
+        <item name="android:textAppearance">@style/Theme.Mystyle.Light.AlertDialogSytle.TextAppearance</item>
+    </style>
+
+    <style name="Theme.Mystyle.Light.AlertDialogSytle.TextAppearance">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Theme.Mystyle.Light" parent="@style/Theme.AppCompat.Light">
+        <item name="android:alertDialogTheme">@style/Theme.Mystyle.Light.AlertDialog</item>
 
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
@@ -104,11 +107,11 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant</item>
         <item name="menu_ic_loading">@anim/progress_medium_white</item>
-        
         <item name="color_sidemenu_listview_text">@color/material_grey_600</item>
     </style>
 
     <style name="Theme.Mystyle.Light.DarkActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:alertDialogTheme">@style/Theme.Mystyle.Light.AlertDialog</item>
 
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list</item>
@@ -195,11 +198,18 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant_dark</item>
         <item name="menu_ic_loading">@anim/progress_medium_dark</item>
-        
         <item name="color_sidemenu_listview_text">@android:color/white</item>
     </style>
 
+    <style name="Theme.Mystyle.Dark.AlertDialog" parent="@style/Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTitleStyle">@style/Theme.Mystyle.Light.AlertDialogSytle</item>
+        <item name="android:buttonBarButtonStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+        <item name="android:buttonBarStyle">@style/Widget.AppCompat.Toolbar.Button.Navigation</item>
+    </style>
+
     <style name="Theme.Mystyle.Dark" parent="@style/Theme.AppCompat">
+        <item name="android:alertDialogTheme">@style/Theme.Mystyle.Dark.AlertDialog</item>
 
         <!-- for selector -->
         <item name="selector_list">@drawable/selector_list_dark</item>
@@ -286,7 +296,6 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant_dark</item>
         <item name="menu_ic_loading">@anim/progress_medium_dark</item>
-        
         <item name="color_sidemenu_listview_text">@android:color/white</item>
     </style>
 

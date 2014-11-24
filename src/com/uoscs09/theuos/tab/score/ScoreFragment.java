@@ -63,6 +63,8 @@ public class ScoreFragment extends AbsAsyncFragment<ArrayList<ScoreItem>>
 		alertDialog = new AlertDialog.Builder(context).setView(dialogView)
 				.setTitle(R.string.title_tab_score)
 				.setPositiveButton(android.R.string.ok, this).create();
+		AppUtil.setAlertDialogMaterial(alertDialog, getActivity());
+		
 		prog = AppUtil.getProgressDialog(context, false, null);
 		adapter = new ScoreAdapter(context, new ArrayList<ScoreItem>());
 		initTable();

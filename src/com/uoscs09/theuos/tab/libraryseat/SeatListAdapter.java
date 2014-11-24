@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.PieProgressDrawable;
 import com.uoscs09.theuos.common.util.AppUtil;
-import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 
 public class SeatListAdapter extends
 		RecyclerView.Adapter<SeatListAdapter.ViewHolder> {
@@ -29,8 +28,7 @@ public class SeatListAdapter extends
 		this.mContext = context;
 		this.mInflater = LayoutInflater.from(context);
 		textColor = context.getResources().getColor(
-				AppUtil.theme == AppTheme.Black ? android.R.color.white
-						: R.color.dark_blue_gray);
+				AppUtil.getStyledValue(mContext, R.attr.colorAccent));
 	}
 
 	@Override
@@ -74,16 +72,19 @@ public class SeatListAdapter extends
 		@SuppressWarnings("deprecation")
 		public ViewHolder(View convertView) {
 			super(convertView);
+			Context context = convertView.getContext();
 			roomName = (TextView) convertView
 					.findViewById(R.id.tab_library_seat_list_text_room_name);
-			DisplayMetrics dm = convertView.getContext().getResources()
-					.getDisplayMetrics();
+			DisplayMetrics dm = context.getResources().getDisplayMetrics();
 			drawable.setBorderWidth(2, dm);
 			progressImg = (TextView) convertView
 					.findViewById(R.id.tab_libray_seat_list_progress_img);
 			drawable.setTextSize(15 * dm.scaledDensity);
-			drawable.setColor(convertView.getContext().getResources()
-					.getColor(R.color.gray_red));
+			drawable.setColor(context.getResources().getColor(R.color.gray_red));
+			drawable.setCentorColor(context.getResources()
+					.getColor(
+							AppUtil.getStyledValue(context,
+									R.attr.cardBackgroundColor)));
 			progressImg.setBackgroundDrawable(drawable);
 		}
 	}

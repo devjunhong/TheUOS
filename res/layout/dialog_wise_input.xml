@@ -8,14 +8,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="21dp"
-        android:text="@string/tab_timetable_wise_term" />
+        android:text="@string/tab_timetable_wise_term"
+        android:textSize="15sp" />
 
     <Spinner
         android:id="@+id/dialog_wise_spinner_term"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/dialog_wise_term_text"
-        android:layout_below="@+id/dialog_wise_term_text"
+        android:layout_alignBaseline="@+id/dialog_wise_term_text"
+        android:layout_alignRight="@+id/dialog_wise_id_input"
+        android:layout_marginLeft="20dp"
         android:entries="@array/terms" />
 
     <TextView
@@ -24,7 +26,8 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/dialog_wise_term_text"
         android:layout_below="@id/dialog_wise_spinner_term"
-        android:text="@string/tab_timetable_wise_id" />
+        android:text="@string/tab_timetable_wise_id"
+        android:layout_marginTop="4dp" />
 
     <EditText
         android:id="@+id/dialog_wise_id_input"

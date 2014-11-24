@@ -2,23 +2,35 @@ package com.uoscs09.theuos.common.util;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.internal.widget.AdapterViewCompat;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import com.uoscs09.theuos.UosMainActivity;
@@ -38,6 +50,7 @@ import com.uoscs09.theuos.tab.score.ScoreFragment;
 import com.uoscs09.theuos.tab.subject.TabSearchSubjectFragment;
 import com.uoscs09.theuos.tab.timetable.TabTimeTableFragment;
 import com.uoscs09.theuos.tab.transport.TabTransportFragment;
+import com.uoscs09.theuos.wear.DataLayerListenerService;
 
 public class AppUtil {
 	public static final String DB_PHONE = "PhoneNumberDB.db";
@@ -557,6 +570,8 @@ public class AppUtil {
 				context.getString(R.string.pref_key_check_anounce_service),
 				true);
 		Intent service = new Intent(context, ServiceForAnounce.class);
+
+		context.startService(new Intent(context, DataLayerListenerService.class));
 		if (isServiceEnable) {
 			context.startService(service);
 		} else {
@@ -746,6 +761,14 @@ public class AppUtil {
 		}
 	}
 
+	/**
+	 * 화면 크기를 판단한다.
+	 * 
+	 * @return {@code true} - 화면 크기가
+	 *         {@link Configuration.SCREENLAYOUT_SIZE_NORMAL} 이하 일 경우<br>
+	 * <br>
+	 *         {@code false} - 그 외
+	 */
 	public static boolean isScreenSizeSmall(Context context) {
 		int sizeInfoMasked = context.getResources().getConfiguration().screenLayout
 				& Configuration.SCREENLAYOUT_SIZE_MASK;
@@ -755,6 +778,85 @@ public class AppUtil {
 			return true;
 		default:
 			return false;
+		}
+	}
+
+	/**
+	 * Dialog를 Material 테마를 적용한 것 처럼 만들어준다.
+	 * 
+	 * @param context
+	 *            테마를 적용하기 위한 context
+	 */
+	@SuppressLint("NewApi")
+	public static void setAlertDialogMaterial(Dialog dialog, Context context) {
+		try {
+			// 실제 다이얼로그가 생성되지 않았다면 생성시켜준다.
+			// (requestFeature() 관련 에러 처리)
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+				dialog.create();
+			} else {
+				Class<?> dialogClass = dialog.getClass();
+				while (!dialogClass.equals(Dialog.class)) {
+					dialogClass = dialogClass.getSuperclass();
+				}
+				Method m = dialogClass.getDeclaredMethod("dispatchOnCreate",
+						Bundle.class);
+				m.setAccessible(true);
+				m.invoke(dialog, (Bundle) null);
+			}
+
+			Resources resources = context.getResources();
+
+			int titleDividerId = resources.getIdentifier("titleDivider", "id",
+					"android");
+			View decorView = dialog.getWindow().getDecorView();
+			decorView.setPadding(0, 0, 0, 10);
+			
+			View titleDivider = decorView.findViewById(titleDividerId);
+			if (titleDivider != null)
+				titleDivider.setBackgroundColor(Color.TRANSPARENT);
+
+			if (dialog instanceof AlertDialog) {
+				Button button = ((AlertDialog) dialog)
+						.getButton(DialogInterface.BUTTON_POSITIVE);
+				if (button != null)
+					button.setTextColor(resources.getColor(getStyledValue(
+							context, R.attr.colorAccent)));
+			}
+
+			int buttonPanelId = resources.getIdentifier("buttonPanel", "id",
+					"android");
+			LinearLayout buttonPanel = (LinearLayout) decorView
+					.findViewById(buttonPanelId);
+			if (buttonPanel != null) {
+				buttonPanel.setDividerDrawable(null);
+				LinearLayout buttonPanelChild = (LinearLayout) buttonPanel
+						.getChildAt(0);
+				if (buttonPanelChild != null) {
+					buttonPanelChild.setPadding(10, 20, 10, 10);
+					buttonPanelChild.setWeightSum(3.6f);
+					buttonPanelChild.setGravity(Gravity.END);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void setNumberPickerMaterial(NumberPicker numberPicker,
+			Context context) {
+		try {
+			Class<?> numberPickerClass = numberPicker.getClass();
+			while (!numberPickerClass.equals(NumberPicker.class)) {
+				numberPickerClass = numberPickerClass.getSuperclass();
+			}
+
+			Field selectionDivider = numberPickerClass
+					.getDeclaredField("mSelectionDivider");
+			selectionDivider.setAccessible(true);
+			selectionDivider.set(numberPicker, null);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

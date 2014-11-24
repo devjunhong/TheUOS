@@ -71,7 +71,8 @@ public class TabPhoneFragment extends AbsAsyncFragment<ArrayList<PhoneItem>> {
 
 		initProgress();
 		dialog = settingAlertDialog();
-
+		AppUtil.setAlertDialogMaterial(dialog, getActivity());
+		
 		// 리스트 어댑터 생성
 		phoneAdapter = new PhoneListAdapter(getActivity(),
 				R.layout.list_layout_phone, mPhoneList, mOnClickListener);

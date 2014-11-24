@@ -7,27 +7,38 @@
 
     <include layout="@layout/view_toolbar" />
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/activity_uos_drawer_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/activity_pager_viewpager"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_weight="1" />
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/activity_uos_drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <ListView
-            android:id="@+id/activity_uos_left_drawer"
-            android:layout_width="240dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:background="?attr/colorPrimaryDark"
-            android:choiceMode="singleChoice"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:scrollbars="none" />
-    </android.support.v4.widget.DrawerLayout>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/activity_pager_viewpager"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <ListView
+                android:id="@+id/activity_uos_left_drawer"
+                android:layout_width="240dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:background="?attr/colorPrimaryDark"
+                android:choiceMode="singleChoice"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:scrollbars="none" />
+        </android.support.v4.widget.DrawerLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/toolbar_shadow" >
+        </View>
+    </FrameLayout>
 
 </LinearLayout>

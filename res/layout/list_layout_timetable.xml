@@ -13,9 +13,9 @@
         android:layout_width="0dp"
         android:layout_height="fill_parent"
         android:layout_weight="48"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/cardBackgroundColor"
         android:gravity="center"
-        android:textColor="?attr/color_sidemenu_listview_text" />
+        android:textColor="?attr/colorPrimaryDark" />
 
     <TextView
         android:id="@+id/tab_timetable_list_text_mon"

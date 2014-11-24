@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 public class PieProgressDrawable extends Drawable {
 
 	Paint mPaint;
+	Paint mCentorPaint;
 	RectF mBoundsF;
 	RectF mInnerBoundsF;
 	final float START_ANGLE = 0.f;
@@ -26,6 +27,9 @@ public class PieProgressDrawable extends Drawable {
 	public PieProgressDrawable() {
 		super();
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mCentorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mCentorPaint.setStyle(Paint.Style.FILL);
+		mCentorPaint.setColor(Color.WHITE);
 		mTextPaint = new Paint(mPaint);
 		mTextPaint.setColor(Color.BLACK);
 	}
@@ -67,9 +71,8 @@ public class PieProgressDrawable extends Drawable {
 
 	@Override
 	public void draw(Canvas canvas) {
-		// Rotate the canvas around the center of the pie by 90 degrees
-		// counter clockwise so the pie stars at 12 o'clock.
 		int level = getLevel();
+
 		canvas.rotate(-90f, getBounds().centerX(), getBounds().centerY());
 		if (level != 0) {
 			mPaint.setStyle(Paint.Style.STROKE);
@@ -87,10 +90,9 @@ public class PieProgressDrawable extends Drawable {
 			mPaint.setColor(color);
 		}
 
-		// Draw inner oval and text on top of the pie (or add any other
-		// decorations such as a stroke) here..
-		// Don't forget to rotate the canvas back if you plan to add text!
-		// ...
+		canvas.drawCircle(mInnerBoundsF.centerX(), mInnerBoundsF.centerY(),
+				mInnerBoundsF.width() / 5 * 2, mCentorPaint);
+
 		canvas.rotate(90f, getBounds().centerX(), getBounds().centerY());
 
 		Rect bounds = new Rect();
@@ -130,5 +132,9 @@ public class PieProgressDrawable extends Drawable {
 	@Override
 	public int getOpacity() {
 		return mPaint.getAlpha();
+	}
+
+	public void setCentorColor(int color) {
+		mCentorPaint.setColor(color);
 	}
 }

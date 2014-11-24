@@ -2,6 +2,8 @@ package com.uoscs09.theuos.common.util;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.io.StreamCorruptedException;
 import java.util.concurrent.Callable;
 
@@ -155,6 +158,37 @@ public class IOUtil {
 					file.delete();
 			}
 		} catch (Exception e) {
+		}
+	}
+	
+	public static byte[] toByteArray(Serializable obj) throws IOException {
+		ObjectOutputStream objectOuput = null;
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+		try {
+			objectOuput = new ObjectOutputStream(output);
+			objectOuput.writeObject(obj);
+			return output.toByteArray();
+		} finally {
+			closeStream(output);
+			closeStream(objectOuput);
+		}
+	}
+
+	public static <T extends Serializable> T fromByteArray(byte[] array)
+			throws IOException, ClassNotFoundException {
+		ObjectInputStream objectInputStream = null;
+		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
+				array);
+
+		try {
+			objectInputStream = new ObjectInputStream(byteArrayInputStream);
+			@SuppressWarnings("unchecked")
+			T obj = (T) objectInputStream.readObject();
+			return obj;
+		} finally {
+			closeStream(objectInputStream);
+			closeStream(byteArrayInputStream);
 		}
 	}
 

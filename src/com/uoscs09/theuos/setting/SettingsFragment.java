@@ -5,8 +5,6 @@ import java.util.concurrent.Callable;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.Source;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -21,6 +19,8 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,7 +159,9 @@ public class SettingsFragment extends PreferenceFragment implements
 													.setWebPageIntent(URL));
 										}
 									}).setNegativeButton(R.string.later, null);
-					builder.create().show();
+					AlertDialog d = builder.create();
+					AppUtil.setAlertDialogMaterial(d, getActivity());
+					d.show();
 				}
 			}
 
@@ -241,6 +243,7 @@ public class SettingsFragment extends PreferenceFragment implements
 									mThemeSelectorDialog.dismiss();
 								}
 							}).create();
+			AppUtil.setAlertDialogMaterial(mThemeSelectorDialog, getActivity());
 		}
 		mThemeSelectorDialog.show();
 	}
@@ -333,7 +336,7 @@ public class SettingsFragment extends PreferenceFragment implements
 			setPrefScreenSummary(sharedPreferences, key,
 					R.string.setting_check_seat_desc_enable,
 					R.string.setting_check_seat_desc_disable);
-		} else if(key.equals(PrefUtil.KEY_LIB_WIDGET_SEAT_SHOW_ALL)){
+		} else if (key.equals(PrefUtil.KEY_LIB_WIDGET_SEAT_SHOW_ALL)) {
 			setPrefScreenSummary(sharedPreferences, key,
 					R.string.setting_widget_seat_show_all_enable,
 					R.string.setting_widget_seat_show_all_disable);

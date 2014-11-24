@@ -50,7 +50,7 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 	protected WeakReference<Context> contextRef;
 	protected String building, subjectName;
 	protected int day, pos;
-	protected AlertDialog infoDialog, alarmDialog;
+	protected AlertDialog infoDialog;
 	protected AsyncExecutor<ArrayList<ArrayList<String>>> infoExecutor;
 	protected Dialog progress;
 	private Term term;
@@ -129,6 +129,7 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 			spinner.setSelection(getPrefNotiIndex(pos, day, context));
 			infoDialog = new AlertDialog.Builder(context).setTitle(subjectName)
 					.setView(dialogView).create();
+			AppUtil.setAlertDialogMaterial(infoDialog, context);
 			infoDialog.show();
 		}
 	}

@@ -372,6 +372,8 @@ public class TabAnounceFragment extends
 							}
 						}).setNegativeButton(android.R.string.no, null)
 				.create();
+		AppUtil.setNumberPickerMaterial(mPageNumberPicker, context);
+		AppUtil.setAlertDialogMaterial(pageSelectDialog, context);
 	}
 
 	/** 현재 page의 번호를 설정한다. */

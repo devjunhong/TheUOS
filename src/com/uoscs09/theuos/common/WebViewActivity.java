@@ -3,6 +3,7 @@ package com.uoscs09.theuos.common;
 import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.widget.LinearLayout;
@@ -18,15 +19,14 @@ public abstract class WebViewActivity extends BaseActivity {
 	protected WebSettings settings;
 	@ReleaseWhenDestroy
 	protected Toolbar mToolbar;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LinearLayout layout = new LinearLayout(this);
 		layout.setOrientation(LinearLayout.VERTICAL);
 
-		mToolbar = (Toolbar) View.inflate(this, R.layout.view_toolbar,
-				null);
+		mToolbar = (Toolbar) View.inflate(this, R.layout.view_toolbar, null);
 		mWebView = new NonLeakingWebView(this);
 
 		setSupportActionBar(mToolbar);
@@ -44,6 +44,17 @@ public abstract class WebViewActivity extends BaseActivity {
 	protected void onPause() {
 		overridePendingTransition(R.anim.zoom_enter, R.anim.zoom_exit);
 		super.onPause();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

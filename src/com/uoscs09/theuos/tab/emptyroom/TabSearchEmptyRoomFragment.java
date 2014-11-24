@@ -92,6 +92,7 @@ public class TabSearchEmptyRoomFragment extends
 						excute();
 					}
 				}).create();
+		AppUtil.setAlertDialogMaterial(dialog, getActivity());
 	}
 
 	@Override

@@ -59,7 +59,7 @@ public class SubAnounceWebActivity extends WebViewActivity {
 			AppUtil.overridePendingTransition(this, 1);
 			return true;
 		default:
-			return false;
+			return super.onOptionsItemSelected(item);
 		}
 	}
 }

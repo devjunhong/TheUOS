@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
@@ -25,15 +26,16 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 		OnSharedPreferenceChangeListener {
 	private TimePickerDialog timePicker;
 	protected boolean isAccepted = false;
+	private boolean isNotiKeywordDialogSetting = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((ActionBarActivity) getActivity())
-				.getSupportActionBar().setTitle(
+		((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(
 				R.string.setting_anounce_noti_frag_title1);
 		addPreferencesFromResource(R.xml.prefrence_announce_noti);
 		bindPreferenceSummaryToValue();
+
 	}
 
 	@Override
@@ -46,9 +48,31 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 		case R.string.setting_noti_time:
 			showTimePicker();
 			return true;
+		case R.string.anounce_keyword:
+			if (!isNotiKeywordDialogSetting) {
+				EditTextPreference prefKeyword = (EditTextPreference) preference;
+				AppUtil.setAlertDialogMaterial(prefKeyword.getDialog(),
+						getActivity());
+				isNotiKeywordDialogSetting = true;
+			}
+			return false;
 		default:
 			return false;
 		}
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		getPreferenceScreen().getSharedPreferences()
+				.registerOnSharedPreferenceChangeListener(this);
+	}
+
+	@Override
+	public void onPause() {
+		getPreferenceScreen().getSharedPreferences()
+				.unregisterOnSharedPreferenceChangeListener(this);
+		super.onPause();
 	}
 
 	private void bindPreferenceSummaryToValue() {
@@ -187,6 +211,7 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 							isAccepted = false;
 						}
 					});
+			AppUtil.setAlertDialogMaterial(timePicker, getActivity());
 		}
 		timePicker.show();
 	}

@@ -46,6 +46,9 @@
 -keep class android.support.** { *; }
 -keep interface android.support.** { *; }
 
+# material theme for dialog  
+-keep class android.app.Dialog
+
 -keep class com.uoscs09.theuos.common.impl.annotaion.**
 
 # Library Jars
