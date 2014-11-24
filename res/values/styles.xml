@@ -104,6 +104,8 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant</item>
         <item name="menu_ic_loading">@anim/progress_medium_white</item>
+        
+        <item name="color_sidemenu_listview_text">@color/material_grey_600</item>
     </style>
 
     <style name="Theme.Mystyle.Light.DarkActionBar" parent="@style/Theme.AppCompat.Light.DarkActionBar">
@@ -193,6 +195,8 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant_dark</item>
         <item name="menu_ic_loading">@anim/progress_medium_dark</item>
+        
+        <item name="color_sidemenu_listview_text">@android:color/white</item>
     </style>
 
     <style name="Theme.Mystyle.Dark" parent="@style/Theme.AppCompat">
@@ -282,6 +286,8 @@
         <item name="menu_ic_navigation_drawer">@drawable/ic_action_navigation_menu_dark</item>
         <item name="menu_ic_restaurant">@drawable/ic_restaurant_dark</item>
         <item name="menu_ic_loading">@anim/progress_medium_dark</item>
+        
+        <item name="color_sidemenu_listview_text">@android:color/white</item>
     </style>
 
 </resources>

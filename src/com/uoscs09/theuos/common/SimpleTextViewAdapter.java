@@ -135,7 +135,10 @@ public class SimpleTextViewAdapter extends AbsArrayAdapter<Integer> {
 			return this;
 		}
 
-		/** TextView의 icon의 테마를 설정한다. */
+		/**
+		 * TextView의 icon의 테마를 설정한다.<br>
+		 * <i>추후에 이 메소드를 삭제할 예정</i>
+		 */
 		@Deprecated
 		public Builder setDrawableTheme(AppTheme theme) {
 			product.iconTheme = theme;

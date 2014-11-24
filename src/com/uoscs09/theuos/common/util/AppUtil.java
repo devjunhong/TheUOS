@@ -193,7 +193,10 @@ public class AppUtil {
 		}
 	}
 
-	/** 탭 아이콘을 불러옴 */
+	/**
+	 * 탭 아이콘을 불러옴<br>
+	 * <i>추후에 이 메소드를 삭제할 예정</i>
+	 */
 	@Deprecated
 	public static int getPageIcon(int pageStringResourceId, AppTheme theme) {
 		switch (theme) {
@@ -272,7 +275,7 @@ public class AppUtil {
 
 		return getStyledValue(context, iconId);
 	}
-	
+
 	public static int getPageIconForMenu(Context context, int pageStringResId) {
 		int iconId;
 		switch (pageStringResId) {

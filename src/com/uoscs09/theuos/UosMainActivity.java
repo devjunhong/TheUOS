@@ -151,7 +151,7 @@ public class UosMainActivity extends BaseActivity implements PagerInterface,
 				.setTextViewTextColor(
 						getResources().getColor(
 								AppUtil.getStyledValue(this,
-										R.attr.color_actionbar_title)))
+										R.attr.color_sidemenu_listview_text)))
 				.setDrawableBounds(new Rect(0, 0, width, height)).create());
 		mDrawerListView
 				.setOnItemClickListener(new AdapterView.OnItemClickListener() {
