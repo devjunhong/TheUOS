@@ -114,7 +114,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 		locationSelector = new AlertDialog.Builder(this).setView(listView)
 				.setTitle(R.string.tab_map_submap_select_dest)
 				.setMessage(R.string.tab_map_submap_select_building).create();
-		AppUtil.setAlertDialogMaterial(locationSelector, this);
+		AppUtil.setDialogMaterial(locationSelector, this);
 		moveCameraPositionAt(0);
 		setCameraMapMarkerAt(0, getString(R.string.univ));
 	}
@@ -407,7 +407,7 @@ public class SubMapActivity extends BaseActivity implements LocationListener {
 									dialog.dismiss();
 								}
 							}).create();
-			AppUtil.setAlertDialogMaterial(dialog, this);
+			AppUtil.setDialogMaterial(dialog, this);
 		}
 		dialog.show();
 	}

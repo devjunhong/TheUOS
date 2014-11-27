@@ -163,7 +163,7 @@ public class TabLibrarySeatFragment extends
 				mInfoDialog = new AlertDialog.Builder(getActivity())
 						.setTitle(R.string.action_dissmiss_info)
 						.setView(mDismissDialogView).create();
-				AppUtil.setAlertDialogMaterial(mInfoDialog, getActivity());
+				AppUtil.setDialogMaterial(mInfoDialog, getActivity());
 			}
 			mInfoDialog.show();
 			return true;

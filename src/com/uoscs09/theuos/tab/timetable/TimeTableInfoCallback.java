@@ -129,7 +129,7 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 			spinner.setSelection(getPrefNotiIndex(pos, day, context));
 			infoDialog = new AlertDialog.Builder(context).setTitle(subjectName)
 					.setView(dialogView).create();
-			AppUtil.setAlertDialogMaterial(infoDialog, context);
+			AppUtil.setDialogMaterial(infoDialog, context);
 			infoDialog.show();
 		}
 	}

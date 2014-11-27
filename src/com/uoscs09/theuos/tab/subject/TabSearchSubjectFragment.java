@@ -246,7 +246,7 @@ public class TabSearchSubjectFragment extends
 								excute();
 							}
 						}).create();
-		AppUtil.setAlertDialogMaterial(ad, getActivity());
+		AppUtil.setDialogMaterial(ad, getActivity());
 	}
 
 	@Override

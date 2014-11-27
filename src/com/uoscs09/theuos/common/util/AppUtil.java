@@ -788,7 +788,7 @@ public class AppUtil {
 	 *            테마를 적용하기 위한 context
 	 */
 	@SuppressLint("NewApi")
-	public static void setAlertDialogMaterial(Dialog dialog, Context context) {
+	public static void setDialogMaterial(Dialog dialog, Context context) {
 		try {
 			// 실제 다이얼로그가 생성되지 않았다면 생성시켜준다.
 			// (requestFeature() 관련 에러 처리)

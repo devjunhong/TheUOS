@@ -137,7 +137,7 @@ public class SettingsFileSelectDialogFragment extends DialogFragment {
 							}
 						}).setNegativeButton(android.R.string.cancel, null)
 				.create();
-		AppUtil.setAlertDialogMaterial(ad, getActivity());
+		AppUtil.setDialogMaterial(ad, getActivity());
 		return ad;
 	}
 

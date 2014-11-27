@@ -112,7 +112,7 @@ public class TabTimeTableFragment extends
 				.setView(wiseDialogLayout)
 				.setPositiveButton(R.string.confirm, this)
 				.setNegativeButton(R.string.cancel, this).create();
-		AppUtil.setAlertDialogMaterial(loginDialog, getActivity());
+		AppUtil.setDialogMaterial(loginDialog, getActivity());
 
 		super.onCreate(savedInstanceState);
 	}

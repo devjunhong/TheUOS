@@ -143,7 +143,7 @@ public class TabBookSearchFragment extends
 								setActionText();
 							}
 						}).setIconAttribute(R.attr.ic_action_help).create();
-		AppUtil.setAlertDialogMaterial(optionDialog, getActivity());
+		AppUtil.setDialogMaterial(optionDialog, getActivity());
 		super.onCreate(savedInstanceState);
 	}
 

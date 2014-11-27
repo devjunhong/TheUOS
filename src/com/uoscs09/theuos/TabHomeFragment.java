@@ -88,6 +88,7 @@ public class TabHomeFragment extends BaseFragment implements
 				.setIconAttribute(R.attr.ic_navigation_accept)
 				.setTitle(R.string.tab_etc_selection).create();
 		etcDialog.setView(v, 10, 10, 10, 10);
+		AppUtil.setDialogMaterial(etcDialog, getActivity());
 	}
 
 	@Override

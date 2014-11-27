@@ -51,7 +51,7 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 		case R.string.anounce_keyword:
 			if (!isNotiKeywordDialogSetting) {
 				EditTextPreference prefKeyword = (EditTextPreference) preference;
-				AppUtil.setAlertDialogMaterial(prefKeyword.getDialog(),
+				AppUtil.setDialogMaterial(prefKeyword.getDialog(),
 						getActivity());
 				isNotiKeywordDialogSetting = true;
 			}
@@ -211,7 +211,7 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 							isAccepted = false;
 						}
 					});
-			AppUtil.setAlertDialogMaterial(timePicker, getActivity());
+			AppUtil.setDialogMaterial(timePicker, getActivity());
 		}
 		timePicker.show();
 	}

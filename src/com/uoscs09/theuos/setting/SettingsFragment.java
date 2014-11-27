@@ -160,7 +160,7 @@ public class SettingsFragment extends PreferenceFragment implements
 										}
 									}).setNegativeButton(R.string.later, null);
 					AlertDialog d = builder.create();
-					AppUtil.setAlertDialogMaterial(d, getActivity());
+					AppUtil.setDialogMaterial(d, getActivity());
 					d.show();
 				}
 			}
@@ -243,7 +243,7 @@ public class SettingsFragment extends PreferenceFragment implements
 									mThemeSelectorDialog.dismiss();
 								}
 							}).create();
-			AppUtil.setAlertDialogMaterial(mThemeSelectorDialog, getActivity());
+			AppUtil.setDialogMaterial(mThemeSelectorDialog, getActivity());
 		}
 		mThemeSelectorDialog.show();
 	}

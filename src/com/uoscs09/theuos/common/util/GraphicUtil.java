@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,6 +22,9 @@ public class GraphicUtil {
 	/** 주어진 리스트뷰의 전체 아이템들을 하나의 통합된 비트맵으로 만든다. */
 	public static Bitmap getWholeListViewItemsToBitmap(ListView listview) {
 		ListAdapter adapter = listview.getAdapter();
+		if (adapter instanceof AnimationAdapter) {
+			adapter = ((AnimationAdapter) adapter).getDecoratedBaseAdapter();
+		}
 		int itemscount = adapter.getCount();
 		int allitemsheight = 0;
 		List<Bitmap> bmps = new ArrayList<Bitmap>();

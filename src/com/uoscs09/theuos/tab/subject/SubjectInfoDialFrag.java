@@ -6,6 +6,7 @@ import java.util.Hashtable;
 import java.util.concurrent.Callable;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -72,6 +73,7 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 		if (f == null)
 			f = (DialogFragment) Fragment.instantiate(context,
 					SubjectInfoDialFrag.class.getName(), b);
+
 		f.show(fm, "info");
 	}
 
@@ -145,6 +147,13 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 	}
 
 	@Override
+	public Dialog getDialog() {
+		Dialog d = super.getDialog();
+		AppUtil.setDialogMaterial(d, getActivity());
+		return d;
+	}
+
+	@Override
 	public void onResume() {
 		if (infoList.size() == 0) {
 			ex = new AsyncExecutor<ArrayList<String>>().setCallable(this)
@@ -152,6 +161,7 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 			ex.executeOnExecutor(AsyncExecutor.THREAD_POOL_EXECUTOR);
 			prog.show();
 		}
+
 		super.onResume();
 	}
 
