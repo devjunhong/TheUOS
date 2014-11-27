@@ -29,7 +29,7 @@ public class PieProgressDrawable extends Drawable {
 		mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mCentorPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mCentorPaint.setStyle(Paint.Style.FILL);
-		mCentorPaint.setColor(Color.WHITE);
+		mCentorPaint.setColor(Color.TRANSPARENT);
 		mTextPaint = new Paint(mPaint);
 		mTextPaint.setColor(Color.BLACK);
 	}
@@ -95,11 +95,14 @@ public class PieProgressDrawable extends Drawable {
 
 		canvas.rotate(90f, getBounds().centerX(), getBounds().centerY());
 
-		Rect bounds = new Rect();
-		mTextPaint.getTextBounds(mText.toString(), 0, mText.length(), bounds);
-		canvas.drawText(mText, 0, mText.length(), getBounds().centerX()
-				- bounds.centerX(), getBounds().centerY() - bounds.centerY(),
-				mTextPaint);
+		if (mText != null && !mText.equals("")) {
+			Rect bounds = new Rect();
+			mTextPaint.getTextBounds(mText.toString(), 0, mText.length(),
+					bounds);
+			canvas.drawText(mText, 0, mText.length(), getBounds().centerX()
+					- bounds.centerX(),
+					getBounds().centerY() - bounds.centerY(), mTextPaint);
+		}
 	}
 
 	@Override

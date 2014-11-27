@@ -14,6 +14,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
+import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -31,6 +33,7 @@ import com.javacan.asyncexcute.AsyncCallback;
 import com.javacan.asyncexcute.AsyncExecutor;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.AsyncLoader;
+import com.uoscs09.theuos.common.PieProgressDrawable;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.AppUtil.AppTheme;
 import com.uoscs09.theuos.common.util.PrefUtil;
@@ -192,33 +195,47 @@ public class SettingsFragment extends PreferenceFragment implements
 										View convertView, ViewGroup parent) {
 									View view = super.getView(position,
 											convertView, parent);
-									int textColor;
-									int backColor;
+									// ActionBar text, colorPrimary, colorPrimaryDark (예정)
+									int colorText, colorDrawableCentor, colorDrawableBorder;
 									switch (getItem(position)) {
 									case Black:
-										textColor = android.R.color.white;
-										backColor = R.color.primary_material_dark;
+										colorText = R.color.primary_dark_material_dark;
+										colorDrawableCentor = R.color.primary_material_dark;
+										colorDrawableBorder = R.color.primary_dark_material_dark;
 										break;
 									case BlackAndWhite:
-										textColor = android.R.color.white;
-										backColor = R.color.primary_material_dark;
+										colorText = R.color.primary_dark_material_dark;
+										colorDrawableCentor = android.R.color.white;
+										colorDrawableBorder = R.color.material_blue_grey_950;
 										break;
 									case LightBlue:
-										textColor = android.R.color.white;
-										backColor = R.color.material_light_blue_400;
+										colorText = R.color.material_light_blue_400;
+										colorDrawableCentor = R.color.material_light_blue_400;
+										colorDrawableBorder = R.color.material_light_blue_600;
 										break;
 									case White:
 									default:
-										textColor = R.color.material_deep_teal_500;
-										backColor = android.R.color.white;
+										colorText = R.color.material_deep_teal_500;
+										colorDrawableCentor = android.R.color.white;
+										colorDrawableBorder = R.color.primary_material_light;
 										break;
 									}
-
-									((TextView) view)
-											.setTextColor(getResources()
-													.getColor(textColor));
-									view.setBackgroundColor(getResources()
-											.getColor(backColor));
+									Resources res = getResources();
+									colorText = res
+											.getColor(colorText);
+									colorDrawableCentor = res.getColor(colorDrawableCentor);
+									colorDrawableBorder = res
+											.getColor(colorDrawableBorder);
+									TextView tv = (TextView) view;
+									tv.setTextColor(colorText);
+									PieProgressDrawable d = new PieProgressDrawable();
+									d.setBounds(new Rect(0, 0, 60, 60));
+									d.setBorderWidth(2, res.getDisplayMetrics());
+									d.setCentorColor(colorDrawableCentor);
+									d.setColor(colorDrawableBorder);
+									d.setLevel(100);
+									tv.setCompoundDrawablePadding(40);
+									tv.setCompoundDrawables(d, null, null, null);
 									return view;
 								}
 							}, new DialogInterface.OnClickListener() {
