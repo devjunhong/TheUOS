@@ -44,16 +44,17 @@ public class TabAnounceFragment extends
 	protected Spinner spinner;
 	@ReleaseWhenDestroy
 	private ArrayAdapter<AnounceItem> adapter;
-	private Hashtable<String, String> queryTable;
+	private Hashtable<String, String> mQueryTable;
 	@AsyncData
 	private ArrayList<AnounceItem> mDataList;
 	/** searchView */
 	@ReleaseWhenDestroy
 	protected MenuItem searchMenu;
 	/** viewpager 이동 시 스피너의 아이템 리스너를 한번만 발동시키게 하는 변수 */
+	//XXX onMenuVisibleChange()로 해결 할 수 있을듯? 
 	private boolean once;
-	/** 검색기능 활성화시 true 가 되는 변수 */
-	private boolean isSearch;
+	/** 현재 공지사항 검색을 시도하는지의 여부를 가리키는 변수*/
+	private boolean isSearching;
 	/** (검색 메뉴 선택시)검색어를 저장함 */
 	protected String searchQuery;
 	protected int spinnerSelection = 0;
@@ -62,6 +63,8 @@ public class TabAnounceFragment extends
 	protected AlertDialog pageSelectDialog;
 	@ReleaseWhenDestroy
 	protected NumberPicker mPageNumberPicker;
+	/** 표시할 공지사항목록의 변동이 생겼을 때 (분류 변경 등등..)<br>
+	 * 페이지의 최대값이 변경되어야 하는지를 가리키는 값*/
 	protected boolean mShouldChangeMaxValueOfPage = false;
 
 	/** 이전 페이지 번호, 공지사항 검색 결과가 없으면 현재 페이지 번호를 변하지 않게하는 역할 */
@@ -81,7 +84,7 @@ public class TabAnounceFragment extends
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		queryTable = new Hashtable<String, String>();
+		mQueryTable = new Hashtable<String, String>();
 		getDataFromBundle(savedInstanceState);
 		Context context = getActivity();
 		initDialog();
@@ -171,7 +174,7 @@ public class TabAnounceFragment extends
 						public void onFocusChange(View view,
 								boolean queryTextFocused) {
 							if (!queryTextFocused) {
-								searchMenu.collapseActionView();
+								MenuItemCompat.collapseActionView(searchMenu);
 								searchView.setQuery("", false);
 							}
 						}
@@ -212,7 +215,7 @@ public class TabAnounceFragment extends
 				int position, long itemId) {
 			spinnerSelection = position;
 			searchQuery = null;
-			isSearch = false;
+			isSearching = false;
 			if (!isMenuVisible() || !once) {
 				once = true;
 				return;
@@ -248,11 +251,11 @@ public class TabAnounceFragment extends
 			if (spinnerSelection == 0) {
 				AppUtil.showToast(getActivity(),
 						R.string.tab_anounce_invaild_category, true);
-				isSearch = false;
+				isSearching = false;
 			} else {
 				searchQuery = query.trim();
 				setPageValue(1);
-				isSearch = true;
+				isSearching = true;
 				mShouldChangeMaxValueOfPage = true;
 				excute();
 			}
@@ -267,34 +270,34 @@ public class TabAnounceFragment extends
 	@Override
 	public ArrayList<AnounceItem> call() throws Exception {
 		// TODO 최적화 필요, 필요없이 지우고 쓰고 함
-		queryTable.clear();
+		mQueryTable.clear();
 		final int howTo;
 		final String url;
 		if (spinnerSelection == 3) {
-			if (isSearch) {
-				queryTable.put("sword", searchQuery);
-				queryTable.put("skind", "title");
+			if (isSearching) {
+				mQueryTable.put("sword", searchQuery);
+				mQueryTable.put("skind", "title");
 			}
-			queryTable.put("process", "list");
-			queryTable.put("brdbbsseq", "1");
-			queryTable.put("x", "1");
-			queryTable.put("y", "1");
-			queryTable.put("w", "3");
-			queryTable.put("pageNo", String.valueOf(pageNum));
+			mQueryTable.put("process", "list");
+			mQueryTable.put("brdbbsseq", "1");
+			mQueryTable.put("x", "1");
+			mQueryTable.put("y", "1");
+			mQueryTable.put("w", "3");
+			mQueryTable.put("pageNo", String.valueOf(pageNum));
 			howTo = ParseFactory.Value.BODY;
 			url = "http://scholarship.uos.ac.kr/scholarship.do";
 		} else {
-			if (isSearch) {
-				queryTable.put("searchCnd", "1");
-				queryTable.put("searchWrd", searchQuery);
+			if (isSearching) {
+				mQueryTable.put("searchCnd", "1");
+				mQueryTable.put("searchWrd", searchQuery);
 			}
-			queryTable.put("list_id", spinnerSelection == 1 ? "FA1" : "FA2");
-			queryTable.put("pageIndex", String.valueOf(pageNum));
+			mQueryTable.put("list_id", spinnerSelection == 1 ? "FA1" : "FA2");
+			mQueryTable.put("pageIndex", String.valueOf(pageNum));
 			howTo = ParseFactory.Value.BASIC;
 			url = "http://www.uos.ac.kr/korNotice/list.do";
 		}
 		String body = HttpRequest.getBodyByPost(url, StringUtil.ENCODE_UTF_8,
-				queryTable, StringUtil.ENCODE_UTF_8);
+				mQueryTable, StringUtil.ENCODE_UTF_8);
 		return (ArrayList<AnounceItem>) ParseFactory.create(
 				ParseFactory.What.Anounce, body, howTo).parse();
 	}

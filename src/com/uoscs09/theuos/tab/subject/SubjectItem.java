@@ -26,6 +26,21 @@ import com.uoscs09.theuos.common.util.StringUtil;
 public class SubjectItem implements Parcelable {
 	// TODO 수업 시간을 String 이 아닌 날짜/시간 별 code로 변환
 	public static final int SIZE = 13;
+	/**
+	 * public String sub_dept<br>
+	 * public String subject_div<br>
+	 * public String subject_div2<br>
+	 * public String subject_no<br>
+	 * public String class_div<br>
+	 * public String subject_nm<br>
+	 * public String shyr<br>
+	 * public String credit<br>
+	 * public String prof_nm<br>
+	 * public String class_type<br>
+	 * public String class_nm<br>
+	 * public String tlsn_count<br>
+	 * public String tlsn_limit_count<br>
+	 */
 	public String[] infoArray = new String[SIZE];
 
 	public SubjectItem() {

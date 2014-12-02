@@ -37,7 +37,7 @@ public class ParseSubjectInfo extends OApiParse<ArrayList<String>> {
 				infoList = parseToArrayList(split, PTNS2);
 			}
 
-			for (int i = 0; i < 16; i++) {
+			for (int i = 0; i < infoList.size()/*16*/; i++) {
 				list.addAll(infoList.get(i));
 			}
 

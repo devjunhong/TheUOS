@@ -123,35 +123,32 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 				// 설정된 데이터가 없다면
 				// 해당 아이템을 처음 터치하는 것 이므로 데이터를 불러옴
 				if (item.bookStateInfoList == null) {
-					new AsyncLoader<List<BookStateInfo>>().excute(
-							new Callable<List<BookStateInfo>>() {
+					AsyncLoader.excute(new Callable<List<BookStateInfo>>() {
 
-								@Override
-								public List<BookStateInfo> call()
-										throws Exception {
-									if (item.infoUrl.equals(StringUtil.NULL)) {
-										return null;
-									} else {
-										return new ParseBookInfo(HttpRequest
-												.getBody(item.infoUrl)).parse();
-									}
-								}
-							}, new AsyncLoader.OnTaskFinishedListener() {
+						@Override
+						public List<BookStateInfo> call() throws Exception {
+							if (item.infoUrl.equals(StringUtil.NULL)) {
+								return null;
+							} else {
+								return new ParseBookInfo(HttpRequest
+										.getBody(item.infoUrl)).parse();
+							}
+						}
+					}, new AsyncLoader.OnTaskFinishedListener() {
 
-								@SuppressWarnings("unchecked")
-								@Override
-								public void onTaskFinished(
-										boolean isExceptionOccured, Object data) {
-									if (!isExceptionOccured && data != null) {
-										item.bookStateInfoList = (List<BookStateInfo>) data;
-										setBookStateLayout(h.stateInfoLayout,
-												item.bookStateInfoList);
-										h.stateInfoLayout
-												.setVisibility(View.VISIBLE);
-										v.requestLayout();
-									}
-								}
-							});
+						@SuppressWarnings("unchecked")
+						@Override
+						public void onTaskFinished(boolean isExceptionOccured,
+								Object data) {
+							if (!isExceptionOccured && data != null) {
+								item.bookStateInfoList = (List<BookStateInfo>) data;
+								setBookStateLayout(h.stateInfoLayout,
+										item.bookStateInfoList);
+								h.stateInfoLayout.setVisibility(View.VISIBLE);
+								v.requestLayout();
+							}
+						}
+					});
 				} else {
 					if (h.stateInfoLayout.getVisibility() == View.GONE
 							&& !item.bookStateInfoList.isEmpty())

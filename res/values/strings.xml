@@ -131,6 +131,7 @@
     <string name="emptyview_button_or_menu_to_search">버튼이나 메뉴버튼을 눌러 검색하세요</string>
     <string name="emptyview_button_to_search">버튼을 눌러 검색하세요</string>
     <string name="tab_etc_selection">이동할 메뉴를 선택해주세요.</string>
+    <string name="year">학년도</string>
 
     <string-array name="buildings_univ">
         <item>01 전농관</item>

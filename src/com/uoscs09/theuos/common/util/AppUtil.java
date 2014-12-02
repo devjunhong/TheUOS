@@ -96,7 +96,7 @@ public class AppUtil {
 		for (int i = 1; i < PAGE_SIZE; i++) {
 			tabList.add(getTitleResId(pref.get(page + i, i)));
 		}
-		// tabList.add(getTitleResId(pref.get("page99", 99)));
+		// tabList.add(getTitleResId(mPrefUtil.get("page99", 99)));
 
 		return tabList;
 	}

@@ -57,9 +57,11 @@ public class TabTimeTableFragment extends
 	@ReleaseWhenDestroy
 	protected View rootView;
 	@ReleaseWhenDestroy
-	protected EditText idView, passwdView;
+	protected EditText mWiseIdView, mWisePasswdView;
 	@ReleaseWhenDestroy
-	private Spinner termSpinner;
+	private Spinner mWiseTermSpinner;
+	@ReleaseWhenDestroy
+	private Spinner mWiseYearSpinner;
 	@ReleaseWhenDestroy
 	private AlertDialog deleteDialog;
 	protected Term term;
@@ -69,9 +71,8 @@ public class TabTimeTableFragment extends
 	private TimeTableInfoCallback cb;
 	private boolean mIsOnLoad;
 	private Map<String, Integer> colorTable;
-	private String termText;
-
-	// public final static int NUM_OF_TIMETABLE_VIEWS = 7;
+	private String mTermText;
+	private String mTimeTableYear;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -88,24 +89,35 @@ public class TabTimeTableFragment extends
 		}
 		cb = new TimeTableInfoCallback(context);
 
-		int termValue = PrefUtil.getInstance(context).get("timetable_term", -1);
+		PrefUtil pref = PrefUtil.getInstance(context);
+		int termValue = pref.get("timetable_term", -1);
 		if (termValue != -1) {
 			term = Term.values()[termValue];
-			cb.setTerm(term);
-			setTermTextViewText(term, context);
+			cb.term = term;
 		} else {
 			term = OApiUtil.getTerm();
-			cb.setTerm(term);
+			cb.term = term;
 		}
+		mTimeTableYear = pref.get("timetable_year",
+				OApiUtil.getSemesterYear(term));
+		cb.year = mTimeTableYear;
+
 		adapter = new TimetableAdapter(context, R.layout.list_layout_timetable,
 				mTimetableList, colorTable, cb);
 		View wiseDialogLayout = View.inflate(context,
-				R.layout.dialog_wise_input, null);
-		idView = (EditText) wiseDialogLayout
+				R.layout.dialog_timetable_wise_login, null);
+		mWiseYearSpinner = (Spinner) wiseDialogLayout
+				.findViewById(R.id.dialog_wise_spinner_year);
+		mWiseYearSpinner.setAdapter(new ArrayAdapter<String>(context,
+				android.R.layout.simple_spinner_dropdown_item, OApiUtil
+						.getYears()));
+		mWiseYearSpinner.setSelection(2);
+
+		mWiseIdView = (EditText) wiseDialogLayout
 				.findViewById(R.id.dialog_wise_id_input);
-		passwdView = (EditText) wiseDialogLayout
+		mWisePasswdView = (EditText) wiseDialogLayout
 				.findViewById(R.id.dialog_wise_passwd_input);
-		termSpinner = (Spinner) wiseDialogLayout
+		mWiseTermSpinner = (Spinner) wiseDialogLayout
 				.findViewById(R.id.dialog_wise_spinner_term);
 		loginDialog = new AlertDialog.Builder(context)
 				.setTitle(R.string.tab_timetable_wise_login_title)
@@ -114,6 +126,8 @@ public class TabTimeTableFragment extends
 				.setNegativeButton(R.string.cancel, this).create();
 		AppUtil.setDialogMaterial(loginDialog, getActivity());
 
+		if (termValue != -1)
+			setTermTextViewText(term, context);
 		super.onCreate(savedInstanceState);
 	}
 
@@ -121,10 +135,10 @@ public class TabTimeTableFragment extends
 	public void onClick(DialogInterface dialog, int which) {
 		switch (which) {
 		case DialogInterface.BUTTON_POSITIVE: {
-			String id = idView.getText().toString();
+			String id = mWiseIdView.getText().toString();
 			Context context = getActivity();
 
-			if (id.equals("123456789") && passwdView.length() < 1) {
+			if (id.equals("123456789") && mWisePasswdView.length() < 1) {
 				if (AppUtil.test) {
 					AppUtil.test = false;
 				} else {
@@ -136,7 +150,7 @@ public class TabTimeTableFragment extends
 				return;
 			}
 
-			if (passwdView.length() < 1 || StringUtil.NULL.equals(id)) {
+			if (mWisePasswdView.length() < 1 || StringUtil.NULL.equals(id)) {
 				AppUtil.showToast(context,
 						R.string.tab_timetable_wise_login_warning_null, true);
 				clearText();
@@ -161,14 +175,14 @@ public class TabTimeTableFragment extends
 	}
 
 	private void clearId() {
-		if (idView != null && idView.length() > 0) {
-			TextKeyListener.clear(idView.getText());
+		if (mWiseIdView != null && mWiseIdView.length() > 0) {
+			TextKeyListener.clear(mWiseIdView.getText());
 		}
 	}
 
 	private void clearPassWd() {
-		if (passwdView != null && passwdView.length() > 0) {
-			TextKeyListener.clear(passwdView.getText());
+		if (mWisePasswdView != null && mWisePasswdView.length() > 0) {
+			TextKeyListener.clear(mWisePasswdView.getText());
 		}
 	}
 
@@ -219,8 +233,10 @@ public class TabTimeTableFragment extends
 				loginDialog.show();
 			return true;
 		case R.id.action_delete:
-			if (deleteDialog == null)
+			if (deleteDialog == null) {
 				deleteDialog = getDeleteDialog();
+				AppUtil.setDialogMaterial(deleteDialog, getActivity());
+			}
 			deleteDialog.show();
 			return true;
 		case R.id.action_save:
@@ -238,7 +254,7 @@ public class TabTimeTableFragment extends
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append(PrefUtil.getPictureSavedPath(getActivity()))
-				.append("timetable_").append(OApiUtil.getYear()).append('_')
+				.append("timetable_").append(mTimeTableYear).append('_')
 				.append(term).append('_')
 				.append(String.valueOf(System.currentTimeMillis()))
 				.append(".png");
@@ -299,11 +315,11 @@ public class TabTimeTableFragment extends
 	}
 
 	private void setTermTextViewText(Term term, Context context) {
-		termText = OApiUtil.getSemesterYear(term)
+		mTermText = mTimeTableYear
 				+ " / "
 				+ context.getResources().getStringArray(R.array.terms)[term
 						.ordinal()];
-		setSubtitleWhenVisible(termText);
+		setSubtitleWhenVisible(mTermText);
 	}
 
 	@Override
@@ -321,14 +337,19 @@ public class TabTimeTableFragment extends
 		if (mIsOnLoad) {
 			result = (ArrayList<TimeTableItem>) readTimetable(context);
 		} else { // 사용자가 WISE에 시간표 정보를 요청하였을 때
-			term = Term.values()[termSpinner.getSelectedItemPosition()];
+			term = Term.values()[mWiseTermSpinner.getSelectedItemPosition()];
+			mTimeTableYear = mWiseYearSpinner.getSelectedItem().toString();
 			String body = TimeTableHttpRequest.getHttpBodyPost(
-					idView.getText(), passwdView.getText(), term);
-			cb.setTerm(term);
+					mWiseIdView.getText(), mWisePasswdView.getText(), term,
+					mTimeTableYear);
+			cb.term = term;
+			cb.year = mTimeTableYear;
 			result = (ArrayList<TimeTableItem>) ParseFactory.create(
 					ParseFactory.What.TimeTable, body, 0).parse();
 
-			PrefUtil.getInstance(context).put("timetable_term", term.ordinal());
+			PrefUtil pref = PrefUtil.getInstance(context);
+			pref.put("timetable_term", term.ordinal());
+			pref.put("timetable_year", mTimeTableYear);
 			TimeTableInfoCallback.clearAllAlarm(context);
 			saveColorTable(context, makeColorTable(result));
 		}
@@ -459,54 +480,45 @@ public class TabTimeTableFragment extends
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								new AsyncLoader<Boolean>().excute(
-										new Callable<Boolean>() {
+								AsyncLoader.excute(new Callable<Boolean>() {
 
-											@Override
-											public Boolean call()
-													throws Exception {
-												boolean b = getActivity()
-														.deleteFile(
-																IOUtil.FILE_TIMETABLE);
-												if (b) {
-													getActivity()
-															.deleteFile(
-																	IOUtil.FILE_COLOR_TABLE);
-												}
-												return b;
-											}
-										}, new OnTaskFinishedListener() {
-											@Override
-											public void onTaskFinished(
-													boolean isExceptionOccoured,
-													Object data) {
-												boolean result = (Boolean) data;
-												if (!isExceptionOccoured
-														&& result) {
-													adapter.clear();
-													adapter.notifyDataSetChanged();
-													mTimetableList.clear();
-													Context context = getActivity();
-													AppUtil.showToast(
-															context,
-															R.string.excute_delete,
-															isVisible());
-													TimeTableInfoCallback
-															.clearAllAlarm(context);
-													PrefUtil.getInstance(
-															context).put(
-															"timetable_term",
-															-1);
-													termText = StringUtil.NULL;
-												} else {
-													AppUtil.showToast(
-															getActivity(),
-															R.string.file_not_found,
-															isMenuVisible());
-												}
-											}
+									@Override
+									public Boolean call() throws Exception {
+										boolean b = getActivity().deleteFile(
+												IOUtil.FILE_TIMETABLE);
+										if (b) {
+											getActivity().deleteFile(
+													IOUtil.FILE_COLOR_TABLE);
+										}
+										return b;
+									}
+								}, new OnTaskFinishedListener() {
+									@Override
+									public void onTaskFinished(
+											boolean isExceptionOccoured,
+											Object data) {
+										boolean result = (Boolean) data;
+										if (!isExceptionOccoured && result) {
+											adapter.clear();
+											adapter.notifyDataSetChanged();
+											mTimetableList.clear();
+											Context context = getActivity();
+											AppUtil.showToast(context,
+													R.string.excute_delete,
+													isVisible());
+											TimeTableInfoCallback
+													.clearAllAlarm(context);
+											PrefUtil.getInstance(context).put(
+													"timetable_term", -1);
+											mTermText = StringUtil.NULL;
+										} else {
+											AppUtil.showToast(getActivity(),
+													R.string.file_not_found,
+													isMenuVisible());
+										}
+									}
 
-										});
+								});
 							}
 						}).setNegativeButton(R.string.cancel, null).create();
 	}
@@ -518,6 +530,6 @@ public class TabTimeTableFragment extends
 
 	@Override
 	protected CharSequence getSubtitle() {
-		return termText;
+		return mTermText;
 	}
 }

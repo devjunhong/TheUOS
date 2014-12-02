@@ -4,8 +4,9 @@ import java.util.Calendar;
 
 /** WISE OPEN API관련 변수와 메소드를 가지는 클래스 */
 public class OApiUtil {
-	private static String year;
-	public static final String UOS_API_KEY = OApiKey.WISE_OAPI_KEY;
+	private static String sThisYear;
+	private static String[] sYears;
+	public static final String UOS_API_KEY = OApiKey.WISE_OAPI_KEY.toString();
 	public static final String API_KEY = "apiKey";
 	public static final String TERM = "term";
 	public static final String YEAR = "year";
@@ -17,13 +18,37 @@ public class OApiUtil {
 		SPRING, AUTUMN, SUMMER, WINTER
 	}
 
+	/** 현재 연도를 얻는다. ex) "2013" */
 	public static synchronized String getYear() {
-		if (year == null) {
-			year = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+		if (sThisYear == null) {
+			sThisYear = String.valueOf(Calendar.getInstance()
+					.get(Calendar.YEAR));
 		}
-		return year;
+		return sThisYear;
 	}
 
+	/**
+	 * 현재 연도를 기준점으로 -2 ~ + 1 범위의 연도를얻는다. <br>
+	 * ex) 현재 연도가 "2013"이면 2011, 2012, 2013, 2014 배열을 얻게된다.
+	 */
+	public static String[] getYears() {
+		if (sThisYear == null) {
+			getYear();
+		}
+		if (sYears == null) {
+			int year = Integer.valueOf(sThisYear);
+			sYears = new String[] { Integer.toString((year - 2)),
+					Integer.toString((year - 1)), sThisYear,
+					Integer.toString((year + 1)) };
+		}
+		return sYears;
+	}
+
+	/**
+	 * 학기를 기준점으로 연도를 얻는다.<br>
+	 * 보통 {@link #getYear()}를 통해 얻는값과 크게 다르지 않지만, 겨울 계절학기의 경우 현재 연도 보다 -1된 값을
+	 * 얻는다
+	 */
 	public static String getSemesterYear(Term term) {
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
@@ -33,7 +58,7 @@ public class OApiUtil {
 			year--;
 		}
 
-		return String.valueOf(year);
+		return Integer.toString(year);
 	}
 
 	public static Term getTerm() {

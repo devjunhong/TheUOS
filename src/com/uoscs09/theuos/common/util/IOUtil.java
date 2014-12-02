@@ -121,7 +121,7 @@ public class IOUtil {
 	 */
 	public static void readFromFileAsync(final Context context,
 			final String fileName, OnTaskFinishedListener l) {
-		new AsyncLoader<Object>().excute(new Callable<Object>() {
+		AsyncLoader.excute(new Callable<Object>() {
 			@Override
 			public Object call() throws Exception {
 				return readFromFile(context, fileName);
@@ -137,7 +137,7 @@ public class IOUtil {
 	public static void saveToFileAsync(final Context context,
 			final String fileName, final int mode, final Object obj,
 			OnTaskFinishedListener l) {
-		new AsyncLoader<Object>().excute(new Callable<Object>() {
+		AsyncLoader.excute(new Callable<Object>() {
 			@Override
 			public Object call() throws Exception {
 				return saveToFile(context, fileName, mode, obj);

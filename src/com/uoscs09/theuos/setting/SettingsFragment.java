@@ -195,7 +195,8 @@ public class SettingsFragment extends PreferenceFragment implements
 										View convertView, ViewGroup parent) {
 									View view = super.getView(position,
 											convertView, parent);
-									// ActionBar text, colorPrimary, colorPrimaryDark (예정)
+									// ActionBar text, colorPrimary,
+									// colorPrimaryDark (예정)
 									int colorText, colorDrawableCentor, colorDrawableBorder;
 									switch (getItem(position)) {
 									case Black:
@@ -221,9 +222,9 @@ public class SettingsFragment extends PreferenceFragment implements
 										break;
 									}
 									Resources res = getResources();
-									colorText = res
-											.getColor(colorText);
-									colorDrawableCentor = res.getColor(colorDrawableCentor);
+									colorText = res.getColor(colorText);
+									colorDrawableCentor = res
+											.getColor(colorDrawableCentor);
 									colorDrawableBorder = res
 											.getColor(colorDrawableBorder);
 									TextView tv = (TextView) view;
@@ -267,7 +268,7 @@ public class SettingsFragment extends PreferenceFragment implements
 
 	/** 어플리케이션의 모든 캐쉬를 삭제한다. */
 	private void deleteCache(Context context) {
-		new AsyncLoader<Void>().excute(new Callable<Void>() {
+		AsyncLoader.excute(new Callable<Void>() {
 			@Override
 			public Void call() throws Exception {
 				AppUtil.clearCache(getActivity());
@@ -276,12 +277,7 @@ public class SettingsFragment extends PreferenceFragment implements
 		}, new AsyncLoader.OnTaskFinishedListener() {
 			@Override
 			public void onTaskFinished(boolean isExceptionOccoured, Object data) {
-				if (isExceptionOccoured) {
-					AppUtil.showErrorToast(getActivity(), (Exception) data,
-							true);
-				} else {
-					AppUtil.showToast(getActivity(), R.string.excute_delete);
-				}
+
 			}
 		});
 	}

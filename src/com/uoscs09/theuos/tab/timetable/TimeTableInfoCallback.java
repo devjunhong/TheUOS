@@ -2,6 +2,8 @@ package com.uoscs09.theuos.tab.timetable;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Hashtable;
@@ -14,7 +16,6 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -27,8 +28,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.javacan.asyncexcute.AsyncCallback;
-import com.javacan.asyncexcute.AsyncExecutor;
 import com.uoscs09.theuos.R;
+import com.uoscs09.theuos.common.AsyncLoader;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.IOUtil;
 import com.uoscs09.theuos.common.util.OApiUtil;
@@ -45,36 +46,66 @@ import com.uoscs09.theuos.tab.subject.SubjectItem;
  * 시간표 탭에서 과목을 선택하면 불리게 되는 클래스<br>
  * 과목 선택시 AlertDialog를 띄우고, AlertDialog에서 제공하는 메뉴를 처리한다.
  */
+// FIXME
 public class TimeTableInfoCallback implements View.OnClickListener {
 	protected Hashtable<String, String> params;
 	protected WeakReference<Context> contextRef;
 	protected String building, subjectName;
-	protected int day, pos;
+	protected View mTimeTableDialogView;
+	/** 선택된 수업의 날짜 (1-7 월-토) */
+	protected int day;
+	/** 선택된 수업의 시간의 인덱스, (0-14) (ex: 09:00 수업 = 0) */
+	protected int pos;
 	protected AlertDialog infoDialog;
-	protected AsyncExecutor<ArrayList<ArrayList<String>>> infoExecutor;
-	protected Dialog progress;
-	private Term term;
-	private final static long DAY = 1000 * 60 * 60 * 24;
-	private final static long WEEK = DAY * 7;
+	protected Dialog mProgress;
+	/** 시간표를 불러와야 값이 설정된다. */
+	// FIXME
+	Term term;
+	/** 시간표를 불러와야 값이 설정된다. */
+	// FIXME
+	String year;
+	private final static long WEEK = 86400000 * 7;
+	private final static SimpleDateFormat sDateFomatter = new SimpleDateFormat(
+			"yyyy-MM-dd hh:mm:ss", Locale.KOREAN);
 	public final static String ACTION_SET_ALARM = "com.uoscs09.theuos.tab.timetable.set_alarm";
 	public final static String INTENT_TIME = "com.uoscs09.theuos.tab.timetable.INTENT_TIME";
 	public final static String INTENT_CODE = "com.uoscs09.theuos.tab.timetable.INTENT_CODE";
 
 	public TimeTableInfoCallback(Context context) {
 		contextRef = new WeakReference<Context>(context);
-		progress = AppUtil.getProgressDialog(context, false, null);
-		initTable();
+		mProgress = AppUtil.getProgressDialog(context, false, null);
+		params = new Hashtable<String, String>();
+		params.put(OApiUtil.API_KEY, OApiUtil.UOS_API_KEY);
 	}
 
-	public void setTerm(Term term) {
-		this.term = term;
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.tab_timetable_list_text_mon:
+		case R.id.tab_timetable_list_text_tue:
+		case R.id.tab_timetable_list_text_wed:
+		case R.id.tab_timetable_list_text_thr:
+		case R.id.tab_timetable_list_text_fri:
+		case R.id.tab_timetable_list_text_sat:
+			doOnClickFromTimeTable(v);
+			break;
+		case R.id.dialog_timetable_button_info:
+			whenInfoButtonClicked();
+			break;
+		case R.id.dialog_timetable_button_map:
+			whenMapButtonClicked();
+			break;
+		default:
+			break;
+		}
 	}
 
 	public void doOnClickFromTimeTable(View v) {
 		// 시간표를 터치하면 나타나는 dialog를 생성하는 과정
+		// View에 해당 시간표 정보가 담겨있다.
 		if (v instanceof TextView) {
 			// 전달되어 오는 TextView의 tag는
-			// 시간표 정보 + 시간표 정보의 리스트 인덱스(0-15) + 시간표 요일 정보(1-7)
+			// 시간표 정보 + 시간표 정보의 리스트 인덱스(시간대)(0-15) + 시간표 요일 정보(1-7)
 			TextView tv = (TextView) v;
 			String tag = tv.getTag().toString();
 			String[] split = tag.split(StringUtil.NEW_LINE);
@@ -100,59 +131,65 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 			day = Integer.valueOf(split[split.length - 1]);
 
 			final Context context = contextRef.get();
-			if (context == null)
+			if (context == null) {
+				Log.e("timetable callback", "context == null");
 				return;
-			View dialogView = View.inflate(context,
-					R.layout.dialog_timetable_subject, null);
-			dialogView.findViewById(R.id.dialog_timetable_button_map)
-					.setOnClickListener(this);
-			dialogView.findViewById(R.id.dialog_timetable_button_info)
-					.setOnClickListener(this);
-			Spinner spinner = (Spinner) dialogView
-					.findViewById(R.id.timetable_callback_alarm_spinner);
+			}
+			Spinner spinner = null;
+			View alarmButton = null;
+			if (mTimeTableDialogView == null) {
+				mTimeTableDialogView = View.inflate(context,
+						R.layout.dialog_timetable_subject, null);
+				mTimeTableDialogView.findViewById(
+						R.id.dialog_timetable_button_map).setOnClickListener(
+						this);
+				mTimeTableDialogView.findViewById(
+						R.id.dialog_timetable_button_info).setOnClickListener(
+						this);
 
-			spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+				alarmButton = mTimeTableDialogView
+						.findViewById(R.id.dialog_timetable_button_alarm);
+				spinner = (Spinner) mTimeTableDialogView
+						.findViewById(R.id.timetable_callback_alarm_spinner);
 
-				@Override
-				public void onItemSelected(AdapterView<?> arg0, View arg1,
-						int arg2, long arg3) {
-					PrefUtil.getInstance(context).put(
-							PrefUtil.KEY_TIMETABLE_NOTIFY_TIME + pos + "-"
-									+ day, arg2);
-					setOrCancelAlarm(pos, day, subjectName, arg2, arg2 > 0);
-				}
+				spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
-				@Override
-				public void onNothingSelected(AdapterView<?> arg0) {
-				}
-			});
+					@Override
+					public void onItemSelected(AdapterView<?> arg0, View arg1,
+							int arg2, long arg3) {
+						PrefUtil.getInstance(context).put(
+								PrefUtil.KEY_TIMETABLE_NOTIFY_TIME + pos + "-"
+										+ day, arg2);
+						setOrCancelAlarm(pos, day, subjectName, arg2, arg2 > 0);
+					}
+
+					@Override
+					public void onNothingSelected(AdapterView<?> arg0) {
+					}
+				});
+			}
+			if (spinner == null) {
+				alarmButton = mTimeTableDialogView
+						.findViewById(R.id.dialog_timetable_button_alarm);
+				spinner = (Spinner) mTimeTableDialogView
+						.findViewById(R.id.timetable_callback_alarm_spinner);
+			}
 			spinner.setSelection(getPrefNotiIndex(pos, day, context));
-			infoDialog = new AlertDialog.Builder(context).setTitle(subjectName)
-					.setView(dialogView).create();
+
+			if (AppUtil.test) {
+				spinner.setVisibility(View.VISIBLE);
+				alarmButton.setVisibility(View.VISIBLE);
+			} else {
+				spinner.setVisibility(View.GONE);
+				alarmButton.setVisibility(View.GONE);
+			}
+			if (infoDialog == null) {
+				infoDialog = new AlertDialog.Builder(context).setView(
+						mTimeTableDialogView).create();
+			}
+			infoDialog.setTitle(subjectName);
 			AppUtil.setDialogMaterial(infoDialog, context);
 			infoDialog.show();
-		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.tab_timetable_list_text_mon:
-		case R.id.tab_timetable_list_text_tue:
-		case R.id.tab_timetable_list_text_wed:
-		case R.id.tab_timetable_list_text_thr:
-		case R.id.tab_timetable_list_text_fri:
-		case R.id.tab_timetable_list_text_sat:
-			doOnClickFromTimeTable(v);
-			break;
-		case R.id.dialog_timetable_button_info:
-			whenInfoButtonClicked();
-			break;
-		case R.id.dialog_timetable_button_map:
-			whenMapButtonClicked();
-			break;
-		default:
-			break;
 		}
 	}
 
@@ -182,6 +219,18 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 		return position * 10 + day;
 	}
 
+	/**
+	 * 시간표 알림을 설정하거나 취소한다.
+	 * 
+	 * @param position
+	 * @param day
+	 * @param name
+	 *            알림을 설정하는 교과목 이름
+	 * @param spinnerSelection
+	 *            알림이 언제 울릴지 설정하는 Spinner의 선택 값, 즉 몇 분전에 알림이 울릴 것 인가 결정하는 값
+	 * @param isSet
+	 *            알림 설정 여부
+	 */
 	protected void setOrCancelAlarm(int position, int day, String name,
 			int spinnerSelection, boolean isSet) {
 		Context context = contextRef.get();
@@ -191,8 +240,8 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 		String when = context.getResources().getStringArray(
 				R.array.tab_timetable_alarm_time_array)[spinnerSelection];
 
-		Intent intent = new Intent(context.getApplicationContext(),
-				TimeTableNotiReceiver.class).setAction(ACTION_SET_ALARM)
+		Intent intent = new Intent(context, TimeTableNotiReceiver.class)
+				.setAction(ACTION_SET_ALARM)
 				.putExtra(OApiUtil.SUBJECT_NAME, name)
 				.putExtra(INTENT_CODE, code)
 				.putExtra(INTENT_TIME, spinnerSelection);
@@ -204,12 +253,14 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 			long notiTime = getNotificationTime(position, day);
 			am.cancel(pi);
 			am.setRepeating(AlarmManager.RTC_WAKEUP, notiTime, WEEK, pi);
-			Log.d("timetable_alarm", "alaram time : " + notiTime);
+			Log.d("timetable_alarm",
+					name + " : " + sDateFomatter.format(new Date(notiTime)));
 		} else {
 			am.cancel(pi);
 		}
 	}
 
+	/** 현재 설정된 시간표 알림을 모두 취소한다. */
 	public static void clearAllAlarm(Context context) {
 		AlarmManager am = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
@@ -243,7 +294,6 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 	 *            월요일 1 ~ 토요일 6 임.
 	 */
 	private long getNotificationTime(int position, int day) {
-		Calendar c = Calendar.getInstance(Locale.KOREA);
 		int hour, minute;
 		switch (position) {
 		case 10:
@@ -279,16 +329,19 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 			minute += 60;
 		}
 
-		c.setTimeInMillis(System.currentTimeMillis());
-		c.set(Calendar.DAY_OF_WEEK, day + 1);
-		c.set(Calendar.HOUR_OF_DAY, hour);
-		c.set(Calendar.MINUTE, minute);
-		c.set(Calendar.SECOND, 0);
+		Calendar alarmTime = Calendar.getInstance(Locale.KOREA);
+		alarmTime.set(Calendar.DAY_OF_WEEK, day + 1);
+		alarmTime.set(Calendar.HOUR_OF_DAY, hour);
+		alarmTime.set(Calendar.MINUTE, minute);
+		alarmTime.set(Calendar.SECOND, 0);
 		Calendar now = Calendar.getInstance();
-		if (c.before(now)) {
-			c.add(Calendar.DATE, 7);
+		// 알림을 설정하려는 시간이 현 시간보다 이전이라면
+		// (알림 해당 날짜가 이미 지나감)
+		// 알림 시간에 1주일을 더한다.
+		if (alarmTime.before(now)) {
+			alarmTime.add(Calendar.WEEK_OF_YEAR, 1);
 		}
-		long time = c.getTimeInMillis();
+		long time = alarmTime.getTimeInMillis();
 		return time;
 	}
 
@@ -305,37 +358,25 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 	}
 
 	private void whenInfoButtonClicked() {
-		if (infoExecutor != null && !infoExecutor.isCancelled()) {
-			infoExecutor.cancel(true);
-		}
-		infoExecutor = new AsyncExecutor<ArrayList<ArrayList<String>>>();
-		infoExecutor.setCallable(infoCallable).setCallback(infoCallback)
-				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		progress.show();
+		AsyncLoader.excute(new Callable<ArrayList<ArrayList<String>>>() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public ArrayList<ArrayList<String>> call() throws Exception {
+				params.put(OApiUtil.YEAR, OApiUtil.getSemesterYear(term));
+				params.put(OApiUtil.TERM, OApiUtil.getTermCode(term));
+				return (ArrayList<ArrayList<String>>) ParseFactory
+						.create(ParseFactory.What.SubjectList,
+								HttpRequest
+										.getBody(
+												"http://wise.uos.ac.kr/uosdoc/api.ApiApiSubjectList.oapi",
+												StringUtil.ENCODE_EUC_KR,
+												params,
+												StringUtil.ENCODE_EUC_KR),
+								ParseFactory.Value.BASIC).parse();
+			}
+		}, infoCallback);
+		mProgress.show();
 	}
-
-	protected void initTable() {
-		params = new Hashtable<String, String>();
-		params.put(OApiUtil.API_KEY, OApiUtil.UOS_API_KEY);
-	}
-
-	/** 수업 계획서 메뉴를 선택하였을 시, 작업을 처리하는 Callable */
-	protected final Callable<ArrayList<ArrayList<String>>> infoCallable = new Callable<ArrayList<ArrayList<String>>>() {
-		@SuppressWarnings("unchecked")
-		@Override
-		public ArrayList<ArrayList<String>> call() throws Exception {
-			params.put(OApiUtil.YEAR, OApiUtil.getSemesterYear(term));
-			params.put(OApiUtil.TERM, OApiUtil.getTermCode(term));
-			return (ArrayList<ArrayList<String>>) ParseFactory
-					.create(ParseFactory.What.SubjectList,
-							HttpRequest
-									.getBody(
-											"http://wise.uos.ac.kr/uosdoc/api.ApiApiSubjectList.oapi",
-											StringUtil.ENCODE_EUC_KR, params,
-											StringUtil.ENCODE_EUC_KR),
-							ParseFactory.Value.BASIC).parse();
-		}
-	};
 
 	/** 수업 계획서 메뉴를 선택하였을 시, 작업 결과를 처리하는 AsyncCallback */
 	protected final AsyncCallback<ArrayList<ArrayList<String>>> infoCallback = new AsyncCallback<ArrayList<ArrayList<String>>>() {
@@ -421,7 +462,7 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 
 		@Override
 		public void onPostExcute() {
-			progress.dismiss();
+			mProgress.dismiss();
 		}
 
 		@Override
@@ -431,6 +472,6 @@ public class TimeTableInfoCallback implements View.OnClickListener {
 
 	protected void showDialFrag(FragmentManager fm, SubjectItem item) {
 		SubjectInfoDialFrag.showDialog(fm, item, contextRef.get(),
-				term.ordinal());
+				term.ordinal(), year);
 	}
 }

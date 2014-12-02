@@ -4,7 +4,7 @@ import java.util.Calendar;
 
 public class SeoulOApiUtil {
 	public final static String KEY = "KEY";
-	public final static String OAPI_KEY = OApiKey.SEOUL_OPAI_KEY;
+	public final static String OAPI_KEY = OApiKey.SEOUL_OPAI_KEY.toString();
 	public final static String TYPE = "TYPE";
 	public final static String TYPE_XML = "xml";
 	public final static String TYPE_JSON = "json";

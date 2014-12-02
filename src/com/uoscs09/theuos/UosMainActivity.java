@@ -209,6 +209,9 @@ public class UosMainActivity extends BaseActivity implements PagerInterface,
 		case White:
 			mViewPager.setPageTransformer(true, new PagerTransformer(1));
 			break;
+		case LightBlue:
+			break;
+		case Black:
 		default:
 			mViewPager.setPageTransformer(true, new PagerTransformer(0));
 			break;
@@ -442,6 +445,8 @@ public class UosMainActivity extends BaseActivity implements PagerInterface,
 				break;
 			case 2:
 				transformDepth(arg0, arg1);
+				break;
+			case 3:
 				break;
 			default:
 				arg0.setRotationY(arg1 * -30);

@@ -16,7 +16,7 @@ public abstract class AbsAsyncWidgetProvider<Data> extends AppWidgetProvider {
 	@Override
 	public void onUpdate(final Context context,
 			final AppWidgetManager appWidgetManager, final int[] appWidgetIds) {
-		new AsyncLoader<Data>().excute(new Callable<Data>() {
+		AsyncLoader.excute(new Callable<Data>() {
 			@Override
 			public Data call() throws Exception {
 				return doInBackGround(context, appWidgetManager, appWidgetIds);

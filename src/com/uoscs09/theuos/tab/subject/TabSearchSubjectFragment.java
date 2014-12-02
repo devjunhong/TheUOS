@@ -50,13 +50,14 @@ public class TabSearchSubjectFragment extends
 	@ReleaseWhenDestroy
 	protected EditText et;
 	@ReleaseWhenDestroy
-	private Spinner sp1, sp2, sp3, sp4, termSpinner;
+	private Spinner mDialogSpinner1, mDialogSpinner2, mDialogSpinner3,
+			mDialogSpinner4, mDialogTermSpinner, mDialogYearSpinner;
 	private int[] selections = new int[4];
 	@ReleaseWhenDestroy
 	private View mTitleLayout;
 	@ReleaseWhenDestroy
 	private TextView[] textViews;
-	private String mSearchedTermString;
+	private String mSearchConditionString;
 	private int sortFocusViewId;
 	private boolean isInverse = false;
 
@@ -68,17 +69,31 @@ public class TabSearchSubjectFragment extends
 				null);
 		getAlertDialog(dialogView);
 
-		et = (EditText) dialogView.findViewById(R.id.etc_search_subj_editText1);
-		sp1 = (Spinner) dialogView.findViewById(R.id.etc_search_subj_spinner1);
-		sp2 = (Spinner) dialogView.findViewById(R.id.etc_search_subj_spinner2);
-		sp3 = (Spinner) dialogView.findViewById(R.id.etc_search_subj_spinner3);
-		sp4 = (Spinner) dialogView.findViewById(R.id.etc_search_subj_spinner4);
-		termSpinner = (Spinner) dialogView
-				.findViewById(R.id.etc_search_subj_spinner_term);
-		sp1.setAdapter(createArrayAdapter(R.array.search_subj_opt1));
-		sp1.setOnItemSelectedListener(this);
-		sp2.setOnItemSelectedListener(this);
-		sp3.setOnItemSelectedListener(this);
+		et = (EditText) dialogView.findViewById(R.id.search_subj_editText1);
+		mDialogSpinner1 = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner1);
+		mDialogSpinner2 = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner2);
+		mDialogSpinner3 = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner3);
+		mDialogSpinner4 = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner4);
+		mDialogSpinner1
+				.setAdapter(createArrayAdapter(R.array.search_subj_opt1));
+		mDialogSpinner1.setOnItemSelectedListener(this);
+		mDialogSpinner2.setOnItemSelectedListener(this);
+		mDialogSpinner3.setOnItemSelectedListener(this);
+
+		mDialogTermSpinner = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner_term);
+		mDialogYearSpinner = (Spinner) dialogView
+				.findViewById(R.id.search_subj_spinner_year);
+		mDialogYearSpinner.setAdapter(new ArrayAdapter<String>(context,
+				android.R.layout.simple_spinner_dropdown_item, OApiUtil
+						.getYears()));
+		// current year
+		mDialogYearSpinner.setSelection(2);
+
 		super.onCreate(savedInstanceState);
 	}
 
@@ -102,7 +117,7 @@ public class TabSearchSubjectFragment extends
 		if (savedInstanceState != null) {
 			mSubjectList = savedInstanceState
 					.getParcelableArrayList("mSubjectList");
-			mSearchedTermString = savedInstanceState.getString("action");
+			mSearchConditionString = savedInstanceState.getString("action");
 		} else {
 			mSubjectList = new ArrayList<SubjectItem>();
 		}
@@ -132,6 +147,7 @@ public class TabSearchSubjectFragment extends
 		return rootView;
 	}
 
+	// for titles
 	@Override
 	public void onClick(View v) {
 		if (mSubjectList.isEmpty()) {
@@ -209,7 +225,7 @@ public class TabSearchSubjectFragment extends
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putParcelableArrayList("mSubjectList", mSubjectList);
-		outState.putString("action", mSearchedTermString);
+		outState.putString("action", mSearchConditionString);
 		super.onSaveInstanceState(outState);
 	}
 
@@ -224,12 +240,12 @@ public class TabSearchSubjectFragment extends
 	public void onItemClick(AdapterView<?> ad, View v, int pos, long id) {
 		SubjectInfoDialFrag.showDialog(getFragmentManager(),
 				(SubjectItem) ad.getItemAtPosition(pos), getActivity(),
-				termSpinner.getSelectedItemPosition());
+				mDialogTermSpinner.getSelectedItemPosition(),
+				mDialogYearSpinner.getSelectedItem().toString());
 	}
 
 	private void getAlertDialog(View v) {
-		final Context context = getActivity();
-		ad = new AlertDialog.Builder(context)
+		ad = new AlertDialog.Builder(getActivity())
 				.setView(v)
 				.setTitle(R.string.title_tab_search_subject)
 				.setMessage(R.string.tab_book_subject_opt)
@@ -239,8 +255,9 @@ public class TabSearchSubjectFragment extends
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {
-								InputMethodManager ipm = (InputMethodManager) context
-										.getSystemService(Activity.INPUT_METHOD_SERVICE);
+								InputMethodManager ipm = (InputMethodManager) getActivity()
+										.getSystemService(
+												Activity.INPUT_METHOD_SERVICE);
 								ipm.hideSoftInputFromWindow(
 										et.getWindowToken(), 0);
 								excute();
@@ -254,12 +271,19 @@ public class TabSearchSubjectFragment extends
 		adapter.clear();
 		adapter.addAll(result);
 		adapter.notifyDataSetChanged();
-		mTitleLayout.setVisibility(View.VISIBLE);
+		if (result.isEmpty()) {
+			mTitleLayout.setVisibility(View.INVISIBLE);
+		} else {
+			mTitleLayout.setVisibility(View.VISIBLE);
+		}
 		AppUtil.showToast(getActivity(), String.valueOf(result.size())
 				+ getString(R.string.search_found), true);
 
-		mSearchedTermString = termSpinner.getSelectedItem().toString();
-		setSubtitleWhenVisible(mSearchedTermString);
+		mSearchConditionString = mDialogYearSpinner.getSelectedItem()
+				.toString()
+				+ " / "
+				+ mDialogTermSpinner.getSelectedItem().toString();
+		setSubtitleWhenVisible(mSearchConditionString);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -268,27 +292,30 @@ public class TabSearchSubjectFragment extends
 		String query;
 		params.clear();
 		params.put(OApiUtil.API_KEY, OApiUtil.UOS_API_KEY);
-		params.put(OApiUtil.YEAR, OApiUtil.getYear());
+		params.put(OApiUtil.YEAR, mDialogYearSpinner.getSelectedItem()
+				.toString());
 		params.put(OApiUtil.TERM,
-				OApiUtil.getTermCode(Term.values()[termSpinner
+				OApiUtil.getTermCode(Term.values()[mDialogTermSpinner
 						.getSelectedItemPosition()]));
-		switch (sp1.getSelectedItemPosition()) {
+		switch (mDialogSpinner1.getSelectedItemPosition()) {
 		default:
 		case 0:// 교양
 			query = "http://wise.uos.ac.kr/uosdoc/api.ApiUcrCultTimeInq.oapi";
-			params.put("subjectDiv",
-					getCultSubjectDiv(sp2.getSelectedItemPosition()));
+			params.put(
+					"subjectDiv",
+					getCultSubjectDiv(mDialogSpinner2.getSelectedItemPosition()));
 			break;
 		case 1:// 전공
 			query = "http://wise.uos.ac.kr/uosdoc/api.ApiUcrMjTimeInq.oapi";
 			switch (selections[1]) {
 			case R.array.search_subj_major_2_0_0:
-				params.putAll(getMajorDeptDiv(sp3.getSelectedItemPosition(),
-						sp4.getSelectedItemPosition()));
+				params.putAll(getMajorDeptDiv(
+						mDialogSpinner3.getSelectedItemPosition(),
+						mDialogSpinner4.getSelectedItemPosition()));
 				break;
 			default:
 				params.putAll(getMajorDeptDiv2(selections[1],
-						sp4.getSelectedItemPosition()));
+						mDialogSpinner4.getSelectedItemPosition()));
 				break;
 			}
 			break;
@@ -322,7 +349,7 @@ public class TabSearchSubjectFragment extends
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int pos,
 			long arg3) {
 		switch (arg0.getId()) {
-		case R.id.etc_search_subj_spinner1: {
+		case R.id.search_subj_spinner1: {
 			int array;
 			switch (pos) {
 			case 0:
@@ -336,18 +363,18 @@ public class TabSearchSubjectFragment extends
 			}
 			selections[0] = array;
 			ArrayAdapter<CharSequence> aa = createArrayAdapter(array);
-			sp2.setAdapter(aa);
+			mDialogSpinner2.setAdapter(aa);
 			break;
 		}
-		case R.id.etc_search_subj_spinner2: {
+		case R.id.search_subj_spinner2: {
 			int array, array2 = 0;
-			if (sp1.getSelectedItemPosition() == 0) {
+			if (mDialogSpinner1.getSelectedItemPosition() == 0) {
 				// 처음 spinner가 "교양"인 경우
-				sp4.setVisibility(View.INVISIBLE);
+				mDialogSpinner4.setVisibility(View.INVISIBLE);
 				array = R.array.search_cult_2;
 			} else {
 				// 처음 spinner가 "전공"인 경우
-				sp4.setVisibility(View.VISIBLE);
+				mDialogSpinner4.setVisibility(View.VISIBLE);
 				switch (pos) { // 두 번재 spinner의 위치
 				case 0: // "대학"
 					array = R.array.search_subj_major_2_0_0;
@@ -394,24 +421,24 @@ public class TabSearchSubjectFragment extends
 				// 네 번째 spinner의 항목을 변경한다.
 				if (pos > 0) {
 					ArrayAdapter<CharSequence> aaa = createArrayAdapter(array2);
-					sp4.setAdapter(aaa);
+					mDialogSpinner4.setAdapter(aaa);
 					selections[2] = array2;
 				}
 			}
 			// 위에서 판별한 결과에 따라 세 번째 spinner의 항목을 변경한다.
 			selections[1] = array;
 			ArrayAdapter<CharSequence> aa = createArrayAdapter(array);
-			sp3.setAdapter(aa);
+			mDialogSpinner3.setAdapter(aa);
 			break;
 		}
-		case R.id.etc_search_subj_spinner3: {
+		case R.id.search_subj_spinner3: {
 			int array;
-			if (sp1.getSelectedItemPosition() == 0) {
+			if (mDialogSpinner1.getSelectedItemPosition() == 0) {
 				// 첫 번째 spinner의 항목이 "교양" 인 경우 아무것도 하지 않는다.
 				return;
 			} else {
 				// 첫 번째 spinner의 항목이 "전공" 인 경우
-				switch (sp2.getSelectedItemPosition()) {
+				switch (mDialogSpinner2.getSelectedItemPosition()) {
 				case 0:// 두 번째 spinner의 항목이 "대학" 인 경우
 					switch (pos) {
 					case 0: // "정경대학"
@@ -451,7 +478,7 @@ public class TabSearchSubjectFragment extends
 			// 판별한 결과에 따라 네 번째 spinner의 항목들을 변경한다.
 			selections[3] = array;
 			ArrayAdapter<CharSequence> aa = createArrayAdapter(array);
-			sp4.setAdapter(aa);
+			mDialogSpinner4.setAdapter(aa);
 			break;
 		}
 		default:
@@ -890,6 +917,6 @@ public class TabSearchSubjectFragment extends
 
 	@Override
 	protected CharSequence getSubtitle() {
-		return mSearchedTermString;
+		return mSearchConditionString;
 	}
 }

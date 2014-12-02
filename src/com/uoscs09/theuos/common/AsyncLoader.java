@@ -7,7 +7,7 @@ import com.javacan.asyncexcute.AsyncExecutor;
 
 import android.os.AsyncTask;
 
-public class AsyncLoader<Data> {
+public class AsyncLoader {
 	/**
 	 * 비동기 작업을 실행한다.
 	 * 
@@ -16,7 +16,8 @@ public class AsyncLoader<Data> {
 	 * @param l
 	 *            작업 종료후 호출될 callback
 	 */
-	public void excute(Callable<Data> task, OnTaskFinishedListener l) {
+	public static <Data> void excute(Callable<Data> task,
+			OnTaskFinishedListener l) {
 		getTasker(task, l).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
@@ -28,7 +29,8 @@ public class AsyncLoader<Data> {
 	 * @param callback
 	 *            작업 종료후 호출될 callback
 	 */
-	public void excute(Callable<Data> task, AsyncCallback<Data> callback) {
+	public static <Data> void excute(Callable<Data> task,
+			AsyncCallback<Data> callback) {
 		new AsyncExecutor<Data>().setCallable(task).setCallback(callback)
 				.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
@@ -43,8 +45,8 @@ public class AsyncLoader<Data> {
 		AsyncTask.THREAD_POOL_EXECUTOR.execute(r);
 	}
 
-	private AsyncTask<Void, Void, Data> getTasker(Callable<Data> task,
-			final OnTaskFinishedListener l) {
+	private static <Data> AsyncTask<Void, Void, Data> getTasker(
+			Callable<Data> task, final OnTaskFinishedListener l) {
 		return new AsyncExecutor<Data>().setCallable(task).setCallback(
 				new AsyncCallback.Base<Data>() {
 					public void onResult(Data result) {
@@ -61,7 +63,7 @@ public class AsyncLoader<Data> {
 	}
 
 	/** 비 동기 작업 후 호출될 listener */
-	public interface OnTaskFinishedListener {
+	public static interface OnTaskFinishedListener {
 		/**
 		 * 비 동기 작업 후 호출되는 메소드
 		 * 

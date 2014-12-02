@@ -45,8 +45,6 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 		OnClickListener {
 	/** 교과목 객체 */
 	private SubjectItem item;
-	/** 학기 정보를 나타내는 변수 */
-	private Term term;
 	/** OAPI에 Query할 매개변수들 */
 	private Hashtable<String, String> params;
 	private ArrayList<String> infoList;
@@ -65,10 +63,11 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 	private final static String TITLE = "수업계획서";
 
 	public static void showDialog(FragmentManager fm, SubjectItem item,
-			Context context, int term) {
+			Context context, int term, String year) {
 		Bundle b = new Bundle();
 		b.putParcelable(OApiUtil.SUBJECT_NAME, item);
 		b.putInt(OApiUtil.TERM, term);
+		b.putString(OApiUtil.YEAR, year);
 		DialogFragment f = (DialogFragment) fm.getFragment(b, "info");
 		if (f == null)
 			f = (DialogFragment) Fragment.instantiate(context,
@@ -82,15 +81,22 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 		super.onAttach(activity);
 		Bundle b = getArguments();
 		item = b.getParcelable(OApiUtil.SUBJECT_NAME);
-		term = Term.values()[b.getInt(OApiUtil.TERM)];
+		Term term = Term.values()[b.getInt(OApiUtil.TERM)];
 		if (item == null)
 			this.dismiss();
+
+		params = new Hashtable<String, String>(5);
+		params.put(OApiUtil.API_KEY, OApiUtil.UOS_API_KEY);
+		params.put(OApiUtil.TERM, OApiUtil.getTermCode(term));
+		params.put(OApiUtil.SUBJECT_NO, item.infoArray[3]);
+		params.put(OApiUtil.CLASS_DIV, item.infoArray[4]);
+		params.put(OApiUtil.YEAR, b.getString(OApiUtil.YEAR));
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		initTable();
+
 		View v = inflater.inflate(R.layout.dialog_subject_info, container,
 				false);
 		Context context = getActivity();
@@ -135,15 +141,6 @@ public class SubjectInfoDialFrag extends DialogFragment implements
 		ListViewBitmapWriteTask task = new ListViewBitmapWriteTask(
 				getActivity(), dir, listView);
 		task.excute();
-	}
-
-	private void initTable() {
-		params = new Hashtable<String, String>(5);
-		params.put(OApiUtil.API_KEY, OApiUtil.UOS_API_KEY);
-		params.put(OApiUtil.YEAR, OApiUtil.getSemesterYear(term));
-		params.put(OApiUtil.TERM, OApiUtil.getTermCode(term));
-		params.put(OApiUtil.SUBJECT_NO, item.infoArray[3]);
-		params.put(OApiUtil.CLASS_DIV, item.infoArray[4]);
 	}
 
 	@Override

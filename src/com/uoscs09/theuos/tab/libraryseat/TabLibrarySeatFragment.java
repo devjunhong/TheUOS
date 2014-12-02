@@ -2,7 +2,7 @@ package com.uoscs09.theuos.tab.libraryseat;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,6 +26,7 @@ import com.uoscs09.theuos.common.impl.annotaion.ReleaseWhenDestroy;
 import com.uoscs09.theuos.common.util.AppUtil;
 import com.uoscs09.theuos.common.util.PrefUtil;
 import com.uoscs09.theuos.common.util.StringUtil;
+import com.uoscs09.theuos.common.util.TimeUtil;
 import com.uoscs09.theuos.http.HttpRequest;
 import com.uoscs09.theuos.http.parse.ParseFactory;
 
@@ -55,7 +56,7 @@ public class TabLibrarySeatFragment extends
 	 * 
 	 * {@code onSaveonSaveInstanceState()} 에서 "COMMIT_TIME"라는 이름으로 저장된다.
 	 */
-	private String mCommitTime = StringUtil.NULL;
+	private String mSearchTime = StringUtil.NULL;
 	/**
 	 * 해지될 좌석 정보 버튼 ({@code R.id.action_info})을 선택하면 나타나는 AlertDialog<br>
 	 * 해지될 좌석 정보를 보여준다.
@@ -78,7 +79,7 @@ public class TabLibrarySeatFragment extends
 		setMenuRefresh(false);
 		setDrawableForMenu(false);
 		if (savedInstanceState != null) {
-			mCommitTime = savedInstanceState.getString(COMMIT_TIME);
+			mSearchTime = savedInstanceState.getString(COMMIT_TIME);
 			mSeatList = savedInstanceState.getParcelableArrayList(BUNDLE_LIST);
 			mDissmissInfoList = savedInstanceState
 					.getStringArrayList(INFO_LIST);
@@ -125,7 +126,7 @@ public class TabLibrarySeatFragment extends
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		outState.putString(COMMIT_TIME, mCommitTime);
+		outState.putString(COMMIT_TIME, mSearchTime);
 		outState.putParcelableArrayList(BUNDLE_LIST, mSeatList);
 		outState.putStringArrayList(INFO_LIST, mDissmissInfoList);
 		super.onSaveInstanceState(outState);
@@ -253,32 +254,8 @@ public class TabLibrarySeatFragment extends
 		// Fragment가 Attatch 되지 않은 경우
 		if (getActivity() == null)
 			return;
-		Calendar c = Calendar.getInstance();
-		int ampm = c.get(Calendar.AM_PM);
-		int h = c.get(Calendar.HOUR) == 0 ? 12 : c.get(Calendar.HOUR);
-		int m = c.get(Calendar.MINUTE);
-		int s = c.get(Calendar.SECOND);
-
-		StringBuilder sb = new StringBuilder();
-
-		if (ampm == Calendar.AM) {
-			sb.append(StringUtil.STR_AM);
-		} else {
-			sb.append(StringUtil.STR_PM);
-		}
-		sb.append(h);
-		sb.append(':');
-		if (m < 10) {
-			sb.append(0);
-		}
-		sb.append(m);
-		sb.append(':');
-		if (s < 10) {
-			sb.append(0);
-		}
-		sb.append(s);
-		mCommitTime = sb.toString();
-		setSubtitleWhenVisible(mCommitTime);
+		mSearchTime = TimeUtil.sFormat_am_hms.format(new Date());
+		setSubtitleWhenVisible(mSearchTime);
 	}
 
 	@Override
@@ -288,6 +265,6 @@ public class TabLibrarySeatFragment extends
 
 	@Override
 	protected CharSequence getSubtitle() {
-		return mCommitTime;
+		return mSearchTime;
 	}
 }

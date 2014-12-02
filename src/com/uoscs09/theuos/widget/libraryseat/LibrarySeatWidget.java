@@ -1,9 +1,7 @@
 package com.uoscs09.theuos.widget.libraryseat;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -17,6 +15,7 @@ import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.impl.AbsAsyncWidgetProvider;
 import com.uoscs09.theuos.common.util.IOUtil;
 import com.uoscs09.theuos.common.util.PrefUtil;
+import com.uoscs09.theuos.common.util.TimeUtil;
 import com.uoscs09.theuos.tab.libraryseat.SeatItem;
 import com.uoscs09.theuos.tab.libraryseat.TabLibrarySeatFragment;
 
@@ -102,8 +101,7 @@ public class LibrarySeatWidget extends
 				Context.MODE_PRIVATE, newList);
 		// 불러온 시간 기록
 		IOUtil.saveToFileSuppressed(context, DATE_FILE, Context.MODE_PRIVATE,
-				new SimpleDateFormat("a hh:mm:ss", Locale.getDefault())
-						.format(new Date()));
+				TimeUtil.sFormat_am_hms.format(new Date()));
 		return newList;
 	}
 

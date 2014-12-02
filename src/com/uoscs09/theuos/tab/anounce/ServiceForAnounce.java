@@ -44,14 +44,14 @@ public class ServiceForAnounce extends Service {
 	protected static final long WAIT_MAX = 86330000;
 	protected boolean isThreadFinish = false;
 	protected static final int NOTIFICATION_NUMBER = 9090;
-	private Thread worker;
-	protected PrefUtil pref;
+	private Thread mWorker;
+	protected PrefUtil mPrefUtil;
 	protected boolean isServiceEnabled;
 	/** 접속할 URL */
 	protected static final String[] URL_LIST = {
-			"http://www.uos.ac.kr/korNotice/mSubjectList.do?list_id=FA1&pageIndex=1",
-			"http://www.uos.ac.kr/korNotice/mSubjectList.do?list_id=FA2&pageIndex=1",
-			"http://scholarship.uos.ac.kr/scholarship.do?process=mSubjectList&brdbbsseq=1&x=1&y=1&w=3&pageNo=1" };
+			"http://www.uos.ac.kr/korNotice/list.do?list_id=FA1&pageIndex=1",
+			"http://www.uos.ac.kr/korNotice/list.do?list_id=FA2&pageIndex=1",
+			"http://scholarship.uos.ac.kr/scholarship.do?process=list&brdbbsseq=1&x=1&y=1&w=3&pageNo=1" };
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -60,18 +60,18 @@ public class ServiceForAnounce extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if (pref == null)
-			pref = PrefUtil.getInstance(getApplicationContext());
-		isServiceEnabled = pref.get(PrefUtil.KEY_CHECK_ANOUNCE_SERVICE, true);
+		if (mPrefUtil == null)
+			mPrefUtil = PrefUtil.getInstance(getApplicationContext());
+		isServiceEnabled = mPrefUtil.get(PrefUtil.KEY_CHECK_ANOUNCE_SERVICE, true);
 		if (!isServiceEnabled) {
 			return super.onStartCommand(intent, 0, startId);
 		}
-		if (worker == null || !worker.isAlive()) {
-			worker = new Worker();
-			worker.start();
+		if (mWorker == null || !mWorker.isAlive()) {
+			mWorker = new Worker();
+			mWorker.start();
 		} else {
-			synchronized (worker) {
-				worker.notify();
+			synchronized (mWorker) {
+				mWorker.notify();
 			}
 		}
 		return super.onStartCommand(intent, START_FLAG_REDELIVERY, startId);
@@ -79,10 +79,10 @@ public class ServiceForAnounce extends Service {
 
 	@Override
 	public void onDestroy() {
-		if (worker != null) {
+		if (mWorker != null) {
 			isThreadFinish = true;
-			worker.interrupt();
-			worker = null;
+			mWorker.interrupt();
+			mWorker = null;
 		}
 		super.onDestroy();
 	}
@@ -91,7 +91,7 @@ public class ServiceForAnounce extends Service {
 		@Override
 		public void run() {
 			while (!isThreadFinish) {
-				boolean isServiceEnabled = pref.get(
+				boolean isServiceEnabled = mPrefUtil.get(
 						PrefUtil.KEY_CHECK_ANOUNCE_SERVICE, true);
 				if (!isServiceEnabled) {
 					break;
@@ -101,8 +101,8 @@ public class ServiceForAnounce extends Service {
 				try {
 					while (true) {
 						// 값이 설정 되지 않았다면 대기
-						int hour = pref.get(StringUtil.STR_HOUR, -1);
-						int min = pref.get(StringUtil.STR_MIN, -1);
+						int hour = mPrefUtil.get(StringUtil.STR_HOUR, -1);
+						int min = mPrefUtil.get(StringUtil.STR_MIN, -1);
 						if (hour == -1 || min == -1) {
 							synchronized (this) {
 								this.wait(WAIT_TIME);
@@ -115,8 +115,8 @@ public class ServiceForAnounce extends Service {
 								this.wait(waitTimeByMill + 1);
 							}
 							if (WAIT_TIME > waitTimeByMill) {
-								hour = pref.get(StringUtil.STR_HOUR, -1);
-								min = pref.get(StringUtil.STR_MIN, -1);
+								hour = mPrefUtil.get(StringUtil.STR_HOUR, -1);
+								min = mPrefUtil.get(StringUtil.STR_MIN, -1);
 								waitTimeByMill = getWaitTime(hour, min);
 								// notify 확인 및 지연 시간 보정
 								if (waitTimeByMill < WAIT_MIN
@@ -128,7 +128,7 @@ public class ServiceForAnounce extends Service {
 						} // end of else
 					} // end of while
 
-					String[] keywords = pref
+					String[] keywords = mPrefUtil
 							.get(PrefUtil.KEY_KEYWORD_ANOUNCE, StringUtil.NULL)
 							.trim().split(StringUtil.NEW_LINE);
 					if (keywords != null) {
