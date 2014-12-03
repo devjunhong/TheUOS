@@ -54,7 +54,7 @@ public class UosMainActivity extends BaseActivity implements PagerInterface,
 		PrefUtil pref = PrefUtil.getInstance(this);
 		AppUtil.initStaticValues(pref);
 		mPageOrderList = AppUtil.loadPageOrder(this);
-		if (pref.get(PrefUtil.KEY_HOME, AppUtil.isScreenSizeSmall(this))) {
+		if (pref.get(PrefUtil.KEY_HOME, true)) {
 			mPageOrderList.add(0, R.string.title_section0_home);
 		}
 	}

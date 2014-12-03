@@ -31,11 +31,8 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(
-				R.string.setting_anounce_noti_frag_title1);
 		addPreferencesFromResource(R.xml.prefrence_announce_noti);
 		bindPreferenceSummaryToValue();
-
 	}
 
 	@Override
@@ -64,6 +61,9 @@ public class SettingsAnounceNotiFragment extends PreferenceFragment implements
 	@Override
 	public void onResume() {
 		super.onResume();
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		activity.getSupportActionBar().setTitle(
+				R.string.setting_anounce_noti_frag_title1);
 		getPreferenceScreen().getSharedPreferences()
 				.registerOnSharedPreferenceChangeListener(this);
 	}

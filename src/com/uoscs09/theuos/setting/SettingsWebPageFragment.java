@@ -13,9 +13,14 @@ public class SettingsWebPageFragment extends PreferenceFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((ActionBarActivity) getActivity()).getSupportActionBar().setTitle(
-				R.string.setting_web_page);
 		addPreferencesFromResource(R.xml.prefrence_web_page);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		activity.getSupportActionBar().setTitle(R.string.setting_web_page);
 	}
 
 	@Override

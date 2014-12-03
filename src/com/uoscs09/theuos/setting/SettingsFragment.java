@@ -16,7 +16,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -30,7 +29,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.javacan.asyncexcute.AsyncCallback;
-import com.javacan.asyncexcute.AsyncExecutor;
 import com.uoscs09.theuos.R;
 import com.uoscs09.theuos.common.AsyncLoader;
 import com.uoscs09.theuos.common.PieProgressDrawable;
@@ -47,6 +45,8 @@ public class SettingsFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Fragment가 재생성 되었을 때, 표시 화면을 정확히 복구하기 위한 설정
 		getFragmentManager().addOnBackStackChangedListener(
 				new OnBackStackChangedListener() {
 
@@ -109,12 +109,12 @@ public class SettingsFragment extends PreferenceFragment implements
 	}
 
 	private void showAppVersionDialog() {
-		final Context context = getActivity();
 		final String URL = "https://play.google.com/store/apps/details?id=com.uoscs09.theuos";
-		final ProgressDialog progress = AppUtil.getProgressDialog(context,
-				false, getText(R.string.progress_while_updating), null);
+		final ProgressDialog progress = AppUtil.getProgressDialog(
+				getActivity(), false,
+				getText(R.string.progress_while_updating), null);
 		progress.show();
-		new AsyncExecutor<String>().setCallable(new Callable<String>() {
+		AsyncLoader.excute(new Callable<String>() {
 
 			@Override
 			public String call() throws Exception {
@@ -127,7 +127,7 @@ public class SettingsFragment extends PreferenceFragment implements
 						.getAllElementsByClass("content").get(0);
 				return e.getTextExtractor().toString().trim();
 			}
-		}).setCallback(new AsyncCallback.Base<String>() {
+		}, new AsyncCallback.Base<String>() {
 			@Override
 			public void onResult(String result) {
 				String thisVersion = getString(R.string.setting_app_version_desc);
@@ -136,10 +136,10 @@ public class SettingsFragment extends PreferenceFragment implements
 							R.string.setting_app_version_update_this_new, true);
 				} else {
 					AlertDialog.Builder builder = new AlertDialog.Builder(
-							context);
-					TextView tv = new TextView(context);
+							getActivity());
+					TextView tv = new TextView(getActivity());
 					tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-					tv.setPadding(20, 20, 20, 20);
+					tv.setPadding(100, 20, 20, 20);
 
 					Formatter f = new Formatter();
 					f.format(
@@ -170,15 +170,33 @@ public class SettingsFragment extends PreferenceFragment implements
 
 			@Override
 			public void exceptionOccured(Exception e) {
-				AppUtil.showErrorToast(context, e, true);
+				AppUtil.showErrorToast(getActivity(), e, true);
 			}
 
 			@Override
 			public void onPostExcute() {
 				progress.dismiss();
 			}
-		}).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+		});
 	}
+
+	/**
+	 * White, * BlackAndWhite, * Black, * LightBlue <br>
+	 * <br>
+	 * // ActionBar text, colorPrimary, colorPrimaryDark (또는 비슷한 색)<br>
+	 * colorText, colorDrawableCentor, colorDrawableBorder
+	 * 
+	 */
+	static final int[][] THEME_COLORS_RES = {
+			{ R.color.material_deep_teal_500, android.R.color.white,
+					R.color.primary_material_light },
+			{ R.color.primary_dark_material_dark, android.R.color.white,
+					R.color.primary_dark_material_dark },
+			{ R.color.primary_dark_material_dark,
+					R.color.primary_material_dark,
+					R.color.primary_dark_material_dark },
+			{ R.color.material_light_blue_400, R.color.material_light_blue_400,
+					R.color.material_light_blue_600 } };
 
 	/** 테마를 선택하는 dialog를 보여준다.dialog가 null일시 초기화도 같이한다. */
 	private void showThemeDialog() {
@@ -190,43 +208,18 @@ public class SettingsFragment extends PreferenceFragment implements
 							new ArrayAdapter<AppTheme>(getActivity(),
 									android.R.layout.simple_list_item_1,
 									AppTheme.values()) {
+
 								@Override
 								public View getView(int position,
 										View convertView, ViewGroup parent) {
 									View view = super.getView(position,
 											convertView, parent);
-									// ActionBar text, colorPrimary,
-									// colorPrimaryDark (예정)
-									int colorText, colorDrawableCentor, colorDrawableBorder;
-									switch (getItem(position)) {
-									case Black:
-										colorText = R.color.primary_dark_material_dark;
-										colorDrawableCentor = R.color.primary_material_dark;
-										colorDrawableBorder = R.color.primary_dark_material_dark;
-										break;
-									case BlackAndWhite:
-										colorText = R.color.primary_dark_material_dark;
-										colorDrawableCentor = android.R.color.white;
-										colorDrawableBorder = R.color.material_blue_grey_950;
-										break;
-									case LightBlue:
-										colorText = R.color.material_light_blue_400;
-										colorDrawableCentor = R.color.material_light_blue_400;
-										colorDrawableBorder = R.color.material_light_blue_600;
-										break;
-									case White:
-									default:
-										colorText = R.color.material_deep_teal_500;
-										colorDrawableCentor = android.R.color.white;
-										colorDrawableBorder = R.color.primary_material_light;
-										break;
-									}
 									Resources res = getResources();
-									colorText = res.getColor(colorText);
-									colorDrawableCentor = res
-											.getColor(colorDrawableCentor);
-									colorDrawableBorder = res
-											.getColor(colorDrawableBorder);
+									int colorText = res.getColor(THEME_COLORS_RES[position][0]);
+									int colorDrawableCentor = res
+											.getColor(THEME_COLORS_RES[position][1]);
+									int colorDrawableBorder = res
+											.getColor(THEME_COLORS_RES[position][2]);
 									TextView tv = (TextView) view;
 									tv.setTextColor(colorText);
 									PieProgressDrawable d = new PieProgressDrawable();
@@ -235,7 +228,7 @@ public class SettingsFragment extends PreferenceFragment implements
 									d.setCentorColor(colorDrawableCentor);
 									d.setColor(colorDrawableBorder);
 									d.setLevel(100);
-									tv.setCompoundDrawablePadding(40);
+									tv.setCompoundDrawablePadding(50);
 									tv.setCompoundDrawables(d, null, null, null);
 									return view;
 								}
@@ -277,7 +270,12 @@ public class SettingsFragment extends PreferenceFragment implements
 		}, new AsyncLoader.OnTaskFinishedListener() {
 			@Override
 			public void onTaskFinished(boolean isExceptionOccoured, Object data) {
-
+				if (isExceptionOccoured) {
+					AppUtil.showErrorToast(getActivity(), (Exception) data,
+							true);
+				} else {
+					AppUtil.showToast(getActivity(), R.string.excute_delete);
+				}
 			}
 		});
 	}

@@ -18,10 +18,15 @@ public class SettingsTimetableFragment extends PreferenceFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		((ActionBarActivity) getActivity())
-				.getSupportActionBar().setTitle(R.string.setting_timetable);
 		addPreferencesFromResource(R.xml.prefrence_timetable);
 		bindPreferenceSummaryToValue();
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		activity.getSupportActionBar().setTitle(R.string.setting_timetable);
 	}
 
 	@Override

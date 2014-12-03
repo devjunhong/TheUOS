@@ -31,7 +31,13 @@ public class ParseSeat extends JerichoParse<SeatItem> {
 
 		List<Element> tableList = src.getAllElements(HTMLElementName.TABLE);
 		Element table = tableList.get(1);
-		Element dismissTable = tableList.get(3);
+		Element dismissTable;
+		
+		// 페이지 에러
+		if(tableList.size() < 4){
+			throw new IOException("Library Web Page Error");
+		}
+		dismissTable = tableList.get(3);
 		trList = table.getAllElements(HTMLElementName.TR);
 		// 0-12 스터디룸
 		for (index = 16; index <= 28; index++) {

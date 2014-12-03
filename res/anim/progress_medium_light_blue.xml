@@ -152,60 +152,92 @@
             android:fromDegrees="-180"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-200" />
+            android:toDegrees="-194" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-200"
+            android:fromDegrees="-194"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-220" />
+            android:toDegrees="-206" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-220"
+            android:fromDegrees="-206"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-240" />
+            android:toDegrees="-222" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-240"
+            android:fromDegrees="-222"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-260" />
+            android:toDegrees="-236" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-260"
+            android:fromDegrees="-236"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-280" />
+            android:toDegrees="-252" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-280"
+            android:fromDegrees="-252"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-300" />
+            android:toDegrees="-270" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-300"
+            android:fromDegrees="-270"
             android:pivotX="50%"
             android:pivotY="50%"
-            android:toDegrees="-330" />
+            android:toDegrees="-290" />
     </item>
     <item android:duration="30">
         <rotate
             android:drawable="@drawable/spinner_48_light_blue"
-            android:fromDegrees="-330"
+            android:fromDegrees="-290"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="-308" />
+    </item>
+    <item android:duration="30">
+        <rotate
+            android:drawable="@drawable/spinner_48_light_blue"
+            android:fromDegrees="-308"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="-324" />
+    </item>
+    <item android:duration="30">
+        <rotate
+            android:drawable="@drawable/spinner_48_light_blue"
+            android:fromDegrees="-324"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="-338" />
+    </item>
+    <item android:duration="30">
+        <rotate
+            android:drawable="@drawable/spinner_48_light_blue"
+            android:fromDegrees="-338"
+            android:pivotX="50%"
+            android:pivotY="50%"
+            android:toDegrees="-350" />
+    </item>
+    <item android:duration="30">
+        <rotate
+            android:drawable="@drawable/spinner_48_light_blue"
+            android:fromDegrees="-350"
             android:pivotX="50%"
             android:pivotY="50%"
             android:toDegrees="-360" />

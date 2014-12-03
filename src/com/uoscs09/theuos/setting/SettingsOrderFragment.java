@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,16 +33,17 @@ public class SettingsOrderFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
-		Activity activity = getActivity();
-		ActionBar actionBar = ((ActionBarActivity) activity)
-				.getSupportActionBar();
-		actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP
-				| ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_SHOW_TITLE);
-		actionBar.setTitle(R.string.setting_order);
-		orderList = AppUtil.loadPageOrder(activity);
-		mAdapter = new SwapAdapter(activity, R.layout.list_layout_order,
+		orderList = AppUtil.loadPageOrder(getActivity());
+		mAdapter = new SwapAdapter(getActivity(), R.layout.list_layout_order,
 				orderList);
 		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		ActionBarActivity activity = (ActionBarActivity) getActivity();
+		activity.getSupportActionBar().setTitle(R.string.setting_order);
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public class SettingsOrderFragment extends Fragment {
 				.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 					@Override
 					public boolean onItemLongClick(final AdapterView<?> parent,
-							final View view, final int position, final long id) {
+							View view, int position, long id) {
 						mListView.startDragging(position);
 						return true;
 					}

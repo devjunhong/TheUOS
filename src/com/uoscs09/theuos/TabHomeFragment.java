@@ -47,9 +47,13 @@ public class TabHomeFragment extends BaseFragment implements
 		super.onCreate(savedInstanceState);
 		Context context = getActivity();
 		List<Integer> list = AppUtil.loadPageOrder(context);
-		list = list.subList(0, 7);
-		list.add(R.string.title_section_etc);
+		if (AppUtil.isScreenSizeSmall(getActivity())) {
+			initDialog(context);
+			list = list.subList(0, 7);
+			list.add(R.string.title_section_etc);
+		}
 		list.add(R.string.setting);
+
 		adapter = new SimpleTextViewAdapter.Builder(context,
 				R.layout.list_layout_home, list)
 				.setDrawablePosition(DrawblePosition.TOP)
@@ -57,7 +61,6 @@ public class TabHomeFragment extends BaseFragment implements
 				.setTextViewTextColor(
 						getResources().getColor(android.R.color.white))
 				.setDrawableTheme(AppTheme.Black).create();
-		initDialog(context);
 	}
 
 	private void initDialog(Context context) {
@@ -99,7 +102,22 @@ public class TabHomeFragment extends BaseFragment implements
 		SwingBottomInAnimationAdapter animatorAdapter = new SwingBottomInAnimationAdapter(
 				adapter);
 		animatorAdapter.setAbsListView(gridView);
-		gridView.setOnItemClickListener(this);
+		if (AppUtil.isScreenSizeSmall(getActivity())) {
+			gridView.setOnItemClickListener(this);
+		} else {
+			gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					if (position == parent.getAdapter().getCount() - 1)
+						pl.sendCommand(PagerInterface.Type.SETTING, null);
+					else
+						pl.sendCommand(PagerInterface.Type.PAGE,
+								parent.getItemAtPosition(position));
+				}
+			});
+		}
+
 		gridView.setAdapter(animatorAdapter);
 
 		return v;
