@@ -1,6 +1,5 @@
 package com.uoscs09.theuos.tab.booksearch;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +27,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.UsingFreqLimitedMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.uoscs09.theuos.R;
@@ -82,7 +79,7 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 	};
 
 	@Override
-	public View setView(int position, View convertView, ViewHolder holder) {
+	public View setView(int position, final View convertView, ViewHolder holder) {
 		final GroupHolder h = (GroupHolder) holder;
 		final BookItem item = getItem(position);
 		// 책 이미지 설정
@@ -187,7 +184,9 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 	}
 
 	private void setChildViewContent(View v, BookStateInfo info) {
-		ChildHolder h = new ChildHolder(v);
+		ChildHolder h = (ChildHolder) v.getTag();
+		if (h == null || !(h instanceof ChildHolder))
+			h = new ChildHolder(v);
 		h.code.setText(info.infoArray[0]);
 		h.location.setText(info.infoArray[1]);
 		h.state.setText(setSpannableText(info.infoArray[2], 2));
@@ -241,16 +240,16 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 	}
 
 	private void setupImgConfig() {
-		Context mContext = getContext();
-		Drawable extraDrawable = mContext.getResources().getDrawable(
+		Context context = getContext();
+		Drawable extraDrawable = context.getResources().getDrawable(
 				R.drawable.noimg_en);
 		imageHeight = extraDrawable.getMinimumHeight();
 		imageWidth = extraDrawable.getMinimumWidth();
 		if (!imageLoader.isInited()) {
-			File cacheDir = mContext.getCacheDir();
 			Executor ex = Executors.newCachedThreadPool(new ThreadFactory() {
 				private final AtomicInteger mCount = new AtomicInteger(1);
 
+				@Override
 				public Thread newThread(Runnable r) {
 					return new Thread(r, "ImageLoader #"
 							+ mCount.getAndIncrement());
@@ -268,29 +267,20 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 					.decodingOptions(bitmapOpt)
 					.imageScaleType(ImageScaleType.IN_SAMPLE_INT)
 					.showImageOnLoading(
-							AppUtil.getStyledValue(mContext, R.attr.ic_loading))
+							AppUtil.getStyledValue(context, R.attr.ic_loading))
 					.cacheInMemory(true).cacheOnDisk(true).build();
 			ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-					mContext)
-					.memoryCacheExtraOptions(480, 800)
+					context)
+					// .memoryCacheExtraOptions(480, 800)
 					.taskExecutor(ex)
 					.taskExecutorForCachedImages(ex)
-					.threadPoolSize(
-							ImageLoaderConfiguration.Builder.DEFAULT_THREAD_POOL_SIZE)
-					.threadPriority(Thread.NORM_PRIORITY - 1)
-					.tasksProcessingOrder(QueueProcessingType.FIFO)
 					.denyCacheImageMultipleSizesInMemory()
 					.memoryCache(
 							new UsingFreqLimitedMemoryCache(2 * 1024 * 1024))
-					.memoryCacheSize(2 * 1024 * 1024)
-					.diskCache(new UnlimitedDiscCache(cacheDir))
-					.diskCacheSize(50 * 1024 * 1024)
-					.diskCacheFileCount(100)
-					.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-					.imageDownloader(new BaseImageDownloader(mContext))
+					.diskCache(new UnlimitedDiscCache(context.getCacheDir()))
+					.imageDownloader(new BaseImageDownloader(context))
 					.defaultDisplayImageOptions(option).build();
 
-			// Initialize ImageLoader with created configuration. Do it once.
 			imageLoader.init(config);
 		}
 	}
@@ -325,7 +315,6 @@ public class BookItemListAdapter extends AbsArrayAdapter<BookItem> {
 		}
 		return styledText;
 	}
-
 }
 
 class ParseBookInfo extends JerichoParse<BookStateInfo> {

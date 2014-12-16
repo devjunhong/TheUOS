@@ -1,12 +1,12 @@
 package com.uoscs09.theuos.http.parse;
 
 public class ParseFactory {
-	/* TODO enum type으로 바꿀 것*/
-	public enum What{
-		Anounce, Book, Rest, Seat, Phone, TimeTable, EmptyRoom,
-		Subject, SubjectInfo, SubjectList, SubjectScore, Transport
+	/* TODO enum type으로 바꿀 것 */
+	public enum What {
+		Anounce, Book, Rest, Seat, Phone, TimeTable, EmptyRoom, Subject, SubjectInfo, SubjectList, Schedule, SubjectScore, Transport
 	}
-	/* TODO enum type으로 바꿀 것*/
+
+	/* TODO enum type으로 바꿀 것 */
 	public static final class Value {
 		public final static int BASIC = 0;
 		public final static int BOTTOM = 999;
@@ -37,6 +37,8 @@ public class ParseFactory {
 			return new ParseSubjectInfo(body);
 		case SubjectList:
 			return new ParseSubjectList(body);
+		case Schedule:
+			return new ParseSchedule(body, howTo);
 		case SubjectScore:
 			return new ParseSubjectScore(body);
 		case Transport:

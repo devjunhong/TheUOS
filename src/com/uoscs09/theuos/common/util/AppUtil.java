@@ -18,6 +18,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -46,6 +47,7 @@ import com.uoscs09.theuos.tab.map.TabMapFragment;
 import com.uoscs09.theuos.tab.phonelist.PhoneNumberDB;
 import com.uoscs09.theuos.tab.phonelist.TabPhoneFragment;
 import com.uoscs09.theuos.tab.restaurant.TabRestaurantFragment;
+import com.uoscs09.theuos.tab.schedule.TabScheduleFragment;
 import com.uoscs09.theuos.tab.score.ScoreFragment;
 import com.uoscs09.theuos.tab.subject.TabSearchSubjectFragment;
 import com.uoscs09.theuos.tab.timetable.TabTimeTableFragment;
@@ -85,7 +87,7 @@ public class AppUtil {
 		}
 		AppUtil.theme = vals[v];
 		AppUtil.test = pref.get("test", false);
-		PAGE_SIZE = test ? 12 : 10;
+		PAGE_SIZE = test ? 13 : 11;
 	}
 
 	/** 저장된 탭 순서를 불러옴 */
@@ -101,6 +103,7 @@ public class AppUtil {
 		return tabList;
 	}
 
+	// TODO page의 순서 뿐만 아니라 사용 여부도 결정할 수 있게 하는것을 구현
 	private static int[] getPages() {
 		return new int[] { R.string.title_section1_announce, /* 공지사항 */
 		R.string.title_section2_rest, /* 식당메뉴 */
@@ -148,10 +151,12 @@ public class AppUtil {
 			return 8;
 		case R.string.title_tab_search_subject:
 			return 9;
-		case R.string.title_tab_score:
+		case R.string.title_tab_schedule:
 			return 10;
-		case R.string.title_tab_transport:
+		case R.string.title_tab_score:
 			return 11;
+		case R.string.title_tab_transport:
+			return 12;
 		case R.string.setting:
 			return 98;
 		case R.string.title_section_etc:
@@ -185,8 +190,10 @@ public class AppUtil {
 		case 9:
 			return R.string.title_tab_search_subject;
 		case 10:
-			return R.string.title_tab_score;
+			return R.string.title_tab_schedule;
 		case 11:
+			return R.string.title_tab_score;
+		case 12:
 			return R.string.title_tab_transport;
 		case 98:
 			return R.string.setting;
@@ -267,6 +274,9 @@ public class AppUtil {
 		case R.string.title_tab_search_subject:
 			iconId = R.attr.ic_content_paste;
 			break;
+		case R.string.title_tab_schedule:
+			iconId = R.attr.ic_content_timetable;
+			break;
 		case R.string.title_tab_score:
 			iconId = R.attr.ic_content_copy;
 			break;
@@ -321,6 +331,9 @@ public class AppUtil {
 		case R.string.title_tab_search_subject:
 			iconId = R.attr.menu_ic_content_paste;
 			break;
+		case R.string.title_tab_schedule:
+			iconId = R.attr.menu_ic_content_timetable;
+			break;
 		case R.string.title_tab_score:
 			iconId = R.attr.menu_ic_content_copy;
 			break;
@@ -365,6 +378,8 @@ public class AppUtil {
 			return R.drawable.ic_action_action_search;
 		case R.string.title_tab_search_subject:
 			return R.drawable.ic_action_content_content_paste;
+		case R.string.title_tab_schedule:
+			return R.drawable.ic_action_content_timetable;
 		case R.string.title_tab_score:
 			return R.drawable.ic_action_content_content_copy;
 		case R.string.title_tab_transport:
@@ -402,6 +417,8 @@ public class AppUtil {
 			return R.drawable.ic_action_action_search_dark;
 		case R.string.title_tab_search_subject:
 			return R.drawable.ic_action_content_content_paste_dark;
+		case R.string.title_tab_schedule:
+			return R.drawable.ic_action_content_timetable_dark;
 		case R.string.title_tab_score:
 			return R.drawable.ic_action_content_content_copy_dark;
 		case R.string.title_tab_transport:
@@ -475,6 +492,8 @@ public class AppUtil {
 			return TabSearchEmptyRoomFragment.class;
 		case R.string.title_tab_search_subject:
 			return TabSearchSubjectFragment.class;
+		case R.string.title_tab_schedule:
+			return TabScheduleFragment.class;
 		case R.string.title_tab_score:
 			return ScoreFragment.class;
 		case R.string.title_tab_transport:
@@ -505,6 +524,8 @@ public class AppUtil {
 			return R.string.title_tab_search_empty_room;
 		else if (fragmentClass.equals(TabSearchSubjectFragment.class))
 			return R.string.title_tab_search_subject;
+		else if (fragmentClass.equals(TabScheduleFragment.class))
+			return R.string.title_tab_schedule;
 		else if (fragmentClass.equals(ScoreFragment.class))
 			return R.string.title_tab_score;
 		else if (fragmentClass.equals(TabTransportFragment.class))
@@ -807,35 +828,57 @@ public class AppUtil {
 
 			Resources resources = context.getResources();
 
-			int titleDividerId = resources.getIdentifier("titleDivider", "id",
-					"android");
 			View decorView = dialog.getWindow().getDecorView();
 			decorView.setPadding(0, 0, 0, 10);
-			
-			View titleDivider = decorView.findViewById(titleDividerId);
-			if (titleDivider != null)
-				titleDivider.setBackgroundColor(Color.TRANSPARENT);
+
+			int titleDividerId = resources.getIdentifier("titleDivider", "id",
+					"android");
+			if (titleDividerId != 0) {
+				View titleDivider = decorView.findViewById(titleDividerId);
+				if (titleDivider != null) {
+					titleDivider.setBackgroundColor(Color.TRANSPARENT);
+					titleDivider.setVisibility(View.GONE);
+				}
+			}
 
 			if (dialog instanceof AlertDialog) {
+				if (((AlertDialog) dialog).getListView() != null)
+					((AlertDialog) dialog).getListView().setDivider(null);
+
 				Button button = ((AlertDialog) dialog)
 						.getButton(DialogInterface.BUTTON_POSITIVE);
-				if (button != null)
+				Typeface typeface = Typeface.defaultFromStyle(Typeface.BOLD);
+				if (button != null) {
 					button.setTextColor(resources.getColor(getStyledValue(
 							context, R.attr.colorAccent)));
+					button.setTypeface(typeface);
+				}
+				button = ((AlertDialog) dialog)
+						.getButton(DialogInterface.BUTTON_NEGATIVE);
+				if (button != null) {
+					button.setTypeface(typeface);
+				}
+				button = ((AlertDialog) dialog)
+						.getButton(DialogInterface.BUTTON_NEUTRAL);
+				if (button != null) {
+					button.setTypeface(typeface);
+				}
 			}
 
 			int buttonPanelId = resources.getIdentifier("buttonPanel", "id",
 					"android");
-			LinearLayout buttonPanel = (LinearLayout) decorView
-					.findViewById(buttonPanelId);
-			if (buttonPanel != null) {
-				buttonPanel.setDividerDrawable(null);
-				LinearLayout buttonPanelChild = (LinearLayout) buttonPanel
-						.getChildAt(0);
-				if (buttonPanelChild != null) {
-					buttonPanelChild.setPadding(10, 20, 10, 10);
-					buttonPanelChild.setWeightSum(3.6f);
-					buttonPanelChild.setGravity(Gravity.END);
+			if (buttonPanelId != 0) {
+				LinearLayout buttonPanel = (LinearLayout) decorView
+						.findViewById(buttonPanelId);
+				if (buttonPanel != null) {
+					buttonPanel.setDividerDrawable(null);
+					LinearLayout buttonPanelChild = (LinearLayout) buttonPanel
+							.getChildAt(0);
+					if (buttonPanelChild != null) {
+						buttonPanelChild.setPadding(10, 20, 10, 10);
+						buttonPanelChild.setWeightSum(3f);
+						buttonPanelChild.setGravity(Gravity.END);
+					}
 				}
 			}
 		} catch (Exception e) {

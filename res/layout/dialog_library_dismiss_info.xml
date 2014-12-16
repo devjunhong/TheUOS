@@ -6,7 +6,9 @@
     <ListView
         android:id="@+id/tab_library_listview_dismiss"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@null"
+        android:dividerHeight="1dp" />
 
     <TextView
         android:id="@android:id/empty"

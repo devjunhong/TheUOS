@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -55,7 +54,7 @@ public class TabBookSearchFragment extends
 	private String mRawQuery;
 	// private String mOptionString;
 	@ReleaseWhenDestroy
-	protected ArrayAdapter<BookItem> mBookListAdapter;
+	protected BookItemListAdapter mBookListAdapter;
 	@ReleaseWhenDestroy
 	protected AnimationAdapter mAnimAdapter;
 	@AsyncData
@@ -420,7 +419,7 @@ public class TabBookSearchFragment extends
 		// 이 이벤트가 처음 일어났고, 이전에 검색결과가 0이 아닌 경우에만
 		// 새로운 검색을 시도한다.
 		if (totalItemCount > 1
-				&& (firstVisibleItem + visibleItemCount) == totalItemCount) {
+				&& (firstVisibleItem + visibleItemCount) == totalItemCount - 1) {
 			if (!isInvokeScroll && !isResultEmpty) {
 				isInvokeScroll = true;
 				mCurrentPage++;

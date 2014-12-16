@@ -6,10 +6,12 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -32,12 +34,15 @@ public class TabRestaurantFragment extends
 	@ReleaseWhenDestroy
 	private ScrollView mScrollView;
 	@ReleaseWhenDestroy
+	private View mMenuButtonView;
+	@ReleaseWhenDestroy
 	private TextView mSemesterTimeView, mVacationTimeView,
 			mContentBreakfastView, mContentLunchView, mContentSupperView;
 	private int mCurrentMenuButtonID;
 	@AsyncData
 	private ArrayList<RestItem> mRestList;
 	private String mCurrentRestName;
+	private GestureDetector mDetector;
 
 	private static final String BUTTON = "button";
 	private static final String REST = "rest_list";
@@ -67,22 +72,59 @@ public class TabRestaurantFragment extends
 			mCurrentMenuButtonID = R.id.tab_rest_button_students_hall;
 			mRestList = new ArrayList<RestItem>();
 		}
+		mDetector = new GestureDetector(getActivity(),
+				new GestureDetector.SimpleOnGestureListener() {
+					private boolean isViewHide = false;
+
+					@Override
+					public boolean onFling(MotionEvent e1, MotionEvent e2,
+							float velocityX, float velocityY) {
+						return handlingTouch(e1, e2);
+					}
+
+					private boolean handlingTouch(MotionEvent e1, MotionEvent e2) {
+						if (e1 != null && e2 != null) {
+							if (e1.getY() - e2.getY() > 0) {
+								if (!isViewHide) {
+									mMenuButtonView.setVisibility(View.GONE);
+									isViewHide = true;
+								}
+							} else {
+								if (isViewHide) {
+									mMenuButtonView.setVisibility(View.VISIBLE);
+									isViewHide = false;
+								}
+							}
+						}
+						return true;
+					}
+				});
 		super.onCreate(savedInstanceState);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.tab_restaurant, container,
-				false);
+		final View rootView = inflater.inflate(R.layout.tab_restaurant,
+				container, false);
+		mMenuButtonView = rootView.findViewById(R.id.tab_rest_layout_buttons);
 		for (int id : new int[] { R.id.tab_rest_button_students_hall,
 				R.id.tab_rest_button_anekan, R.id.tab_rest_button_natural,
 				R.id.tab_rest_button_main_8th, R.id.tab_rest_button_living }) {
-			View menuView = rootView.findViewById(id);
+			View menuView = mMenuButtonView.findViewById(id);
 			menuView.setOnClickListener(mButtonClickListener);
-			rootView.setTag(id, menuView);
+			mMenuButtonView.setTag(id, menuView);
 		}
 		mScrollView = (ScrollView) rootView.findViewById(R.id.tab_rest_scroll);
+		mScrollView.setOnTouchListener(new View.OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				if (!mDetector.onTouchEvent(event))
+					v.performClick();
+				return false;
+			}
+		});
 		mSemesterTimeView = (TextView) rootView
 				.findViewById(R.id.tab_rest_text_semester);
 		mVacationTimeView = (TextView) rootView
@@ -233,15 +275,10 @@ public class TabRestaurantFragment extends
 	}
 
 	@Override
-	public void exceptionOccured(Exception e) {
-		super.exceptionOccured(e);
-	}
-
-	@Override
 	public void onTransactResult(ArrayList<RestItem> result) {
 		mRestList.clear();
 		mRestList.addAll(result);
-		getView().findViewById(mCurrentMenuButtonID).performClick();
+		((View) mMenuButtonView.getTag(mCurrentMenuButtonID)).performClick();
 	}
 
 	@Override

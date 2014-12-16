@@ -31,6 +31,7 @@
     <string name="title_section7_time">시간표</string>
     <string name="title_tab_search_subject">교과목 검색</string>
     <string name="title_tab_search_empty_room">빈 강의실 조회</string>
+    <string name="title_tab_schedule">학사일정</string>
     <string name="title_tab_score">수업평가 결과 조회</string>
     <string name="title_tab_transport">교통 정보</string>
     <string name="title_section_etc">기타</string>

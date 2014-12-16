@@ -13,7 +13,8 @@ public class OApiUtil {
 	public static final String SUBJECT_NAME = "subjectNm";
 	public static final String SUBJECT_NO = "subjectNo";
 	public static final String CLASS_DIV = "classDiv";
-
+	
+	public static final String URL_API_MAIN_DB = "http://wise.uos.ac.kr/uosdoc/api.ApiApiMainBd.oapi";
 	public enum Term {
 		SPRING, AUTUMN, SUMMER, WINTER
 	}
@@ -22,7 +23,7 @@ public class OApiUtil {
 	public static synchronized String getYear() {
 		if (sThisYear == null) {
 			sThisYear = String.valueOf(Calendar.getInstance()
-					.get(Calendar.YEAR));
+					.get(Calendar.YEAR)).intern();
 		}
 		return sThisYear;
 	}
